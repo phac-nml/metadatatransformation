@@ -37,6 +37,7 @@ WorkflowMetadatatransformation.initialise(params, log)
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
+include { LOCK_METADATA } from '../modules/local/lock/main'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -62,10 +63,9 @@ workflow METADATATRANSFORMATION {
                 fastq_2 ? tuple(meta, [ file(fastq_1), file(fastq_2) ]) :
                 tuple(meta, [ file(fastq_1) ])}
 
-    input.view()
-
+    // LOCK METADATA
     if(params.transformation == 'lock') {
-
+        LOCK_METADATA (input.collect{ [it] })
     }
     else if (params.transformation == null) {
         exit 1, "Unspecified transformation '--transformation'. Exiting now."
