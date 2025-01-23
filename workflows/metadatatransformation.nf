@@ -64,6 +64,16 @@ workflow METADATATRANSFORMATION {
 
     input.view()
 
+    if(params.transformation == 'lock') {
+
+    }
+    else if (params.transformation == null) {
+        exit 1, "Unspecified transformation '--transformation'. Exiting now."
+    }
+    else {
+        exit 1, "Unrecognized transformation '--transformation ${params.transformation}'. Exiting now."
+    }
+
     //CUSTOM_DUMPSOFTWAREVERSIONS (
     //    ch_versions.unique().collectFile(name: 'collated_versions.yml')
     //)
