@@ -5,6 +5,7 @@
 */
 
 include { paramsSummaryLog; paramsSummaryMap; fromSamplesheet  } from 'plugin/nf-validation'
+include { parseSamplesheet } from 'plugin/nf-iridanext'
 
 def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
 def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
@@ -62,6 +63,8 @@ workflow METADATATRANSFORMATION {
         .map { meta, fastq_1, fastq_2 ->
                 fastq_2 ? tuple(meta, [ file(fastq_1), file(fastq_2) ]) :
                 tuple(meta, [ file(fastq_1) ])}
+
+    input.parseSamplesheet()
 
     // LOCK METADATA
     if(params.transformation == 'lock') {
