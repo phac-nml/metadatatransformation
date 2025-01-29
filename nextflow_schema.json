@@ -190,6 +190,46 @@
                     "help_text": "Allows string values that are parseable as numbers or booleans. For further information see [JSONSchema docs](https://github.com/everit-org/json-schema#lenient-mode)."
                 }
             }
+        },
+        "metadata": {
+            "title": "Metadata",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "metadata_1_header": {
+                    "type": "string",
+                    "default": "metadata_1"
+                },
+                "metadata_2_header": {
+                    "type": "string",
+                    "default": "metadata_2"
+                },
+                "metadata_3_header": {
+                    "type": "string",
+                    "default": "metadata_3"
+                },
+                "metadata_4_header": {
+                    "type": "string",
+                    "default": "metadata_4"
+                },
+                "metadata_5_header": {
+                    "type": "string",
+                    "default": "metadata_5"
+                },
+                "metadata_6_header": {
+                    "type": "string",
+                    "default": "metadata_6"
+                },
+                "metadata_7_header": {
+                    "type": "string",
+                    "default": "metadata_7"
+                },
+                "metadata_8_header": {
+                    "type": "string",
+                    "default": "metadata_8"
+                }
+            }
         }
     },
     "allOf": [
@@ -204,6 +244,16 @@
         },
         {
             "$ref": "#/definitions/generic_options"
+        },
+        {
+            "$ref": "#/definitions/metadata"
         }
-    ]
+    ],
+    "properties": {
+        "transformation": {
+            "type": "string",
+            "description": "The type of transformation to perform.",
+            "default": "lock"
+        }
+    }
 }

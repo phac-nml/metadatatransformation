@@ -3,7 +3,8 @@ process LOCK_METADATA {
     label 'process_single'
 
     input:
-    val input
+    val metadata_headers
+    val metadata_rows
     
     output:
     path("locked.csv"), emit: locked
@@ -11,14 +12,11 @@ process LOCK_METADATA {
     exec:
     task.workDir.resolve("locked.csv").withWriter { writer ->
         // Header:
-        writer.writeLine("column1,column2,column3")
+        writer.writeLine(metadata_headers.join(","))
 
         // Contents:
-        input.each {
-            name = it[0].id
-            metadata = it[1]
-            line = ([name] + metadata).join(",")
-            writer.writeLine(line)
+        metadata_rows.each {
+            writer.writeLine(it.join(","))
         }
     }
 }

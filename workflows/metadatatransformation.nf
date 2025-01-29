@@ -52,23 +52,36 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoft
 */
 
 workflow METADATATRANSFORMATION {
-
+    SAMPLE_HEADER = "sample"
     ch_versions = Channel.empty()
 
     // Create a new channel of metadata from a sample sheet
     // NB: `input` corresponds to `params.input` and associated sample sheet schema
     input = Channel.fromSamplesheet("input")
-        // Map the inputs so that they conform to the nf-core-expected "reads" format.
-        // Either [meta, [fastq_1]] or [meta, [fastq_1, fastq_2]] if fastq_2 exists
-        .map { meta, fastq_1, fastq_2 ->
-                fastq_2 ? tuple(meta, [ file(fastq_1), file(fastq_2) ]) :
-                tuple(meta, [ file(fastq_1) ])}
-
     input.parseSamplesheet()
 
+    metadata_headers = Channel.of(
+        tuple(
+            SAMPLE_HEADER,
+            params.metadata_1_header, params.metadata_2_header,
+            params.metadata_3_header, params.metadata_4_header,
+            params.metadata_5_header, params.metadata_6_header,
+            params.metadata_7_header, params.metadata_8_header)
+        )
+
+    input.view()
+    metadata_rows = input.map{
+        meta = it[0]
+        tuple(meta.id,
+        meta.metadata_1, meta.metadata_2, meta.metadata_3, meta.metadata_4,
+        meta.metadata_5, meta.metadata_6, meta.metadata_7, meta.metadata_8)
+    }.toList()
+    metadata_rows.view()
+
     // LOCK METADATA
+    //*
     if(params.transformation == 'lock') {
-        LOCK_METADATA (input.collect{ [it] })
+        LOCK_METADATA (metadata_headers, metadata_rows)
     }
     else if (params.transformation == null) {
         exit 1, "Unspecified transformation '--transformation'. Exiting now."
@@ -76,6 +89,7 @@ workflow METADATATRANSFORMATION {
     else {
         exit 1, "Unrecognized transformation '--transformation ${params.transformation}'. Exiting now."
     }
+    //*/
 
     //CUSTOM_DUMPSOFTWAREVERSIONS (
     //    ch_versions.unique().collectFile(name: 'collated_versions.yml')
