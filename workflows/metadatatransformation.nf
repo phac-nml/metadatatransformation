@@ -55,9 +55,29 @@ workflow METADATATRANSFORMATION {
     SAMPLE_HEADER = "sample"
     ch_versions = Channel.empty()
 
+    // Track processed IDs
+    def processedIDs = [] as Set
+
     // Create a new channel of metadata from a sample sheet
     // NB: `input` corresponds to `params.input` and associated sample sheet schema
     input = Channel.fromSamplesheet("input")
+    input = input.map {
+        meta = it[0]
+        if (!meta.id) {
+            meta.id = meta.irida_id
+        } else {
+            // Non-alphanumeric characters (excluding _,-,.) will be replaced with "_"
+            meta.id = meta.id.replaceAll(/[^A-Za-z0-9_.\-]/, '_')
+        }
+        // Ensure ID is unique by appending meta.irida_id if needed
+        while (processedIDs.contains(meta.id)) {
+            meta.id = "${meta.id}_${meta.irida_id}"
+        }
+        // Add the ID to the set of processed IDs
+        processedIDs << meta.id
+
+        tuple(meta)
+    }
     input.parseSamplesheet()
 
     metadata_headers = Channel.of(
@@ -69,14 +89,12 @@ workflow METADATATRANSFORMATION {
             params.metadata_7_header, params.metadata_8_header)
         )
 
-    input.view()
     metadata_rows = input.map{
         meta = it[0]
         tuple(meta.id,
         meta.metadata_1, meta.metadata_2, meta.metadata_3, meta.metadata_4,
         meta.metadata_5, meta.metadata_6, meta.metadata_7, meta.metadata_8)
     }.toList()
-    metadata_rows.view()
 
     // LOCK METADATA
     //*
