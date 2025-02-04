@@ -5,7 +5,7 @@
 */
 
 include { paramsSummaryLog; paramsSummaryMap; fromSamplesheet  } from 'plugin/nf-validation'
-include { parseSamplesheet } from 'plugin/nf-iridanext'
+include { loadIridaSampleIds                                   } from 'plugin/nf-iridanext'
 
 def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
 def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
@@ -52,7 +52,8 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoft
 */
 
 workflow METADATATRANSFORMATION {
-    SAMPLE_HEADER = "sample"
+    SAMPLE_ID_HEADER = "sample_id"
+    IRIDA_ID_HEADER = "irida_id"
     ch_versions = Channel.empty()
 
     // Track processed IDs
@@ -77,12 +78,11 @@ workflow METADATATRANSFORMATION {
         processedIDs << meta.id
 
         tuple(meta)
-    }
-    input.parseSamplesheet()
+    }.loadIridaSampleIds()
 
     metadata_headers = Channel.of(
         tuple(
-            SAMPLE_HEADER,
+            SAMPLE_ID_HEADER, IRIDA_ID_HEADER,
             params.metadata_1_header, params.metadata_2_header,
             params.metadata_3_header, params.metadata_4_header,
             params.metadata_5_header, params.metadata_6_header,
@@ -91,13 +91,12 @@ workflow METADATATRANSFORMATION {
 
     metadata_rows = input.map{
         meta = it[0]
-        tuple(meta.id,
+        tuple(meta.id, meta.irida_id,
         meta.metadata_1, meta.metadata_2, meta.metadata_3, meta.metadata_4,
         meta.metadata_5, meta.metadata_6, meta.metadata_7, meta.metadata_8)
     }.toList()
 
     // LOCK METADATA
-    //*
     if(params.transformation == 'lock') {
         LOCK_METADATA (metadata_headers, metadata_rows)
     }
@@ -107,11 +106,10 @@ workflow METADATATRANSFORMATION {
     else {
         exit 1, "Unrecognized transformation '--transformation ${params.transformation}'. Exiting now."
     }
-    //*/
 
-    //CUSTOM_DUMPSOFTWAREVERSIONS (
-    //    ch_versions.unique().collectFile(name: 'collated_versions.yml')
-    //)
+    CUSTOM_DUMPSOFTWAREVERSIONS (
+        ch_versions.unique().collectFile(name: 'collated_versions.yml')
+    )
 }
 
 /*
