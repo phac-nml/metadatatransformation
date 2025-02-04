@@ -38,6 +38,68 @@
                 }
             }
         },
+        "transformation_options": {
+            "title": "Transformation options",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "transformation": {
+                    "type": "string",
+                    "description": "The type of transformation to perform.",
+                    "default": "lock",
+                    "enum": ["lock"]
+                }
+            }
+        },
+        "metadata": {
+            "title": "Metadata",
+            "type": "object",
+            "description": "",
+            "default": "",
+            "properties": {
+                "metadata_1_header": {
+                    "type": "string",
+                    "default": "metadata_1",
+                    "description": "The column header name for the 1st metadata column."
+                },
+                "metadata_2_header": {
+                    "type": "string",
+                    "default": "metadata_2",
+                    "description": "The column header name for the 2nd metadata column."
+                },
+                "metadata_3_header": {
+                    "type": "string",
+                    "default": "metadata_3",
+                    "description": "The column header name for the 3rd metadata column."
+                },
+                "metadata_4_header": {
+                    "type": "string",
+                    "default": "metadata_4",
+                    "description": "The column header name for the 4th metadata column."
+                },
+                "metadata_5_header": {
+                    "type": "string",
+                    "default": "metadata_5",
+                    "description": "The column header name for the 5th metadata column."
+                },
+                "metadata_6_header": {
+                    "type": "string",
+                    "default": "metadata_6",
+                    "description": "The column header name for the 6th metadata column."
+                },
+                "metadata_7_header": {
+                    "type": "string",
+                    "default": "metadata_7",
+                    "description": "The column header name for the 7th metadata column."
+                },
+                "metadata_8_header": {
+                    "type": "string",
+                    "default": "metadata_8",
+                    "description": "The column header name for the 8th metadata column."
+                }
+            }
+        },
         "institutional_config_options": {
             "title": "Institutional config options",
             "type": "object",
@@ -190,51 +252,17 @@
                     "help_text": "Allows string values that are parseable as numbers or booleans. For further information see [JSONSchema docs](https://github.com/everit-org/json-schema#lenient-mode)."
                 }
             }
-        },
-        "metadata": {
-            "title": "Metadata",
-            "type": "object",
-            "description": "",
-            "default": "",
-            "properties": {
-                "metadata_1_header": {
-                    "type": "string",
-                    "default": "metadata_1"
-                },
-                "metadata_2_header": {
-                    "type": "string",
-                    "default": "metadata_2"
-                },
-                "metadata_3_header": {
-                    "type": "string",
-                    "default": "metadata_3"
-                },
-                "metadata_4_header": {
-                    "type": "string",
-                    "default": "metadata_4"
-                },
-                "metadata_5_header": {
-                    "type": "string",
-                    "default": "metadata_5"
-                },
-                "metadata_6_header": {
-                    "type": "string",
-                    "default": "metadata_6"
-                },
-                "metadata_7_header": {
-                    "type": "string",
-                    "default": "metadata_7"
-                },
-                "metadata_8_header": {
-                    "type": "string",
-                    "default": "metadata_8"
-                }
-            }
         }
     },
     "allOf": [
         {
             "$ref": "#/definitions/input_output_options"
+        },
+        {
+            "$ref": "#/definitions/transformation_options"
+        },
+        {
+            "$ref": "#/definitions/metadata"
         },
         {
             "$ref": "#/definitions/institutional_config_options"
@@ -244,16 +272,6 @@
         },
         {
             "$ref": "#/definitions/generic_options"
-        },
-        {
-            "$ref": "#/definitions/metadata"
         }
-    ],
-    "properties": {
-        "transformation": {
-            "type": "string",
-            "description": "The type of transformation to perform.",
-            "default": "lock"
-        }
-    }
+    ]
 }
