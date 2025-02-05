@@ -1,0 +1,140 @@
+nextflow_pipeline {
+
+    name "Metadata Transformation Testing"
+    script "main.nf"
+
+    test("Basic lock - sample ID") {
+        tag "pipeline_basic_sample_id"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/basic.csv"
+                outdir = "results"
+
+                transformation = "lock"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Locked Results
+            def locked = path("$launchDir/results/lock/locked.csv")
+            assert locked.exists()
+
+            assert locked.text.contains("sample_id,irida_id,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8")
+            assert locked.text.contains("ABC,sample1,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8")
+            assert locked.text.contains("DEF,sample2,2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8")
+            assert locked.text.contains("GHI,sample3,3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_metadata.size() == 3 
+
+            assert iridanext_metadata.containsKey("ABC")
+            assert iridanext_metadata.ABC.irida_id == "sample1"
+            assert iridanext_metadata.ABC.metadata_1 == "1.1"
+            assert iridanext_metadata.ABC.metadata_2 == "1.2"
+            assert iridanext_metadata.ABC.metadata_3 == "1.3"
+            assert iridanext_metadata.ABC.metadata_4 == "1.4"
+            assert iridanext_metadata.ABC.metadata_5 == "1.5"
+            assert iridanext_metadata.ABC.metadata_6 == "1.6"
+            assert iridanext_metadata.ABC.metadata_7 == "1.7"
+            assert iridanext_metadata.ABC.metadata_8 == "1.8"
+
+            assert iridanext_metadata.containsKey("DEF")
+            assert iridanext_metadata.DEF.irida_id == "sample2"
+            assert iridanext_metadata.DEF.metadata_1 == "2.1"
+            assert iridanext_metadata.DEF.metadata_2 == "2.2"
+            assert iridanext_metadata.DEF.metadata_3 == "2.3"
+            assert iridanext_metadata.DEF.metadata_4 == "2.4"
+            assert iridanext_metadata.DEF.metadata_5 == "2.5"
+            assert iridanext_metadata.DEF.metadata_6 == "2.6"
+            assert iridanext_metadata.DEF.metadata_7 == "2.7"
+            assert iridanext_metadata.DEF.metadata_8 == "2.8"
+
+            assert iridanext_metadata.containsKey("GHI")
+            assert iridanext_metadata.GHI.irida_id == "sample3"
+            assert iridanext_metadata.GHI.metadata_1 == "3.1"
+            assert iridanext_metadata.GHI.metadata_2 == "3.2"
+            assert iridanext_metadata.GHI.metadata_3 == "3.3"
+            assert iridanext_metadata.GHI.metadata_4 == "3.4"
+            assert iridanext_metadata.GHI.metadata_5 == "3.5"
+            assert iridanext_metadata.GHI.metadata_6 == "3.6"
+            assert iridanext_metadata.GHI.metadata_7 == "3.7"
+            assert iridanext_metadata.GHI.metadata_8 == "3.8"
+        }
+    }
+
+    test("Basic lock - IRIDA ID") {
+        tag "pipeline_basic_irida_id"
+        config "$baseDir/tests/data/configs/irida_id.config"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/basic.csv"
+                outdir = "results"
+
+                transformation = "lock"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Locked Results
+            def locked = path("$launchDir/results/lock/locked.csv")
+            assert locked.exists()
+
+            assert locked.text.contains("sample_id,irida_id,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8")
+            assert locked.text.contains("ABC,sample1,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8")
+            assert locked.text.contains("DEF,sample2,2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8")
+            assert locked.text.contains("GHI,sample3,3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_metadata.size() == 3 
+
+            assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1.sample_id == "ABC"
+            assert iridanext_metadata.sample1.metadata_1 == "1.1"
+            assert iridanext_metadata.sample1.metadata_2 == "1.2"
+            assert iridanext_metadata.sample1.metadata_3 == "1.3"
+            assert iridanext_metadata.sample1.metadata_4 == "1.4"
+            assert iridanext_metadata.sample1.metadata_5 == "1.5"
+            assert iridanext_metadata.sample1.metadata_6 == "1.6"
+            assert iridanext_metadata.sample1.metadata_7 == "1.7"
+            assert iridanext_metadata.sample1.metadata_8 == "1.8"
+
+            /*
+            assert iridanext_metadata.containsKey("DEF")
+            assert iridanext_metadata.DEF.irida_id == "sample2"
+            assert iridanext_metadata.DEF.metadata_1 == "2.1"
+            assert iridanext_metadata.DEF.metadata_2 == "2.2"
+            assert iridanext_metadata.DEF.metadata_3 == "2.3"
+            assert iridanext_metadata.DEF.metadata_4 == "2.4"
+            assert iridanext_metadata.DEF.metadata_5 == "2.5"
+            assert iridanext_metadata.DEF.metadata_6 == "2.6"
+            assert iridanext_metadata.DEF.metadata_7 == "2.7"
+            assert iridanext_metadata.DEF.metadata_8 == "2.8"
+
+            assert iridanext_metadata.containsKey("GHI")
+            assert iridanext_metadata.GHI.irida_id == "sample3"
+            assert iridanext_metadata.GHI.metadata_1 == "3.1"
+            assert iridanext_metadata.GHI.metadata_2 == "3.2"
+            assert iridanext_metadata.GHI.metadata_3 == "3.3"
+            assert iridanext_metadata.GHI.metadata_4 == "3.4"
+            assert iridanext_metadata.GHI.metadata_5 == "3.5"
+            assert iridanext_metadata.GHI.metadata_6 == "3.6"
+            assert iridanext_metadata.GHI.metadata_7 == "3.7"
+            assert iridanext_metadata.GHI.metadata_8 == "3.8"
+            */
+        }
+    }
+}
