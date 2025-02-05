@@ -137,4 +137,42 @@ nextflow_pipeline {
             */
         }
     }
+
+    test("Invalid transformation") {
+        tag "pipeline_invalid_transformation"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/basic.csv"
+                outdir = "results"
+
+                transformation = "UNKNOWN123"
+            }
+        }
+
+        then {
+            assert workflow.failed
+            def output = workflow.stdout.join("\n")
+            assert output.contains("Validation of pipeline parameters failed!")
+        }
+    }
+
+    test("Null transformation") {
+        tag "pipeline_null_transformation"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/basic.csv"
+                outdir = "results"
+
+                transformation = null
+            }
+        }
+
+        then {
+            assert workflow.failed
+            def output = workflow.stdout.join("\n")
+            assert output.contains("Unspecified transformation '--transformation'. Exiting now.")
+        }
+    }
 }
