@@ -1,22 +1,32 @@
 [![Nextflow](https://img.shields.io/badge/nextflow-%E2%89%A523.04.3-brightgreen.svg)](https://www.nextflow.io/)
 
-# Example Pipeline for IRIDA Next
+# Metadata Transformation Pipeline for IRIDA Next
 
-This is an example pipeline to be used for integration with IRIDA Next.
+This pipeline transforms metadata from IRIDA Next.
 
 # Input
 
-The input to the pipeline is a standard sample sheet (passed as `--input samplesheet.csv`) that looks like:
+The input to the pipeline is a sample sheet (passed as `--input samplesheet.csv`) that looks like:
 
-| sample  | fastq_1         | fastq_2         |
-| ------- | --------------- | --------------- |
-| SampleA | file_1.fastq.gz | file_2.fastq.gz |
+| sample  | sample_name | metadata_1 | metadata_2 | metadata_3 | metadata_4 | metadata_5 | metadata_6 | metadata_7 | metadata_8 |
+| ------- | ----------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- |
+| Sample1 | SampleA     | meta_1     | meta_2     | meta_3     | meta_4     | meta_5     | meta_6     | meta_7     | meta_8     |
 
 The structure of this file is defined in [assets/schema_input.json](assets/schema_input.json). Validation of the sample sheet is performed by [nf-validation](https://nextflow-io.github.io/nf-validation/).
 
 # Parameters
 
 The main parameters are `--input` as defined above and `--output` for specifying the output results directory. You may wish to provide `-profile singularity` to specify the use of singularity containers and `-r [branch]` to specify which GitHub branch you would like to run.
+
+## Transformation
+
+You may specify the metadata transformation with the `--transformation` parameter. For example, `--transformation lock` will perform the lock transformation. The available transformations are as follows:
+
+| Transformation | Explanation                       |
+| -------------- | --------------------------------- |
+| lock           | Locks the metadata in IRIDA Next. |
+
+## Other Parameters
 
 Other parameters (defaults from nf-core) are defined in [nextflow_schema.json](nextflow_schema.json).
 
@@ -25,7 +35,7 @@ Other parameters (defaults from nf-core) are defined in [nextflow_schema.json](n
 To run the pipeline, please do:
 
 ```bash
-nextflow run phac-nml/metadatatransformation -profile singularity -r main -latest --input assets/samplesheet.csv --outdir results
+nextflow run phac-nml/metadatatransformation -profile singularity -r main -latest --input assets/samplesheet.csv --outdir results --transformation lock
 ```
 
 Where the `samplesheet.csv` is structured as specified in the [Input](#input) section.
@@ -41,64 +51,65 @@ An example of the what the contents of the IRIDA Next JSON file looks like for t
 {
     "files": {
         "global": [
-            {
-                "path": "summary/summary.txt.gz"
-            }
+            
         ],
         "samples": {
-            "SAMPLE1": [
-                {
-                    "path": "assembly/SAMPLE1.assembly.fa.gz"
-                }
-            ],
-            "SAMPLE2": [
-                {
-                    "path": "assembly/SAMPLE2.assembly.fa.gz"
-                }
-            ],
-            "SAMPLE3": [
-                {
-                    "path": "assembly/SAMPLE3.assembly.fa.gz"
-                }
-            ]
+            
         }
     },
     "metadata": {
         "samples": {
-            "SAMPLE1": {
-                "reads.1": "sample1_R1.fastq.gz",
-                "reads.2": "sample1_R2.fastq.gz"
+            "ABC": {
+                "irida_id": "sample1",
+                "metadata_1": "1.1",
+                "metadata_2": "1.2",
+                "metadata_3": "1.3",
+                "metadata_4": "1.4",
+                "metadata_5": "1.5",
+                "metadata_6": "1.6",
+                "metadata_7": "1.7",
+                "metadata_8": "1.8"
             },
-            "SAMPLE2": {
-                "reads.1": "sample2_R1.fastq.gz",
-                "reads.2": "sample2_R2.fastq.gz"
+            "DEF": {
+                "irida_id": "sample2",
+                "metadata_1": "2.1",
+                "metadata_2": "2.2",
+                "metadata_3": "2.3",
+                "metadata_4": "2.4",
+                "metadata_5": "2.5",
+                "metadata_6": "2.6",
+                "metadata_7": "2.7",
+                "metadata_8": "2.8"
             },
-            "SAMPLE3": {
-                "reads.1": "sample1_R1.fastq.gz",
-                "reads.2": "null"
+            "GHI": {
+                "irida_id": "sample3",
+                "metadata_1": "3.1",
+                "metadata_2": "3.2",
+                "metadata_3": "3.3",
+                "metadata_4": "3.4",
+                "metadata_5": "3.5",
+                "metadata_6": "3.6",
+                "metadata_7": "3.7",
+                "metadata_8": "3.8"
             }
         }
     }
 }
 ```
 
-Within the `files` section of this JSON file, all of the output paths are relative to the `outdir`. Therefore, `"path": "assembly/SAMPLE1.assembly.fa.gz"` refers to a file located within `outdir/assembly/SAMPLE1.assembly.fa.gz`.
-
-There is also a pipeline execution summary output file provided (specified in the above JSON as `"global": [{"path":"summary/summary.txt.gz"}]`). However, there is no formatting specification for this file.
-
-For more information see [output doc](docs/output.md)
+For more information see [output doc](docs/output.md).
 
 ## Test profile
 
 To run with the test profile, please do:
 
 ```bash
-nextflow run phac-nml/metadatatransformation -profile docker,test -r main -latest --outdir results
+nextflow run phac-nml/metadatatransformation -profile docker,test -r main -latest --outdir results --transformation lock
 ```
 
 # Legal
 
-Copyright 2023 Government of Canada
+Copyright 2025 Government of Canada
 
 Licensed under the MIT License (the "License"); you may not use
 this work except in compliance with the License. You may obtain a copy of the
