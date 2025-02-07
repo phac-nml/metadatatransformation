@@ -5,7 +5,7 @@ process LOCK_METADATA {
     input:
     val metadata_headers
     val metadata_rows
-    
+
     output:
     path("transformation.csv"), emit: locked
 

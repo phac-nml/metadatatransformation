@@ -32,7 +32,7 @@ nextflow_pipeline {
             def iridanext_json = path("$launchDir/results/iridanext.output.json").json
             def iridanext_metadata = iridanext_json.metadata.samples
 
-            assert iridanext_metadata.size() == 3 
+            assert iridanext_metadata.size() == 3
 
             assert iridanext_metadata.containsKey("ABC")
             assert iridanext_metadata.ABC.irida_id == "sample1"
@@ -99,7 +99,7 @@ nextflow_pipeline {
             def iridanext_json = path("$launchDir/results/iridanext.output.json").json
             def iridanext_metadata = iridanext_json.metadata.samples
 
-            assert iridanext_metadata.size() == 3 
+            assert iridanext_metadata.size() == 3
 
             assert iridanext_metadata.containsKey("sample1")
             assert iridanext_metadata.sample1.sample_id == "ABC"
@@ -205,7 +205,7 @@ nextflow_pipeline {
             def iridanext_json = path("$launchDir/results/iridanext.output.json").json
             def iridanext_metadata = iridanext_json.metadata.samples
 
-            assert iridanext_metadata.size() == 3 
+            assert iridanext_metadata.size() == 3
 
             assert iridanext_metadata.containsKey("ABC")
             assert iridanext_metadata.ABC.irida_id == "sample1"
