@@ -21,8 +21,8 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 <details markdown="1">
 <summary>Output files</summary>
 
-- `lock/`
-  - A CSV-format file reporting locked files: `locked.csv`
+- `transformation/`
+  - A CSV-format file reporting locked files: `transformation.csv`
 
 </details>
 

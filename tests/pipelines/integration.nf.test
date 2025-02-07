@@ -20,7 +20,7 @@ nextflow_pipeline {
             assert path("$launchDir/results").exists()
 
             // Check Locked Results
-            def locked = path("$launchDir/results/lock/locked.csv")
+            def locked = path("$launchDir/results/transformation/transformation.csv")
             assert locked.exists()
 
             assert locked.text.contains("sample_id,irida_id,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8")
@@ -87,7 +87,7 @@ nextflow_pipeline {
             assert path("$launchDir/results").exists()
 
             // Check Locked Results
-            def locked = path("$launchDir/results/lock/locked.csv")
+            def locked = path("$launchDir/results/transformation/transformation.csv")
             assert locked.exists()
 
             assert locked.text.contains("sample_id,irida_id,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8")
@@ -193,7 +193,7 @@ nextflow_pipeline {
             assert path("$launchDir/results").exists()
 
             // Check Locked Results
-            def locked = path("$launchDir/results/lock/locked.csv")
+            def locked = path("$launchDir/results/transformation/transformation.csv")
             assert locked.exists()
 
             assert locked.text.contains("sample_id,irida_id,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8")

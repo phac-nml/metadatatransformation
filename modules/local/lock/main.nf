@@ -1,5 +1,5 @@
 process LOCK_METADATA {
-    tag "Locks metadata"
+    tag "Lock metadata"
     label 'process_single'
 
     input:
@@ -7,10 +7,10 @@ process LOCK_METADATA {
     val metadata_rows
     
     output:
-    path("locked.csv"), emit: locked
+    path("transformation.csv"), emit: locked
 
     exec:
-    task.workDir.resolve("locked.csv").withWriter { writer ->
+    task.workDir.resolve("transformation.csv").withWriter { writer ->
         // Header:
         writer.writeLine(metadata_headers.join(","))
 
