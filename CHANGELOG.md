@@ -18,4 +18,3 @@ Initial release of phac-nml/metadatatransformation, created with the [nf-core](h
 [Overriding container registries with the container directive]: https://github.com/phac-nml/pipeline-standards?tab=readme-ov-file#521-module-software-requirements
 [phac-nml pipeline standards software requirements]: https://github.com/phac-nml/pipeline-standards?tab=readme-ov-file#521-module-software-requirements
 [1.0.0]: https://github.com/phac-nml/metadatatransformation/releases/tag/1.0.0
-
