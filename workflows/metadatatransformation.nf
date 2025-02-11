@@ -52,8 +52,8 @@ include { CUSTOM_DUMPSOFTWAREVERSIONS } from '../modules/nf-core/custom/dumpsoft
 */
 
 workflow METADATATRANSFORMATION {
-    SAMPLE_ID_HEADER = "sample_id"
-    IRIDA_ID_HEADER = "irida_id"
+    SAMPLE_HEADER = "sample"
+    SAMPLE_NAME_HEADER = "sample_name"
     ch_versions = Channel.empty()
 
     // Track processed IDs
@@ -61,8 +61,7 @@ workflow METADATATRANSFORMATION {
 
     // Create a new channel of metadata from a sample sheet
     // NB: `input` corresponds to `params.input` and associated sample sheet schema
-    input = Channel.fromSamplesheet("input")
-    input = input.map {
+    input = Channel.fromSamplesheet("input").map {
         meta = it[0]
         if (!meta.id) {
             meta.id = meta.irida_id
@@ -82,7 +81,7 @@ workflow METADATATRANSFORMATION {
 
     metadata_headers = Channel.of(
         tuple(
-            SAMPLE_ID_HEADER, IRIDA_ID_HEADER,
+            SAMPLE_HEADER, SAMPLE_NAME_HEADER,
             params.metadata_1_header, params.metadata_2_header,
             params.metadata_3_header, params.metadata_4_header,
             params.metadata_5_header, params.metadata_6_header,
@@ -91,7 +90,7 @@ workflow METADATATRANSFORMATION {
 
     metadata_rows = input.map{
         meta = it[0]
-        tuple(meta.id, meta.irida_id,
+        tuple(meta.irida_id, meta.id,
         meta.metadata_1, meta.metadata_2, meta.metadata_3, meta.metadata_4,
         meta.metadata_5, meta.metadata_6, meta.metadata_7, meta.metadata_8)
     }.toList()
