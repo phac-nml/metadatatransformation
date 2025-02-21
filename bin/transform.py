@@ -11,8 +11,8 @@ from datetime import datetime
 SAMPLE_HEADER = "sample"
 SAMPLE_NAME_HEADER = "sample_name"
 AGE_HEADER = "age"
-AGE_VALID_HEADER = "age_valid"
-AGE_ERROR_HEADER = "age_error"
+VALID_HEADER_EXTENSION = "_valid"
+ERROR_HEADER_EXTENSION = "_error"
 
 # Column indices:
 DATE_1_INDEX = 2
@@ -101,11 +101,14 @@ def calculate_age(row):
 
     return result
 
-def age(metadata):
-    metadata_readable = metadata.iloc[:, :DATE_2_INDEX+1].copy(deep=True) # drop extra columns in new copy
-    metadata_readable[[AGE_HEADER, AGE_VALID_HEADER, AGE_ERROR_HEADER]] = metadata_readable.apply(calculate_age, axis="columns")
+def age(metadata, age_header):
+    age_valid_header = age_header + VALID_HEADER_EXTENSION
+    age_error_header = age_header + ERROR_HEADER_EXTENSION
 
-    metadata_irida = metadata_readable[[SAMPLE_HEADER, AGE_HEADER]].copy(deep=True)
+    metadata_readable = metadata.iloc[:, :DATE_2_INDEX+1].copy(deep=True) # drop extra columns in new copy
+    metadata_readable[[age_header, age_valid_header, age_error_header]] = metadata_readable.apply(calculate_age, axis="columns")
+
+    metadata_irida = metadata_readable[[SAMPLE_HEADER, age_header]].copy(deep=True)
 
     return metadata_readable, metadata_irida
 
@@ -118,6 +121,8 @@ def main():
                         help="The CSV-formatted input file to transform.")
     parser.add_argument("transformation", choices=[LOCK, AGE],
                         help="The type of transformation to perform.")
+    parser.add_argument("--age_header", default=AGE_HEADER, required=False,
+                        help="The type of transformation to perform.")
     
     args = parser.parse_args()
     metadata = pandas.read_csv(args.input)
@@ -125,7 +130,7 @@ def main():
     if (args.transformation == LOCK):
         metadata_readable, metadata_irida = lock(metadata)
     elif (args.transformation == AGE):
-        metadata_readable, metadata_irida = age(metadata)
+        metadata_readable, metadata_irida = age(metadata, args.age_header)
 
     remove_empty_columns(metadata_irida)
 
