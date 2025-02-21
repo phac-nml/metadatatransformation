@@ -24,6 +24,7 @@ AGE = "age"
 
 # Other:
 AGE_THRESHOLD = 2 # Ages less than this will include a decimal component.
+DAYS_IN_YEAR = 365.0
 
 def remove_empty_columns(metadata):
     metadata.dropna(axis="columns", how="all", inplace=True)
@@ -48,25 +49,38 @@ def calculate_age(row):
     age_valid = False
     age_error = "Unable to calculate age."
 
+    # Is a date missing?
+    if pandas.isnull(row.iloc[DATE_1_INDEX]) or pandas.isnull(row.iloc[DATE_2_INDEX]):
+        age = pandas.NA
+        age_valid = False
+        age_error = "At least one of the dates is missing."
+
+        return pandas.Series([age, age_valid, age_error])
+
     date_1_string = row.iloc[DATE_1_INDEX]
     date_2_string = row.iloc[DATE_2_INDEX]
 
+    # Are the dates in the correct format?
     try:
         date_1 = datetime.strptime(date_1_string, pattern)
         date_2 = datetime.strptime(date_2_string, pattern)
+
     except ValueError:
         age = pandas.NA
         age_valid = False
         age_error = "The date format does not match the expected format (YYYY-MM-DD)."
+
         return pandas.Series([age, age_valid, age_error])
 
+    # Calculate the relative delta in calendar time:
     relative_delta = relativedelta(date_2, date_1)
 
-    # Under age threshold, calculate as (days/365):
+    # Under age threshold, calculate as (days/days_in_year):
     # Note: this is inaccurate, because how many days is a year?
     if relative_delta.years < AGE_THRESHOLD:
         time_delta = date_2 - date_1
-        age = time_delta.days / 365.0
+        age = time_delta.days / DAYS_IN_YEAR
+
     # Age meets threshold, calculate as calendar years:
     else:
         age = relative_delta.years
@@ -76,6 +90,7 @@ def calculate_age(row):
     if age >= 0:
         age_valid = True
         age_error = ""
+
     # Negative age, dates reversed:
     else:
         age = pandas.NA
