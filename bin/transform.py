@@ -11,6 +11,8 @@ from datetime import datetime
 SAMPLE_HEADER = "sample"
 SAMPLE_NAME_HEADER = "sample_name"
 AGE_HEADER = "age"
+AGE_VALID_HEADER = "age_valid"
+AGE_ERROR_HEADER = "age_error"
 
 # Column indices:
 DATE_1_INDEX = 2
@@ -42,26 +44,51 @@ def format_age(age):
 
 def calculate_age(row):
     pattern = "%Y-%m-%d"
+    age = pandas.NA
+    age_valid = False
+    age_error = "Unable to calculate age."
 
-    date_1_string = row[DATE_1_INDEX]
-    date_2_string = row[DATE_2_INDEX]
+    date_1_string = row.iloc[DATE_1_INDEX]
+    date_2_string = row.iloc[DATE_2_INDEX]
 
-    date_1 = datetime.strptime(date_1_string, pattern)
-    date_2 = datetime.strptime(date_2_string, pattern)
+    try:
+        date_1 = datetime.strptime(date_1_string, pattern)
+        date_2 = datetime.strptime(date_2_string, pattern)
+    except ValueError:
+        age = pandas.NA
+        age_valid = False
+        age_error = "The date format does not match the expected format (YYYY-MM-DD)."
+        return pandas.Series([age, age_valid, age_error])
 
     relative_delta = relativedelta(date_2, date_1)
 
+    # Under age threshold, calculate as (days/365):
+    # Note: this is inaccurate, because how many days is a year?
     if relative_delta.years < AGE_THRESHOLD:
         time_delta = date_2 - date_1
         age = time_delta.days / 365.0
+    # Age meets threshold, calculate as calendar years:
     else:
         age = relative_delta.years
+        age_valid = True
 
-    return age
+    # Positive age:
+    if age >= 0:
+        age_valid = True
+        age_error = ""
+    # Negative age, dates reversed:
+    else:
+        age = pandas.NA
+        age_valid = False
+        age_error = "The dates are reversed."
+
+    result = pandas.Series([age, age_valid, age_error])
+
+    return result
 
 def age(metadata):
     metadata_readable = metadata.iloc[:, :DATE_2_INDEX+1].copy(deep=True) # drop extra columns in new copy
-    metadata_readable[AGE_HEADER] = metadata_readable.apply(calculate_age, axis="columns")
+    metadata_readable[[AGE_HEADER, AGE_VALID_HEADER, AGE_ERROR_HEADER]] = metadata_readable.apply(calculate_age, axis="columns")
 
     metadata_irida = metadata_readable[[SAMPLE_HEADER, AGE_HEADER]].copy(deep=True)
 
@@ -88,7 +115,7 @@ def main():
     remove_empty_columns(metadata_irida)
 
     metadata_readable.to_csv("results.csv", index=False, float_format=format_age)
-    metadata_irida.to_csv("transformation.csv", index=False)
+    metadata_irida.to_csv("transformation.csv", index=False, float_format=format_age)
 
 if __name__ == '__main__':
     main()
