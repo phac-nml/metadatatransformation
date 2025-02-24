@@ -2,7 +2,6 @@ process TRANSFORM_METADATA {
     tag "transform metadata"
     label 'process_single'
 
-    // TODO: Is there a more specific container we can use with Python and Pandas?
     container "${ workflow.containerEngine == 'singularity' && !task.ext.singularity_pull_docker_container ?
         'https://depot.galaxyproject.org/singularity/staramr:0.10.0--pyhdfd78af_0':
         'biocontainers/staramr:0.10.0--pyhdfd78af_0' }"
