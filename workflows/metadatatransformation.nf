@@ -63,7 +63,7 @@ workflow METADATATRANSFORMATION {
     // Create a new channel of metadata from a sample sheet
     // NB: `input` corresponds to `params.input` and associated sample sheet schema
     input = Channel.fromSamplesheet("input").map {
-        meta = it[0]
+        def meta = it[0]
         if (!meta.id) {
             meta.id = meta.irida_id
         } else {
@@ -90,7 +90,7 @@ workflow METADATATRANSFORMATION {
         )
 
     metadata_rows = input.map{
-        meta = it[0]
+        def meta = it[0]
         tuple(meta.irida_id, meta.id,
         meta.metadata_1, meta.metadata_2, meta.metadata_3, meta.metadata_4,
         meta.metadata_5, meta.metadata_6, meta.metadata_7, meta.metadata_8)
