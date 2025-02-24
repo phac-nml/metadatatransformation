@@ -1,0 +1,93 @@
+nextflow_pipeline {
+
+    name "Metadata Transformation: Age"
+    script "main.nf"
+
+    test("Basic") {
+        tag "pipeline_age"
+        tag "pipeline_age_basic"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/age/basic.csv"
+                outdir = "results"
+
+                transformation = "age"
+                metadata_1_header "date_of_birth"
+                metadata_2_header "collection_date"
+                age_header "age_at_collection"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.contains("sample,age_at_collection")
+            assert transformation.text.contains("sample1,0.0000")
+            assert transformation.text.contains("sample2,0.0027")
+            assert transformation.text.contains("sample3,0.2493")
+            assert transformation.text.contains("sample4,1.0000")
+            assert transformation.text.contains("sample5,1.2493")
+            assert transformation.text.contains("sample6,2")
+            assert transformation.text.contains("sample7,2")
+            assert transformation.text.contains("sample8,24")
+            assert transformation.text.contains("sample9,49")
+
+            // Check Results (Human-Readable)
+            def results = path("$launchDir/results/transformation/results.csv")
+            assert results.exists()
+
+            assert results.text.contains("sample,sample_name,date_of_birth,collection_date,age_at_collection,age_at_collection_valid,age_at_collection_error")
+            assert results.text.contains("sample1,ABC,2000-01-01,2000-01-01,0.0000,True,")
+            assert results.text.contains("sample2,DEF,2000-01-01,2000-01-02,0.0027,True,")
+            assert results.text.contains("sample3,GHI,2000-01-01,2000-04-01,0.2493,True,")
+            assert results.text.contains("sample4,JKL,2000-01-01,2000-12-31,1.0000,True,")
+            assert results.text.contains("sample5,MNO,2000-01-01,2001-04-01,1.2493,True,")
+            assert results.text.contains("sample6,PQR,2000-01-01,2001-12-31,2,True,")
+            assert results.text.contains("sample7,STU,2000-01-01,2002-01-01,2,True,")
+            assert results.text.contains("sample8,VWX,2000-02-29,2024-02-29,24,True,")
+            assert results.text.contains("sample9,YZ,1950-12-31,2000-05-05,49,True,")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            assert iridanext_metadata.size() == 9
+
+            assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1.age_at_collection == "0.0000"
+
+            assert iridanext_metadata.containsKey("sample2")
+            assert iridanext_metadata.sample2.age_at_collection == "0.0027"
+
+            assert iridanext_metadata.containsKey("sample3")
+            assert iridanext_metadata.sample3.age_at_collection == "0.2493"
+
+            assert iridanext_metadata.containsKey("sample4")
+            assert iridanext_metadata.sample4.age_at_collection == "1.0000"
+
+            assert iridanext_metadata.containsKey("sample5")
+            assert iridanext_metadata.sample5.age_at_collection == "1.2493"
+
+            assert iridanext_metadata.containsKey("sample6")
+            assert iridanext_metadata.sample6.age_at_collection == "2"
+
+            assert iridanext_metadata.containsKey("sample7")
+            assert iridanext_metadata.sample7.age_at_collection == "2"
+
+            assert iridanext_metadata.containsKey("sample8")
+            assert iridanext_metadata.sample8.age_at_collection == "24"
+
+            assert iridanext_metadata.containsKey("sample9")
+            assert iridanext_metadata.sample9.age_at_collection == "49"
+        }
+    }
+}
