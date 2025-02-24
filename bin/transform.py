@@ -3,6 +3,7 @@
 import argparse
 import pathlib
 import pandas
+import numpy
 
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
@@ -45,13 +46,17 @@ def format_age(age):
 
 def calculate_age(row):
     pattern = "%Y-%m-%d"
-    age = pandas.NA
+    age = numpy.nan
+    # numpy.nan, not pandas.NA because numpy.nan is treated as a float.
+    # Otherwise, there's a risk of mixing age floats with pandas.NA and having
+    # the column be treated as an object column, which will prevent
+    # .to_csv(..., float_format=format_age) from working.
     age_valid = False
     age_error = "Unable to calculate age."
 
     # Is a date missing?
     if pandas.isnull(row.iloc[DATE_1_INDEX]) or pandas.isnull(row.iloc[DATE_2_INDEX]):
-        age = pandas.NA
+        age = numpy.nan
         age_valid = False
         age_error = "At least one of the dates is missing."
 
@@ -66,7 +71,7 @@ def calculate_age(row):
         date_2 = datetime.strptime(date_2_string, pattern)
 
     except ValueError:
-        age = pandas.NA
+        age = numpy.nan
         age_valid = False
         age_error = "The date format does not match the expected format (YYYY-MM-DD)."
 
@@ -93,7 +98,7 @@ def calculate_age(row):
 
     # Negative age, dates reversed:
     else:
-        age = pandas.NA
+        age = numpy.nan
         age_valid = False
         age_error = "The dates are reversed."
 
