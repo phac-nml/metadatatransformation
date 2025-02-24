@@ -1,5 +1,5 @@
 process TRANSFORM_METADATA {
-    tag "Transform metadata"
+    tag "transform metadata"
     label 'process_single'
 
     // TODO: Is there a more specific container we can use with Python and Pandas?
@@ -17,8 +17,10 @@ process TRANSFORM_METADATA {
     path("versions.yml"),       emit: versions
 
     script:
+    def args = task.ext.args ?: ''
+
     """
-    transform.py ${metadata} ${transformation}
+    transform.py ${metadata} ${transformation} $args
 
     cat <<-END_VERSIONS > versions.yml
     "${task.process}":

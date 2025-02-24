@@ -129,13 +129,17 @@ def main():
 
     if (args.transformation == LOCK):
         metadata_readable, metadata_irida = lock(metadata)
+
+        remove_empty_columns(metadata_irida)
+        metadata_readable.to_csv("results.csv", index=False)
+        metadata_irida.to_csv("transformation.csv", index=False)
+
     elif (args.transformation == AGE):
         metadata_readable, metadata_irida = age(metadata, args.age_header)
 
-    remove_empty_columns(metadata_irida)
-
-    metadata_readable.to_csv("results.csv", index=False, float_format=format_age)
-    metadata_irida.to_csv("transformation.csv", index=False, float_format=format_age)
+        remove_empty_columns(metadata_irida)
+        metadata_readable.to_csv("results.csv", index=False, float_format=format_age)
+        metadata_irida.to_csv("transformation.csv", index=False, float_format=format_age)
 
 if __name__ == '__main__':
     main()

@@ -1,5 +1,5 @@
 process WRITE_METADATA {
-    tag "Write metadata"
+    tag "write metadata"
     label 'process_single'
 
     input:
