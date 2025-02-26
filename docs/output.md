@@ -15,6 +15,7 @@ The IRIDA Next-compliant JSON output file will be named `iridanext.output.json.g
 The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes data using the following steps:
 
 - [Lock](#lock) - Locks the metadata for IRIDA Next.
+- [Age](#age) - Calculates the age between the first and second metadata columns.
 
 ### Lock
 
@@ -22,7 +23,17 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 <summary>Output files</summary>
 
 - `transformation/`
-  - A CSV-format file reporting locked files: `transformation.csv`
+  - An Irida-Next intended CSV-format file for locking metadata fields within Irida Next: `transformation.csv`
+  - A user-intended CSV-format file for reference: `result.csv`
+
+### Age
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `transformation/`
+  - An Irida-Next intended CSV-format file for reporting calculated ages within Irida Next: `transformation.csv`
+  - A user-intended CSV-format file for reference: `result.csv`
 
 </details>
 
