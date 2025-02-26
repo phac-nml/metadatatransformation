@@ -128,7 +128,7 @@ def main():
                         help="The type of transformation to perform.")
     parser.add_argument("--age_header", default=AGE_HEADER, required=False,
                         help="The type of transformation to perform.")
-    
+
     args = parser.parse_args()
     metadata = pandas.read_csv(args.input)
 
