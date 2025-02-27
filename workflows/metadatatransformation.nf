@@ -38,7 +38,8 @@ WorkflowMetadatatransformation.initialise(params, log)
     IMPORT NF-CORE MODULES/SUBWORKFLOWS
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
-include { LOCK_METADATA } from '../modules/local/lock/main'
+include { TRANSFORM_METADATA } from '../modules/local/transform/main'
+include { WRITE_METADATA     } from '../modules/local/write/main'
 
 //
 // MODULE: Installed directly from nf-core/modules
@@ -62,7 +63,7 @@ workflow METADATATRANSFORMATION {
     // Create a new channel of metadata from a sample sheet
     // NB: `input` corresponds to `params.input` and associated sample sheet schema
     input = Channel.fromSamplesheet("input").map {
-        meta = it[0]
+        def meta = it[0]
         if (!meta.id) {
             meta.id = meta.irida_id
         } else {
@@ -89,15 +90,16 @@ workflow METADATATRANSFORMATION {
         )
 
     metadata_rows = input.map{
-        meta = it[0]
+        def meta = it[0]
         tuple(meta.irida_id, meta.id,
         meta.metadata_1, meta.metadata_2, meta.metadata_3, meta.metadata_4,
         meta.metadata_5, meta.metadata_6, meta.metadata_7, meta.metadata_8)
     }.toList()
 
-    // LOCK METADATA
-    if(params.transformation == 'lock') {
-        LOCK_METADATA (metadata_headers, metadata_rows)
+    // TRANSFORM METADATA
+    if(params.transformation == 'lock' || params.transformation == 'age') {
+        write_metadata = WRITE_METADATA (metadata_headers, metadata_rows)
+        TRANSFORM_METADATA (write_metadata.results, params.transformation)
     }
     else if (params.transformation == null) {
         exit 1, "Unspecified transformation '--transformation'. Exiting now."

@@ -12,6 +12,8 @@ The input to the pipeline is a sample sheet (passed as `--input samplesheet.csv`
 | ------- | ----------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- |
 | Sample1 | SampleA     | meta_1     | meta_2     | meta_3     | meta_4     | meta_5     | meta_6     | meta_7     | meta_8     |
 
+The amount and meaning of the metadata columns may be different for each metadata transformation.
+
 The structure of this file is defined in [assets/schema_input.json](assets/schema_input.json). Validation of the sample sheet is performed by [nf-validation](https://nextflow-io.github.io/nf-validation/).
 
 # Parameters
@@ -22,9 +24,46 @@ The main parameters are `--input` as defined above and `--output` for specifying
 
 You may specify the metadata transformation with the `--transformation` parameter. For example, `--transformation lock` will perform the lock transformation. The available transformations are as follows:
 
-| Transformation | Explanation                       |
-| -------------- | --------------------------------- |
-| lock           | Locks the metadata in IRIDA Next. |
+| Transformation | Explanation                                                                                                                                                |
+| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| lock           | Locks, or copies and locks, the metadata in IRIDA Next.                                                                                                    |
+| age            | Calculates the age between the first and second metadata columns. Ages under 2 years old are calculated as (days/365) years old, showing 4 decimal places. |
+
+## Lock Parameters
+
+The following parameters can be used to rename CSV-generated output columns and Irida Next fields as follows:
+
+- `--metadata_1_header`: names the first metadata_1 column header
+- `--metadata_2_header`: names the first metadata_2 column header
+- `--metadata_3_header`: names the first metadata_3 column header
+- `--metadata_4_header`: names the first metadata_4 column header
+- `--metadata_5_header`: names the first metadata_5 column header
+- `--metadata_6_header`: names the first metadata_6 column header
+- `--metadata_7_header`: names the first metadata_7 column header
+- `--metadata_8_header`: names the first metadata_8 column header
+
+## Age Parameters
+
+The following parameters can be used to rename CSV-generated output columns and Irida Next fields as follows:
+
+- `--metadata_1_header`: names the date of birth column header
+- `--metadata_2_header`: names the current/target data column header
+- `--age_header`: names the calculated age column header and related output columns
+
+For example, the following code:
+
+```
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/age/success_failure_mix.csv --outdir results --transformation age --metadata_1_header "date_of_birth" --metadata_2_header "collection_date" --age_header "age_at_collection"
+```
+
+would generate the following `results.csv` file:
+
+```
+sample,sample_name,date_of_birth,collection_date,age_at_collection,age_at_collection_valid,age_at_collection_error
+sample1,ABC,2000-01-01,2000-12-31,1.0000,True,
+sample2,DEF,2000-02-29,2024-02-29,24,True,
+sample3,GHI,2000-05-05,1950-12-31,,False,The dates are reversed.
+```
 
 ## Other Parameters
 
@@ -51,7 +90,9 @@ An example of the what the contents of the IRIDA Next JSON file looks like for t
 {
     "files": {
         "global": [
-
+            {
+                "path": "transformation/results.csv"
+            }
         ],
         "samples": {
 
@@ -59,8 +100,7 @@ An example of the what the contents of the IRIDA Next JSON file looks like for t
     },
     "metadata": {
         "samples": {
-            "ABC": {
-                "irida_id": "sample1",
+            "sample1": {
                 "metadata_1": "1.1",
                 "metadata_2": "1.2",
                 "metadata_3": "1.3",
@@ -70,8 +110,7 @@ An example of the what the contents of the IRIDA Next JSON file looks like for t
                 "metadata_7": "1.7",
                 "metadata_8": "1.8"
             },
-            "DEF": {
-                "irida_id": "sample2",
+            "sample2": {
                 "metadata_1": "2.1",
                 "metadata_2": "2.2",
                 "metadata_3": "2.3",
@@ -81,8 +120,7 @@ An example of the what the contents of the IRIDA Next JSON file looks like for t
                 "metadata_7": "2.7",
                 "metadata_8": "2.8"
             },
-            "GHI": {
-                "irida_id": "sample3",
+            "sample3": {
                 "metadata_1": "3.1",
                 "metadata_2": "3.2",
                 "metadata_3": "3.3",
@@ -97,7 +135,7 @@ An example of the what the contents of the IRIDA Next JSON file looks like for t
 }
 ```
 
-For more information see [output doc](docs/output.md).
+For more information see the [output documentation](docs/output.md).
 
 ## Test profile
 
