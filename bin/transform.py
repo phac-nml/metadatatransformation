@@ -4,6 +4,7 @@ import argparse
 import pathlib
 import pandas
 import numpy
+import math
 
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
@@ -40,7 +41,7 @@ def format_age(age):
     if age < AGE_THRESHOLD:
         formatted_age = "{:.4f}".format(age)
     else:
-        formatted_age = "{:.0f}".format(age)
+        formatted_age = "{:.0f}".format(math.floor(age))
 
     return formatted_age
 
