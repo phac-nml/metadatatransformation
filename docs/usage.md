@@ -80,6 +80,8 @@ The calculate age transformation may be run as follows:
 nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/age/success_failure_mix.csv --outdir results --transformation age --metadata_1_header "date_of_birth" --metadata_2_header "collection_date" --age_header "age_at_collection"
 ```
 
+For this transformation, the `metadata_1` column of the sample sheet is understood as the date of birth and the `metadata_2` column is understood as the date at which to calculate the age.
+
 The following parameters can be used to rename CSV-generated output columns and Irida Next fields as follows:
 
 - `--metadata_1_header`: names the date of birth column header
