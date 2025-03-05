@@ -54,7 +54,7 @@
                     "type": "string",
                     "default": "age",
                     "description": "The column header name for the calculated age in the calculate age metadata transformation.",
-                    "pattern": "^[^\\s\\\",]*$"
+                    "pattern": "^[^\\t\\\",]*$"
                 }
             }
         },
@@ -68,49 +68,49 @@
                     "type": "string",
                     "default": "metadata_1",
                     "description": "The column header name for the 1st metadata column.",
-                    "pattern": "^[^\\s\\\",]*$"
+                    "pattern": "^[^\\t\\\",]*$"
                 },
                 "metadata_2_header": {
                     "type": "string",
                     "default": "metadata_2",
                     "description": "The column header name for the 2nd metadata column.",
-                    "pattern": "^[^\\s\\\",]*$"
+                    "pattern": "^[^\\t\\\",]*$"
                 },
                 "metadata_3_header": {
                     "type": "string",
                     "default": "metadata_3",
                     "description": "The column header name for the 3rd metadata column.",
-                    "pattern": "^[^\\s\\\",]*$"
+                    "pattern": "^[^\\t\\\",]*$"
                 },
                 "metadata_4_header": {
                     "type": "string",
                     "default": "metadata_4",
                     "description": "The column header name for the 4th metadata column.",
-                    "pattern": "^[^\\s\\\",]*$"
+                    "pattern": "^[^\\t\\\",]*$"
                 },
                 "metadata_5_header": {
                     "type": "string",
                     "default": "metadata_5",
                     "description": "The column header name for the 5th metadata column.",
-                    "pattern": "^[^\\s\\\",]*$"
+                    "pattern": "^[^\\t\\\",]*$"
                 },
                 "metadata_6_header": {
                     "type": "string",
                     "default": "metadata_6",
                     "description": "The column header name for the 6th metadata column.",
-                    "pattern": "^[^\\s\\\",]*$"
+                    "pattern": "^[^\\t\\\",]*$"
                 },
                 "metadata_7_header": {
                     "type": "string",
                     "default": "metadata_7",
                     "description": "The column header name for the 7th metadata column.",
-                    "pattern": "^[^\\s\\\",]*$"
+                    "pattern": "^[^\\t\\\",]*$"
                 },
                 "metadata_8_header": {
                     "type": "string",
                     "default": "metadata_8",
                     "description": "The column header name for the 8th metadata column.",
-                    "pattern": "^[^\\s\\\",]*$"
+                    "pattern": "^[^\\t\\\",]*$"
                 }
             }
         },
