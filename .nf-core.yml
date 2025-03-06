@@ -12,6 +12,8 @@ lint:
     - lib/WorkflowMain.groovy
     - lib/NfcoreTemplate.groovy
     - lib/WorkflowMetadatatransformation.groovy
+    - conf/igenomes_ignored.config
+    - ro-crate-metadata.json
   files_unchanged:
     - assets/sendmail_template.txt
     - assets/email_template.html
@@ -34,6 +36,7 @@ lint:
     - params.max_cpus
     - params.max_memory
     - params.max_time
+    - nf-schema
   readme:
     - nextflow_badge
 
