@@ -394,4 +394,88 @@ nextflow_pipeline {
             assert iridanext_metadata.sample3.me_t_a_8 == "3.8"
         }
     }
+
+    test("Spaces in headers") {
+        tag "pipeline_lock"
+        tag "pipeline_lock_spaces"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/lock/basic.csv"
+                outdir = "results"
+
+                transformation = "lock"
+                metadata_1_header "meta 1"
+                metadata_2_header "meta 2"
+                metadata_3_header "meta 3"
+                metadata_4_header "meta 4"
+                metadata_5_header "meta 5"
+                metadata_6_header "meta 6"
+                metadata_7_header "meta 7"
+                metadata_8_header "meta 8"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.contains("sample,meta 1,meta 2,meta 3,meta 4,meta 5,meta 6,meta 7,meta 8")
+            assert transformation.text.contains("sample1,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8")
+            assert transformation.text.contains("sample2,2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8")
+            assert transformation.text.contains("sample3,3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8")
+
+            // Check Results (Human-Readable)
+            def results = path("$launchDir/results/transformation/results.csv")
+            assert results.exists()
+
+            assert results.text.contains("sample,sample_name,meta 1,meta 2,meta 3,meta 4,meta 5,meta 6,meta 7,meta 8")
+            assert results.text.contains("sample1,ABC,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8")
+            assert results.text.contains("sample2,DEF,2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8")
+            assert results.text.contains("sample3,GHI,3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            assert iridanext_metadata.size() == 3
+
+            assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1."meta 1" == "1.1"
+            assert iridanext_metadata.sample1."meta 2" == "1.2"
+            assert iridanext_metadata.sample1."meta 3" == "1.3"
+            assert iridanext_metadata.sample1."meta 4" == "1.4"
+            assert iridanext_metadata.sample1."meta 5" == "1.5"
+            assert iridanext_metadata.sample1."meta 6" == "1.6"
+            assert iridanext_metadata.sample1."meta 7" == "1.7"
+            assert iridanext_metadata.sample1."meta 8" == "1.8"
+
+            assert iridanext_metadata.containsKey("sample2")
+            assert iridanext_metadata.sample2."meta 1" == "2.1"
+            assert iridanext_metadata.sample2."meta 2" == "2.2"
+            assert iridanext_metadata.sample2."meta 3" == "2.3"
+            assert iridanext_metadata.sample2."meta 4" == "2.4"
+            assert iridanext_metadata.sample2."meta 5" == "2.5"
+            assert iridanext_metadata.sample2."meta 6" == "2.6"
+            assert iridanext_metadata.sample2."meta 7" == "2.7"
+            assert iridanext_metadata.sample2."meta 8" == "2.8"
+
+            assert iridanext_metadata.containsKey("sample3")
+            assert iridanext_metadata.sample3."meta 1" == "3.1"
+            assert iridanext_metadata.sample3."meta 2" == "3.2"
+            assert iridanext_metadata.sample3."meta 3" == "3.3"
+            assert iridanext_metadata.sample3."meta 4" == "3.4"
+            assert iridanext_metadata.sample3."meta 5" == "3.5"
+            assert iridanext_metadata.sample3."meta 6" == "3.6"
+            assert iridanext_metadata.sample3."meta 7" == "3.7"
+            assert iridanext_metadata.sample3."meta 8" == "3.8"
+        }
+    }
 }
