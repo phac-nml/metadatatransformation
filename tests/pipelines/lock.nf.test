@@ -1,0 +1,481 @@
+nextflow_pipeline {
+
+    name "Metadata Transformation: Lock"
+    script "main.nf"
+
+    test("Basic") {
+        tag "pipeline_lock"
+        tag "pipeline_lock_basic"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/lock/basic.csv"
+                outdir = "results"
+
+                transformation = "lock"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.contains("sample,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8")
+            assert transformation.text.contains("sample1,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8")
+            assert transformation.text.contains("sample2,2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8")
+            assert transformation.text.contains("sample3,3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8")
+
+            // Check Results (Human-Readable)
+            def results = path("$launchDir/results/transformation/results.csv")
+            assert results.exists()
+
+            assert results.text.contains("sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8")
+            assert results.text.contains("sample1,ABC,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8")
+            assert results.text.contains("sample2,DEF,2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8")
+            assert results.text.contains("sample3,GHI,3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            assert iridanext_metadata.size() == 3
+
+            assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1.metadata_1 == "1.1"
+            assert iridanext_metadata.sample1.metadata_2 == "1.2"
+            assert iridanext_metadata.sample1.metadata_3 == "1.3"
+            assert iridanext_metadata.sample1.metadata_4 == "1.4"
+            assert iridanext_metadata.sample1.metadata_5 == "1.5"
+            assert iridanext_metadata.sample1.metadata_6 == "1.6"
+            assert iridanext_metadata.sample1.metadata_7 == "1.7"
+            assert iridanext_metadata.sample1.metadata_8 == "1.8"
+
+            assert iridanext_metadata.containsKey("sample2")
+            assert iridanext_metadata.sample2.metadata_1 == "2.1"
+            assert iridanext_metadata.sample2.metadata_2 == "2.2"
+            assert iridanext_metadata.sample2.metadata_3 == "2.3"
+            assert iridanext_metadata.sample2.metadata_4 == "2.4"
+            assert iridanext_metadata.sample2.metadata_5 == "2.5"
+            assert iridanext_metadata.sample2.metadata_6 == "2.6"
+            assert iridanext_metadata.sample2.metadata_7 == "2.7"
+            assert iridanext_metadata.sample2.metadata_8 == "2.8"
+
+            assert iridanext_metadata.containsKey("sample3")
+            assert iridanext_metadata.sample3.metadata_1 == "3.1"
+            assert iridanext_metadata.sample3.metadata_2 == "3.2"
+            assert iridanext_metadata.sample3.metadata_3 == "3.3"
+            assert iridanext_metadata.sample3.metadata_4 == "3.4"
+            assert iridanext_metadata.sample3.metadata_5 == "3.5"
+            assert iridanext_metadata.sample3.metadata_6 == "3.6"
+            assert iridanext_metadata.sample3.metadata_7 == "3.7"
+            assert iridanext_metadata.sample3.metadata_8 == "3.8"
+        }
+    }
+
+    test("Missing metadata") {
+        tag "pipeline_lock"
+        tag "pipeline_lock_missing_metadata"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/lock/missing_metadata.csv"
+                outdir = "results"
+
+                transformation = "lock"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.contains("sample,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8")
+            assert transformation.text.contains("sample1,,1.2,1.3,,1.5,1.6,,1.8")
+            assert transformation.text.contains("sample2,2.1,,2.3,2.4,,2.6,2.7,")
+            assert transformation.text.contains("sample3,3.1,3.2,,3.4,3.5,,3.7,3.8")
+
+            // Check Results (Human-Readable)
+            def results = path("$launchDir/results/transformation/results.csv")
+            assert results.exists()
+
+            assert results.text.contains("sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8")
+            assert results.text.contains("sample1,ABC,,1.2,1.3,,1.5,1.6,,1.8")
+            assert results.text.contains("sample2,sample2,2.1,,2.3,2.4,,2.6,2.7,")
+            assert results.text.contains("sample3,GHI,3.1,3.2,,3.4,3.5,,3.7,3.8")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            assert iridanext_metadata.size() == 3
+
+            assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1.metadata_1 == ""
+            assert iridanext_metadata.sample1.metadata_2 == "1.2"
+            assert iridanext_metadata.sample1.metadata_3 == "1.3"
+            assert iridanext_metadata.sample1.metadata_4 == ""
+            assert iridanext_metadata.sample1.metadata_5 == "1.5"
+            assert iridanext_metadata.sample1.metadata_6 == "1.6"
+            assert iridanext_metadata.sample1.metadata_7 == ""
+            assert iridanext_metadata.sample1.metadata_8 == "1.8"
+
+            assert iridanext_metadata.containsKey("sample2")
+            assert iridanext_metadata.sample2.metadata_1 == "2.1"
+            assert iridanext_metadata.sample2.metadata_2 == ""
+            assert iridanext_metadata.sample2.metadata_3 == "2.3"
+            assert iridanext_metadata.sample2.metadata_4 == "2.4"
+            assert iridanext_metadata.sample2.metadata_5 == ""
+            assert iridanext_metadata.sample2.metadata_6 == "2.6"
+            assert iridanext_metadata.sample2.metadata_7 == "2.7"
+            assert iridanext_metadata.sample2.metadata_8 == ""
+
+            assert iridanext_metadata.containsKey("sample3")
+            assert iridanext_metadata.sample3.metadata_1 == "3.1"
+            assert iridanext_metadata.sample3.metadata_2 == "3.2"
+            assert iridanext_metadata.sample3.metadata_3 == ""
+            assert iridanext_metadata.sample3.metadata_4 == "3.4"
+            assert iridanext_metadata.sample3.metadata_5 == "3.5"
+            assert iridanext_metadata.sample3.metadata_6 == ""
+            assert iridanext_metadata.sample3.metadata_7 == "3.7"
+            assert iridanext_metadata.sample3.metadata_8 == "3.8"
+        }
+    }
+
+    test("Missing column") {
+        tag "pipeline_lock"
+        tag "pipeline_lock_missing_column"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/lock/missing_column.csv"
+                outdir = "results"
+
+                transformation = "lock"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.contains("sample,metadata_1,metadata_2,metadata_3,metadata_5,metadata_6,metadata_7,metadata_8")
+            assert transformation.text.contains("sample1,1.1,1.2,1.3,1.5,1.6,1.7,1.8")
+            assert transformation.text.contains("sample2,2.1,2.2,2.3,2.5,2.6,2.7,2.8")
+            assert transformation.text.contains("sample3,3.1,3.2,3.3,3.5,3.6,3.7,3.8")
+
+            // Check Results (Human-Readable)
+            def results = path("$launchDir/results/transformation/results.csv")
+            assert results.exists()
+
+            assert results.text.contains("sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8")
+            assert results.text.contains("sample1,ABC,1.1,1.2,1.3,,1.5,1.6,1.7,1.8")
+            assert results.text.contains("sample2,DEF,2.1,2.2,2.3,,2.5,2.6,2.7,2.8")
+            assert results.text.contains("sample3,GHI,3.1,3.2,3.3,,3.5,3.6,3.7,3.8")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            assert iridanext_metadata.size() == 3
+
+            assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1.size() == 7
+            assert iridanext_metadata.sample1.metadata_1 == "1.1"
+            assert iridanext_metadata.sample1.metadata_2 == "1.2"
+            assert iridanext_metadata.sample1.metadata_3 == "1.3"
+            assert (iridanext_metadata.sample1.containsKey("metadata_4") == false)
+            assert iridanext_metadata.sample1.metadata_5 == "1.5"
+            assert iridanext_metadata.sample1.metadata_6 == "1.6"
+            assert iridanext_metadata.sample1.metadata_7 == "1.7"
+            assert iridanext_metadata.sample1.metadata_8 == "1.8"
+
+            assert iridanext_metadata.containsKey("sample2")
+            assert iridanext_metadata.sample2.size() == 7
+            assert iridanext_metadata.sample2.metadata_1 == "2.1"
+            assert iridanext_metadata.sample2.metadata_2 == "2.2"
+            assert iridanext_metadata.sample2.metadata_3 == "2.3"
+            assert (iridanext_metadata.sample2.containsKey("metadata_4") == false)
+            assert iridanext_metadata.sample2.metadata_5 == "2.5"
+            assert iridanext_metadata.sample2.metadata_6 == "2.6"
+            assert iridanext_metadata.sample2.metadata_7 == "2.7"
+            assert iridanext_metadata.sample2.metadata_8 == "2.8"
+
+            assert iridanext_metadata.containsKey("sample3")
+            assert iridanext_metadata.sample3.size() == 7
+            assert iridanext_metadata.sample3.metadata_1 == "3.1"
+            assert iridanext_metadata.sample3.metadata_2 == "3.2"
+            assert iridanext_metadata.sample3.metadata_3 == "3.3"
+            assert (iridanext_metadata.sample3.containsKey("metadata_4") == false)
+            assert iridanext_metadata.sample3.metadata_5 == "3.5"
+            assert iridanext_metadata.sample3.metadata_6 == "3.6"
+            assert iridanext_metadata.sample3.metadata_7 == "3.7"
+            assert iridanext_metadata.sample3.metadata_8 == "3.8"
+        }
+    }
+
+    test("Unrelated parameters") {
+        tag "pipeline_lock"
+        tag "pipeline_lock_unrelated_parameters"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/lock/basic.csv"
+                outdir = "results"
+
+                transformation = "lock"
+                age_header "age_at_collection"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.contains("sample,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8")
+            assert transformation.text.contains("sample1,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8")
+            assert transformation.text.contains("sample2,2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8")
+            assert transformation.text.contains("sample3,3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8")
+
+            // Check Results (Human-Readable)
+            def results = path("$launchDir/results/transformation/results.csv")
+            assert results.exists()
+
+            assert results.text.contains("sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8")
+            assert results.text.contains("sample1,ABC,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8")
+            assert results.text.contains("sample2,DEF,2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8")
+            assert results.text.contains("sample3,GHI,3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            assert iridanext_metadata.size() == 3
+
+            assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1.metadata_1 == "1.1"
+            assert iridanext_metadata.sample1.metadata_2 == "1.2"
+            assert iridanext_metadata.sample1.metadata_3 == "1.3"
+            assert iridanext_metadata.sample1.metadata_4 == "1.4"
+            assert iridanext_metadata.sample1.metadata_5 == "1.5"
+            assert iridanext_metadata.sample1.metadata_6 == "1.6"
+            assert iridanext_metadata.sample1.metadata_7 == "1.7"
+            assert iridanext_metadata.sample1.metadata_8 == "1.8"
+
+            assert iridanext_metadata.containsKey("sample2")
+            assert iridanext_metadata.sample2.metadata_1 == "2.1"
+            assert iridanext_metadata.sample2.metadata_2 == "2.2"
+            assert iridanext_metadata.sample2.metadata_3 == "2.3"
+            assert iridanext_metadata.sample2.metadata_4 == "2.4"
+            assert iridanext_metadata.sample2.metadata_5 == "2.5"
+            assert iridanext_metadata.sample2.metadata_6 == "2.6"
+            assert iridanext_metadata.sample2.metadata_7 == "2.7"
+            assert iridanext_metadata.sample2.metadata_8 == "2.8"
+
+            assert iridanext_metadata.containsKey("sample3")
+            assert iridanext_metadata.sample3.metadata_1 == "3.1"
+            assert iridanext_metadata.sample3.metadata_2 == "3.2"
+            assert iridanext_metadata.sample3.metadata_3 == "3.3"
+            assert iridanext_metadata.sample3.metadata_4 == "3.4"
+            assert iridanext_metadata.sample3.metadata_5 == "3.5"
+            assert iridanext_metadata.sample3.metadata_6 == "3.6"
+            assert iridanext_metadata.sample3.metadata_7 == "3.7"
+            assert iridanext_metadata.sample3.metadata_8 == "3.8"
+        }
+    }
+
+    test("Specify column headers") {
+        tag "pipeline_lock"
+        tag "pipeline_lock_specify_column_headers"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/lock/basic.csv"
+                outdir = "results"
+
+                transformation = "lock"
+                metadata_1_header "me_t_a_1"
+                metadata_2_header "me_t_a_2"
+                metadata_3_header "me_t_a_3"
+                metadata_4_header "me_t_a_4"
+                metadata_5_header "me_t_a_5"
+                metadata_6_header "me_t_a_6"
+                metadata_7_header "me_t_a_7"
+                metadata_8_header "me_t_a_8"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.contains("sample,me_t_a_1,me_t_a_2,me_t_a_3,me_t_a_4,me_t_a_5,me_t_a_6,me_t_a_7,me_t_a_8")
+            assert transformation.text.contains("sample1,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8")
+            assert transformation.text.contains("sample2,2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8")
+            assert transformation.text.contains("sample3,3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8")
+
+            // Check Results (Human-Readable)
+            def results = path("$launchDir/results/transformation/results.csv")
+            assert results.exists()
+
+            assert results.text.contains("sample,sample_name,me_t_a_1,me_t_a_2,me_t_a_3,me_t_a_4,me_t_a_5,me_t_a_6,me_t_a_7,me_t_a_8")
+            assert results.text.contains("sample1,ABC,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8")
+            assert results.text.contains("sample2,DEF,2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8")
+            assert results.text.contains("sample3,GHI,3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            assert iridanext_metadata.size() == 3
+
+            assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1.me_t_a_1 == "1.1"
+            assert iridanext_metadata.sample1.me_t_a_2 == "1.2"
+            assert iridanext_metadata.sample1.me_t_a_3 == "1.3"
+            assert iridanext_metadata.sample1.me_t_a_4 == "1.4"
+            assert iridanext_metadata.sample1.me_t_a_5 == "1.5"
+            assert iridanext_metadata.sample1.me_t_a_6 == "1.6"
+            assert iridanext_metadata.sample1.me_t_a_7 == "1.7"
+            assert iridanext_metadata.sample1.me_t_a_8 == "1.8"
+
+            assert iridanext_metadata.containsKey("sample2")
+            assert iridanext_metadata.sample2.me_t_a_1 == "2.1"
+            assert iridanext_metadata.sample2.me_t_a_2 == "2.2"
+            assert iridanext_metadata.sample2.me_t_a_3 == "2.3"
+            assert iridanext_metadata.sample2.me_t_a_4 == "2.4"
+            assert iridanext_metadata.sample2.me_t_a_5 == "2.5"
+            assert iridanext_metadata.sample2.me_t_a_6 == "2.6"
+            assert iridanext_metadata.sample2.me_t_a_7 == "2.7"
+            assert iridanext_metadata.sample2.me_t_a_8 == "2.8"
+
+            assert iridanext_metadata.containsKey("sample3")
+            assert iridanext_metadata.sample3.me_t_a_1 == "3.1"
+            assert iridanext_metadata.sample3.me_t_a_2 == "3.2"
+            assert iridanext_metadata.sample3.me_t_a_3 == "3.3"
+            assert iridanext_metadata.sample3.me_t_a_4 == "3.4"
+            assert iridanext_metadata.sample3.me_t_a_5 == "3.5"
+            assert iridanext_metadata.sample3.me_t_a_6 == "3.6"
+            assert iridanext_metadata.sample3.me_t_a_7 == "3.7"
+            assert iridanext_metadata.sample3.me_t_a_8 == "3.8"
+        }
+    }
+
+    test("Spaces in headers") {
+        tag "pipeline_lock"
+        tag "pipeline_lock_spaces"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/lock/basic.csv"
+                outdir = "results"
+
+                transformation = "lock"
+                metadata_1_header "meta 1"
+                metadata_2_header "meta 2"
+                metadata_3_header "meta 3"
+                metadata_4_header "meta 4"
+                metadata_5_header "meta 5"
+                metadata_6_header "meta 6"
+                metadata_7_header "meta 7"
+                metadata_8_header "meta 8"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.contains("sample,meta 1,meta 2,meta 3,meta 4,meta 5,meta 6,meta 7,meta 8")
+            assert transformation.text.contains("sample1,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8")
+            assert transformation.text.contains("sample2,2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8")
+            assert transformation.text.contains("sample3,3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8")
+
+            // Check Results (Human-Readable)
+            def results = path("$launchDir/results/transformation/results.csv")
+            assert results.exists()
+
+            assert results.text.contains("sample,sample_name,meta 1,meta 2,meta 3,meta 4,meta 5,meta 6,meta 7,meta 8")
+            assert results.text.contains("sample1,ABC,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8")
+            assert results.text.contains("sample2,DEF,2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8")
+            assert results.text.contains("sample3,GHI,3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            assert iridanext_metadata.size() == 3
+
+            assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1."meta 1" == "1.1"
+            assert iridanext_metadata.sample1."meta 2" == "1.2"
+            assert iridanext_metadata.sample1."meta 3" == "1.3"
+            assert iridanext_metadata.sample1."meta 4" == "1.4"
+            assert iridanext_metadata.sample1."meta 5" == "1.5"
+            assert iridanext_metadata.sample1."meta 6" == "1.6"
+            assert iridanext_metadata.sample1."meta 7" == "1.7"
+            assert iridanext_metadata.sample1."meta 8" == "1.8"
+
+            assert iridanext_metadata.containsKey("sample2")
+            assert iridanext_metadata.sample2."meta 1" == "2.1"
+            assert iridanext_metadata.sample2."meta 2" == "2.2"
+            assert iridanext_metadata.sample2."meta 3" == "2.3"
+            assert iridanext_metadata.sample2."meta 4" == "2.4"
+            assert iridanext_metadata.sample2."meta 5" == "2.5"
+            assert iridanext_metadata.sample2."meta 6" == "2.6"
+            assert iridanext_metadata.sample2."meta 7" == "2.7"
+            assert iridanext_metadata.sample2."meta 8" == "2.8"
+
+            assert iridanext_metadata.containsKey("sample3")
+            assert iridanext_metadata.sample3."meta 1" == "3.1"
+            assert iridanext_metadata.sample3."meta 2" == "3.2"
+            assert iridanext_metadata.sample3."meta 3" == "3.3"
+            assert iridanext_metadata.sample3."meta 4" == "3.4"
+            assert iridanext_metadata.sample3."meta 5" == "3.5"
+            assert iridanext_metadata.sample3."meta 6" == "3.6"
+            assert iridanext_metadata.sample3."meta 7" == "3.7"
+            assert iridanext_metadata.sample3."meta 8" == "3.8"
+        }
+    }
+}

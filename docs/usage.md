@@ -2,11 +2,11 @@
 
 ## Introduction
 
-This pipeline is an example that illustrates running a nf-core-compliant pipeline on IRIDA Next.
+This pipeline transforms metadata from IRIDA Next.
 
-## Samplesheet input
+## Sample sheet input
 
-You will need to create a samplesheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 3 columns, and a header row as shown in the examples below.
+You will need to create a sample sheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 10 columns, and a header row as shown in the examples below.
 
 ```bash
 --input '[path to samplesheet file]'
@@ -14,22 +14,22 @@ You will need to create a samplesheet with information about the samples you wou
 
 ### Full samplesheet
 
-The input samplesheet must contain three columns: `ID`, `fastq_1`, `fastq_2`. The IDs within a samplesheet should be unique. All other columns will be ignored.
+The input samplesheet must contain the following columns: `sample`, and `metadata_1` through `metadata_8`. The IDs within a samplesheet should be unique. You may optionally provide a `sample_name` column, which will replace the Irida Next IDs in the `sample` column if available. All other columns will be ignored.
 
-A final samplesheet file consisting of both single- and paired-end data may look something like the one below.
+A final samplesheet file contain the `sample_name` column may look something like the one below.
 
 ```csv title="samplesheet.csv"
-sample,fastq_1,fastq_2
-SAMPLE1,sample1_R1.fastq.gz,sample1_R2.fastq.gz
-SAMPLE2,sample2_R1.fastq.gz,sample2_R2.fastq.gz
-SAMPLE3,sample1_R1.fastq.gz,
+sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8
+sample1,"ABC",1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8
+sample2,"DEF",2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8
+sample3,"GHI",3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8
 ```
 
-| Column    | Description                                                                                                                |
-| --------- | -------------------------------------------------------------------------------------------------------------------------- |
-| `sample`  | Custom sample name. Samples should be unique within a samplesheet.                                                         |
-| `fastq_1` | Full path to FastQ file for Illumina short reads 1. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz". |
-| `fastq_2` | Full path to FastQ file for Illumina short reads 2. File has to be gzipped and have the extension ".fastq.gz" or ".fq.gz". |
+| Column                   | Description                                                                                                                                |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `sample`                 | Sample ID. Samples should be unique within a samplesheet. Likely Irida Next IDs.                                                           |
+| `sample_name`            | Sample name. Likely user-provided IDs that should be unique, but are not required to be unique. Will be used over `sample` when available. |
+| `metadata_1..metadata_8` | Metadata that will be used in the metadata transformations.                                                                                |
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
@@ -38,7 +38,7 @@ An [example samplesheet](../assets/samplesheet.csv) has been provided with the p
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run main.nf --input ./samplesheet.csv --outdir ./results -profile singularity
+nextflow run phac-nml/metadatatransformation -profile singularity -r main -latest --input assets/samplesheet.csv --outdir results --transformation lock
 ```
 
 This will launch the pipeline with the `singularity` configuration profile. See below for more information about profiles.
@@ -58,30 +58,35 @@ Pipeline settings can be provided in a `yaml` or `json` file via `-params-file <
 
 Do not use `-c <file>` to specify parameters as this will result in errors. Custom config files specified with `-c` must only be used for [tuning process resource specifications](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources), other infrastructural tweaks (such as output directories), or module arguments (args).
 
-### Overriding Container Registries with the `container` Directive
+### Lock
 
-The `metadatatransformation` has implemented the process `override_configured_container_registry` ([detailed here](https://github.com/phac-nml/pipeline-standards?tab=readme-ov-file#5221-example-overriding-container-registries-with-the-container-directive)) to allow `docker.io` to be used when default registry is `quay.io` to [customize the container](#custom-containers) for the [process](/modules/local/simplifyiridajson/main.nf) `SIMPLIFY_IRIDA_JSON`. The process can be changed in the [nextflow.config](/./nextflow.config#L158)
-
-```bash
-// Override the default Docker registry when required
-process.ext.override_configured_container_registry = true
-```
-
-The above pipeline run specified with a params file in yaml format:
+The lock transformation may be run as follows:
 
 ```bash
-nextflow run phac-nml/metadatatransformation -profile docker -params-file params.yaml
+nextflow run phac-nml/metadatatransformation -profile singularity -r main -latest --input assets/samplesheet.csv --outdir results --transformation lock
 ```
 
-with `params.yaml` containing:
+You may wish to specify the `--metadata_1_header` through `--metadata_8_header` parameters to ensure the metadata is named as desired:
 
-```yaml
-input: './samplesheet.csv'
-outdir: './results/'
-<...>
+```bash
+nextflow run phac-nml/metadatatransformation -profile singularity -r main -latest --input assets/samplesheet.csv --outdir results --transformation lock --metadata_1_header country --metadata_2_header outbreak
 ```
 
-You can also generate such `YAML`/`JSON` files via [nf-core/launch](https://nf-co.re/launch).
+### Age
+
+The calculate age transformation may be run as follows:
+
+```bash
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/age/success_failure_mix.csv --outdir results --transformation age --metadata_1_header "date_of_birth" --metadata_2_header "collection_date" --age_header "age_at_collection"
+```
+
+For this transformation, the `metadata_1` column of the sample sheet is understood as the date of birth and the `metadata_2` column is understood as the date at which to calculate the age.
+
+The following parameters can be used to rename CSV-generated output columns and Irida Next fields as follows:
+
+- `--metadata_1_header`: names the date of birth column header
+- `--metadata_2_header`: names the current/target data column header
+- `--age_header`: names the calculated age column header and related output columns
 
 ### Reproducibility
 
