@@ -2,7 +2,7 @@
     "$schema": "https://json-schema.org/draft-07/schema",
     "$id": "https://raw.githubusercontent.com/phac-nml/metadatatransformation/main/nextflow_schema.json",
     "title": "phac-nml/metadatatransformation pipeline parameters",
-    "description": "IRIDA Next Example Pipeline",
+    "description": "Metadata Transformation Pipeline",
     "type": "object",
     "definitions": {
         "input_output_options": {
