@@ -34,6 +34,7 @@ TRANSFORMATION_PATH = "transformation.csv"
 DATE_FORMAT = "%Y-%m-%d" # YYYY-MM-DD
 AGE_THRESHOLD = 2 # Ages less than this will include a decimal component.
 DAYS_IN_YEAR = 365.0
+COLUMN_WISE = 0 # i.e. axis=0 // axis="columns"
 
 def remove_empty_columns(metadata):
     metadata.dropna(axis="columns", how="all", inplace=True)
@@ -46,8 +47,8 @@ def find_earliest_date(row):
     dates = []
 
     # Are ALL dates missing?
-    if (row.iloc[DATE_1_INDEX:].isnull().values.all(axis=0) or
-        row.iloc[DATE_1_INDEX:].isna().values.all(axis=0)):
+    if (row.iloc[DATE_1_INDEX:].isnull().values.all(axis=COLUMN_WISE) or
+        row.iloc[DATE_1_INDEX:].isna().values.all(axis=COLUMN_WISE)):
         earliest = ""
         earliest_valid = False
         earliest_error = "No data was found."
