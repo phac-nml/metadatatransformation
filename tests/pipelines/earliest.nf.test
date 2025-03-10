@@ -1,0 +1,60 @@
+nextflow_pipeline {
+
+    name "Metadata Transformation: Earliest Date"
+    script "main.nf"
+
+    test("Basic") {
+        tag "pipeline_earliest"
+        tag "pipeline_earliest_basic"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/earliest/basic.csv"
+                outdir = "results"
+
+                transformation = "earliest"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.contains("sample,earliest_date")
+            assert transformation.text.contains("sample1,2000-01-01")
+            assert transformation.text.contains("sample2,2000-02-01")
+            assert transformation.text.contains("sample3,2000-03-01")
+
+            // Check Results (Human-Readable)
+            def results = path("$launchDir/results/transformation/results.csv")
+            assert results.exists()
+
+            assert results.text.contains("sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8,earliest_date,earliest_date_valid,earliest_date_error")
+            assert results.text.contains("sample1,ABC,2000-01-01,2000-01-02,2000-01-03,2000-01-04,2000-01-05,2000-01-06,2000-01-07,2000-01-08,2000-01-01,True,")
+            assert results.text.contains("sample2,DEF,2000-02-01,2000-02-02,2000-02-03,2000-02-04,2000-02-05,2000-02-06,2000-02-07,2000-02-08,2000-02-01,True,")
+            assert results.text.contains("sample3,GHI,2000-03-01,2000-03-02,2000-03-03,2000-03-04,2000-03-05,2000-03-06,2000-03-07,2000-03-08,2000-03-01,True,")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            assert iridanext_metadata.size() == 3
+
+            assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1.earliest_date == "2000-01-01"
+
+            assert iridanext_metadata.containsKey("sample2")
+            assert iridanext_metadata.sample2.earliest_date == "2000-02-01"
+
+            assert iridanext_metadata.containsKey("sample3")
+            assert iridanext_metadata.sample3.earliest_date == "2000-03-01"
+        }
+    }
+}

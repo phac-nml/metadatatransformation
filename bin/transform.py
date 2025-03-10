@@ -46,15 +46,20 @@ def find_earliest_date(row):
     dates = []
 
     # Are ALL dates missing?
-    if row.iloc[DATE_1_INDEX:].isnull().values.all(axis=0):
+    if (row.iloc[DATE_1_INDEX:].isnull().values.all(axis=0) or
+        row.iloc[DATE_1_INDEX:].isna().values.all(axis=0)):
         earliest = ""
         earliest_valid = False
-        earliest_error = "No dates were found."
+        earliest_error = "No data was found."
 
         return pandas.Series([earliest, earliest_valid, earliest_error])
 
     # Check all dates in the row:
     for date_string in row.iloc[DATE_1_INDEX:]:
+
+        # Ignore missing values:
+        if (pandas.isna(date_string) or date_string == ""):
+            continue
 
         # Is the date string in the correct format?
         if isinstance(date_string, str):
@@ -63,20 +68,26 @@ def find_earliest_date(row):
                 dates.append(date)
 
             except ValueError:
-                pass
+                earliest = ""
+                earliest_valid = False
+                earliest_error = "At least one of the date values are incorrectly formatted."
 
-    # No valid date-formatted strings were found:
-    if len(dates) == 0:
-        earliest = ""
-        earliest_valid = False
-        earliest_error = "All of the date values are incorrectly formatted."
+                return pandas.Series([earliest, earliest_valid, earliest_error])
 
-        return pandas.Series([earliest, earliest_valid, earliest_error])
+        # The value is not null or NA, and is formatted as something other than a string.
+        else:
+            earliest = ""
+            earliest_valid = False
+            earliest_error = "At least one of the date values are incorrectly formatted."
+
+            return pandas.Series([earliest, earliest_valid, earliest_error])
 
     # At least one valid date was found:
-    earliest = min(dates).strftime(DATE_FORMAT)
-    earliest_valid = True
-    earliest_error = ""
+    if len(dates) > 0:
+        earliest = min(dates).strftime(DATE_FORMAT)
+        earliest_valid = True
+        earliest_error = ""
+
     result = pandas.Series([earliest, earliest_valid, earliest_error])
 
     return result
