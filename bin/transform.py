@@ -216,7 +216,7 @@ def main():
     elif (args.transformation == AGE):
         metadata_readable, metadata_irida = age(metadata, args.age_header)
 
-        remove_empty_columns(metadata_irida, args.age_header)
+        remove_empty_columns(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False, float_format=format_age)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False, float_format=format_age)
 
