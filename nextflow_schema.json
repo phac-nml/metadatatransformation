@@ -48,7 +48,7 @@
                     "type": "string",
                     "description": "The type of transformation to perform.",
                     "default": "lock",
-                    "enum": ["lock", "age"]
+                    "enum": ["lock", "age", "earliest"]
                 },
                 "age_header": {
                     "type": "string",

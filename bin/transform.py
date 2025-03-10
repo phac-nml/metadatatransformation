@@ -13,6 +13,7 @@ from datetime import datetime
 SAMPLE_HEADER = "sample"
 SAMPLE_NAME_HEADER = "sample_name"
 AGE_HEADER = "age"
+EARLIEST_HEADER = "earliest_date"
 VALID_HEADER_EXTENSION = "_valid"
 ERROR_HEADER_EXTENSION = "_error"
 
@@ -23,13 +24,73 @@ DATE_2_INDEX = 3
 # Transformations:
 LOCK = "lock"
 AGE = "age"
+EARLIEST = "earliest"
+
+# Output Files:
+RESULTS_PATH = "results.csv"
+TRANSFORMATION_PATH = "transformation.csv"
 
 # Other:
+DATE_FORMAT = "%Y-%m-%d" # YYYY-MM-DD
 AGE_THRESHOLD = 2 # Ages less than this will include a decimal component.
 DAYS_IN_YEAR = 365.0
 
 def remove_empty_columns(metadata):
     metadata.dropna(axis="columns", how="all", inplace=True)
+
+def find_earliest_date(row):
+    earliest = ""
+    earliest_valid = False
+    earliest_error = "Unable to find the earliest age."
+
+    dates = []
+
+    # Are ALL dates missing?
+    if row.iloc[DATE_1_INDEX:].isnull().values.all(axis=0):
+        earliest = ""
+        earliest_valid = False
+        earliest_error = "No dates were found."
+
+        return pandas.Series([earliest, earliest_valid, earliest_error])
+
+    # Check all dates in the row:
+    for date_string in row.iloc[DATE_1_INDEX:]:
+
+        # Is the date string in the correct format?
+        if isinstance(date_string, str):
+            try:
+                date = datetime.strptime(date_string, DATE_FORMAT)
+                dates.append(date)
+
+            except ValueError:
+                pass
+
+    # No valid date-formatted strings were found:
+    if len(dates) == 0:
+        earliest = ""
+        earliest_valid = False
+        earliest_error = "All of the date values are incorrectly formatted."
+
+        return pandas.Series([earliest, earliest_valid, earliest_error])
+
+    # At least one valid date was found:
+    earliest = min(dates).strftime(DATE_FORMAT)
+    earliest_valid = True
+    earliest_error = ""
+    result = pandas.Series([earliest, earliest_valid, earliest_error])
+
+    return result
+
+def earliest(metadata, earliest_header):
+    earliest_valid_header = earliest_header + VALID_HEADER_EXTENSION
+    earliest_error_header = earliest_header + ERROR_HEADER_EXTENSION
+
+    metadata_readable = metadata.copy(deep=True)
+    metadata_readable[[earliest_header, earliest_valid_header, earliest_error_header]] = metadata_readable.apply(find_earliest_date, axis="columns")
+
+    metadata_irida = metadata_readable[[SAMPLE_HEADER, earliest_header]].copy(deep=True)
+
+    return metadata_readable, metadata_irida
 
 def lock(metadata):
     metadata_readable = metadata.copy(deep=True)
@@ -46,7 +107,6 @@ def format_age(age):
     return formatted_age
 
 def calculate_age(row):
-    pattern = "%Y-%m-%d"
     age = numpy.nan
     # numpy.nan, not pandas.NA because numpy.nan is treated as a float.
     # Otherwise, there's a risk of mixing age floats with pandas.NA and having
@@ -68,8 +128,8 @@ def calculate_age(row):
 
     # Are the dates in the correct format?
     try:
-        date_1 = datetime.strptime(date_1_string, pattern)
-        date_2 = datetime.strptime(date_2_string, pattern)
+        date_1 = datetime.strptime(date_1_string, DATE_FORMAT)
+        date_2 = datetime.strptime(date_2_string, DATE_FORMAT)
 
     except ValueError:
         age = numpy.nan
@@ -125,10 +185,12 @@ def main():
 
     parser.add_argument("input", type=pathlib.Path,
                         help="The CSV-formatted input file to transform.")
-    parser.add_argument("transformation", choices=[LOCK, AGE],
+    parser.add_argument("transformation", choices=[LOCK, AGE, EARLIEST],
                         help="The type of transformation to perform.")
     parser.add_argument("--age_header", default=AGE_HEADER, required=False,
-                        help="The type of transformation to perform.")
+                        help="The output column header for the calculated age.")
+    parser.add_argument("--earliest_header", default=EARLIEST_HEADER, required=False,
+                        help="The output column header for the earliest date.")
 
     args = parser.parse_args()
     metadata = pandas.read_csv(args.input)
@@ -137,15 +199,22 @@ def main():
         metadata_readable, metadata_irida = lock(metadata)
 
         remove_empty_columns(metadata_irida)
-        metadata_readable.to_csv("results.csv", index=False)
-        metadata_irida.to_csv("transformation.csv", index=False)
+        metadata_readable.to_csv(RESULTS_PATH, index=False)
+        metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
     elif (args.transformation == AGE):
         metadata_readable, metadata_irida = age(metadata, args.age_header)
 
+        remove_empty_columns(metadata_irida, args.age_header)
+        metadata_readable.to_csv(RESULTS_PATH, index=False, float_format=format_age)
+        metadata_irida.to_csv(TRANSFORMATION_PATH, index=False, float_format=format_age)
+
+    elif (args.transformation == EARLIEST):
+        metadata_readable, metadata_irida = earliest(metadata, args.earliest_header)
+
         remove_empty_columns(metadata_irida)
-        metadata_readable.to_csv("results.csv", index=False, float_format=format_age)
-        metadata_irida.to_csv("transformation.csv", index=False, float_format=format_age)
+        metadata_readable.to_csv(RESULTS_PATH, index=False)
+        metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
 if __name__ == '__main__':
     main()
