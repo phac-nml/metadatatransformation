@@ -55,33 +55,14 @@ def find_earliest_date(row):
 
         return pandas.Series([earliest, earliest_valid, earliest_error])
 
-    # Check all dates in the row:
-    for date_string in row.iloc[DATE_1_INDEX:]:
+    try:
+        dates = pandas.to_datetime(row.iloc[DATE_1_INDEX:], format="%Y-%m-%d", errors="raise")
+        dates = dates.dropna()
 
-        # Ignore missing values:
-        if (pandas.isna(date_string) or date_string == ""):
-            continue
-
-        # Is the date string in the correct format?
-        if isinstance(date_string, str):
-            try:
-                date = datetime.strptime(date_string, DATE_FORMAT)
-                dates.append(date)
-
-            except ValueError:
+    except ValueError:
                 earliest = ""
                 earliest_valid = False
                 earliest_error = "At least one of the date values are incorrectly formatted."
-
-                return pandas.Series([earliest, earliest_valid, earliest_error])
-
-        # The value is not null or NA, and is formatted as something other than a string.
-        else:
-            earliest = ""
-            earliest_valid = False
-            earliest_error = "At least one of the date values are incorrectly formatted."
-
-            return pandas.Series([earliest, earliest_valid, earliest_error])
 
     # At least one valid date was found:
     if len(dates) > 0:
