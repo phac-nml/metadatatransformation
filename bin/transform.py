@@ -60,9 +60,9 @@ def find_earliest_date(row):
         dates = dates.dropna()
 
     except ValueError:
-                earliest = ""
-                earliest_valid = False
-                earliest_error = "At least one of the date values are incorrectly formatted."
+        earliest = ""
+        earliest_valid = False
+        earliest_error = "At least one of the date values are incorrectly formatted."
 
     # At least one valid date was found:
     if len(dates) > 0:
