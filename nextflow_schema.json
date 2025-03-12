@@ -48,12 +48,18 @@
                     "type": "string",
                     "description": "The type of transformation to perform.",
                     "default": "lock",
-                    "enum": ["lock", "age"]
+                    "enum": ["lock", "age", "earliest"]
                 },
                 "age_header": {
                     "type": "string",
                     "default": "age",
                     "description": "The column header name for the calculated age in the calculate age metadata transformation.",
+                    "pattern": "^[^\\t\\\",]*$"
+                },
+                "earliest_header": {
+                    "type": "string",
+                    "default": "earliest_date",
+                    "description": "The column header name for the earliest date from among metadata columns for the earliest date metadata transformation.",
                     "pattern": "^[^\\t\\\",]*$"
                 }
             }

@@ -88,6 +88,20 @@ The following parameters can be used to rename CSV-generated output columns and 
 - `--metadata_2_header`: names the current/target data column header
 - `--age_header`: names the calculated age column header and related output columns
 
+### Earliest
+
+The earliest date transformation may be run as follows:
+
+```bash
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/earliest/basic.csv --outdir results --transformation earliest
+```
+
+For this transformation, the `metadata_1` column through `metadata_8` column of the sample sheet are understood as containing a date or being empty. The transformation will determine the earliest date among these metadata columns.
+
+You may wish to specify the `--metadata_1_header` through `--metadata_8_header` parameters to provide appropriate column names in the `results.csv` file, but these headers do not affect results returned to IRIDA Next.
+
+If at least one metadata column contains non-empty data that does not conform to the expected "YYYY-MM-DD" date format, then the sample will report an error and no date will be reported for the sample (even if one other valid date appears among the invalid metadata for that sample).
+
 ### Reproducibility
 
 It is a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.

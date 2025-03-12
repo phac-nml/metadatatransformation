@@ -1,0 +1,291 @@
+nextflow_pipeline {
+
+    name "Metadata Transformation: Earliest Date"
+    script "main.nf"
+
+    test("Basic") {
+        tag "pipeline_earliest"
+        tag "pipeline_earliest_basic"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/earliest/basic.csv"
+                outdir = "results"
+
+                transformation = "earliest"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.contains("sample,earliest_date")
+            assert transformation.text.contains("sample1,2000-01-01")
+            assert transformation.text.contains("sample2,2000-02-01")
+            assert transformation.text.contains("sample3,2000-03-01")
+
+            // Check Results (Human-Readable)
+            def results = path("$launchDir/results/transformation/results.csv")
+            assert results.exists()
+
+            assert results.text.contains("sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8,earliest_date,earliest_date_valid,earliest_date_error")
+            assert results.text.contains("sample1,ABC,2000-01-01,2000-01-02,2000-01-03,2000-01-04,2000-01-05,2000-01-06,2000-01-07,2000-01-08,2000-01-01,True,")
+            assert results.text.contains("sample2,DEF,2000-02-01,2000-02-02,2000-02-03,2000-02-04,2000-02-05,2000-02-06,2000-02-07,2000-02-08,2000-02-01,True,")
+            assert results.text.contains("sample3,GHI,2000-03-01,2000-03-02,2000-03-03,2000-03-04,2000-03-05,2000-03-06,2000-03-07,2000-03-08,2000-03-01,True,")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            assert iridanext_metadata.size() == 3
+
+            assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1.earliest_date == "2000-01-01"
+
+            assert iridanext_metadata.containsKey("sample2")
+            assert iridanext_metadata.sample2.earliest_date == "2000-02-01"
+
+            assert iridanext_metadata.containsKey("sample3")
+            assert iridanext_metadata.sample3.earliest_date == "2000-03-01"
+        }
+    }
+
+    test("Problems") {
+        tag "pipeline_earliest"
+        tag "pipeline_earliest_problems"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/earliest/problems.csv"
+                outdir = "results"
+
+                transformation = "earliest"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.contains("sample,earliest_date")
+            assert transformation.text.contains("sample1,2000-01-01")
+            assert transformation.text.contains("sample2,")
+            assert transformation.text.contains("sample3,2000-03-02")
+            assert transformation.text.contains("sample4,")
+            assert transformation.text.contains("sample5,")
+            assert transformation.text.contains("sample6,")
+            assert transformation.text.contains("sample6,")
+            assert transformation.text.contains("sample8,")
+            assert transformation.text.contains("sample9,")
+            assert transformation.text.contains("sample10,")
+            assert transformation.text.contains("sample11,")
+            assert transformation.text.contains("sample12,2000-01-01")
+            assert transformation.text.contains("sample13,")
+            assert transformation.text.contains("sample14,")
+            assert transformation.text.contains("sample15,")
+            assert transformation.text.contains("sample16,")
+            assert transformation.text.contains("sample17,")
+            assert transformation.text.contains("sample18,")
+            assert transformation.text.contains("sample19,")
+            assert transformation.text.contains("sample20,")
+            assert transformation.text.contains("sample21,")
+            assert transformation.text.contains("sample22,")
+            assert transformation.text.contains("sample23,")
+            assert transformation.text.contains("sample24,")
+            assert transformation.text.contains("sample25,2000-01-01")
+            assert transformation.text.contains("sample26,2000-01-01")
+            assert transformation.text.contains("sample27,2000-01-01")
+
+            // Check Results (Human-Readable)
+            def results = path("$launchDir/results/transformation/results.csv")
+            assert results.exists()
+
+            assert results.text.contains("sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8,earliest_date,earliest_date_valid,earliest_date_error")
+            assert results.text.contains("sample1,normal,2000-01-01,2000-01-02,2000-01-03,2000-01-04,2000-01-05,2000-01-06,2000-01-07,2000-01-08,2000-01-01,True,")
+            assert results.text.contains("sample2,all_missing,,,,,,,,,,False,No data was found.")
+            assert results.text.contains("sample3,some_missing,,2000-03-02,,2000-03-04,,2000-03-06,,2000-03-08,2000-03-02,True,")
+            assert results.text.contains("sample4,only_non_strings,12,,a,,0.5,,,1,,False,At least one of the date values are incorrectly formatted.")
+            assert results.text.contains("sample5,only_bad_dates,2000-30-12,,,,,,,2000-30-01,,False,At least one of the date values are incorrectly formatted.")
+            assert results.text.contains("sample6,mix_good_bad_dates,2000-01-01,2000-01-02,,,,,2000-30-12,2000-30-01,,False,At least one of the date values are incorrectly formatted.")
+            assert results.text.contains("sample7,mix_dates_non_dates,2000-01-01,2000-01-02,,,,,cat,0.5,,False,At least one of the date values are incorrectly formatted.")
+            assert results.text.contains("sample8,only_one_integer,1,,,,,,,,,False,At least one of the date values are incorrectly formatted.")
+            assert results.text.contains("sample9,only_one_float,0.1,,,,,,,,,False,At least one of the date values are incorrectly formatted.")
+            assert results.text.contains("sample10,only_one_string,cat,,,,,,,,,False,At least one of the date values are incorrectly formatted.")
+            assert results.text.contains("sample11,only_one_char,a,,,,,,,,,False,At least one of the date values are incorrectly formatted.")
+            assert results.text.contains("sample12,only_one_date,2000-01-01,,,,,,,,2000-01-01,True,")
+            assert results.text.contains("sample13,one_integer_one_date,1,,,,,,,2000-01-01,,False,At least one of the date values are incorrectly formatted.")
+            assert results.text.contains("sample14,one_float_one_date,0.1,,,,,,,2000-01-01,,False,At least one of the date values are incorrectly formatted.")
+            assert results.text.contains("sample15,one_string_one_date,cat,,,,,,,2000-01-01,,False,At least one of the date values are incorrectly formatted.")
+            assert results.text.contains("sample16,one_char_one_date,a,,,,,,,2000-01-01,,False,At least one of the date values are incorrectly formatted.")
+            assert results.text.contains("sample17,many_integer_one_date,1,2,3,4,5,6,7,2000-01-01,,False,At least one of the date values are incorrectly formatted.")
+            assert results.text.contains("sample18,many_float_one_date,0.1,0.2,0.3,0.4,0.5,0.6,0.7,2000-01-01,,False,At least one of the date values are incorrectly formatted.")
+            assert results.text.contains("sample19,many_string_one_date,cat,dog,fish,hamster,rat,mouse,bird,2000-01-01,,False,At least one of the date values are incorrectly formatted.")
+            assert results.text.contains("sample20,many_char_one_date,a,b,c,d,e,f,g,2000-01-01,,False,At least one of the date values are incorrectly formatted.")
+            assert results.text.contains("sample21,one_integer_many_date,1,2000-01-01,2000-01-02,2000-01-03,2000-01-04,2000-01-05,2000-01-06,2000-01-07,,False,At least one of the date values are incorrectly formatted.")
+            assert results.text.contains("sample22,one_float_many_date,0.1,2000-01-01,2000-01-02,2000-01-03,2000-01-04,2000-01-05,2000-01-06,2000-01-07,,False,At least one of the date values are incorrectly formatted.")
+            assert results.text.contains("sample23,one_string_many_date,cat,2000-01-01,2000-01-02,2000-01-03,2000-01-04,2000-01-05,2000-01-06,2000-01-07,,False,At least one of the date values are incorrectly formatted.")
+            assert results.text.contains("sample24,one_char_many_date,a,2000-01-01,2000-01-02,2000-01-03,2000-01-04,2000-01-05,2000-01-06,2000-01-07,,False,At least one of the date values are incorrectly formatted.")
+            assert results.text.contains("sample25,duplicates,2000-01-01,2000-01-01,2000-01-01,2000-01-01,2000-01-01,2000-01-01,2000-01-01,2000-01-01,2000-01-01,True,")
+            assert results.text.contains("sample26,duplicates_missing,2000-01-01,,2000-01-01,,2000-01-01,,2000-01-01,,2000-01-01,True,")
+            assert results.text.contains("sample27,duplicates_mixed,2000-01-01,2000-01-01,2000-01-01,2000-01-01,2000-01-02,2000-01-02,2000-01-02,2000-01-02,2000-01-01,True,")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            assert iridanext_metadata.size() == 27
+
+            assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1.earliest_date == "2000-01-01"
+
+            assert iridanext_metadata.containsKey("sample2")
+            assert iridanext_metadata.sample2.earliest_date == ""
+
+            assert iridanext_metadata.containsKey("sample3")
+            assert iridanext_metadata.sample3.earliest_date == "2000-03-02"
+
+            assert iridanext_metadata.containsKey("sample4")
+            assert iridanext_metadata.sample4.earliest_date == ""
+
+            assert iridanext_metadata.containsKey("sample5")
+            assert iridanext_metadata.sample5.earliest_date == ""
+
+            assert iridanext_metadata.containsKey("sample6")
+            assert iridanext_metadata.sample6.earliest_date == ""
+
+            assert iridanext_metadata.containsKey("sample7")
+            assert iridanext_metadata.sample7.earliest_date == ""
+
+            assert iridanext_metadata.containsKey("sample8")
+            assert iridanext_metadata.sample8.earliest_date == ""
+
+            assert iridanext_metadata.containsKey("sample9")
+            assert iridanext_metadata.sample9.earliest_date == ""
+
+            assert iridanext_metadata.containsKey("sample10")
+            assert iridanext_metadata.sample10.earliest_date == ""
+
+            assert iridanext_metadata.containsKey("sample11")
+            assert iridanext_metadata.sample11.earliest_date == ""
+
+            assert iridanext_metadata.containsKey("sample12")
+            assert iridanext_metadata.sample12.earliest_date == "2000-01-01"
+
+            assert iridanext_metadata.containsKey("sample13")
+            assert iridanext_metadata.sample13.earliest_date == ""
+
+            assert iridanext_metadata.containsKey("sample14")
+            assert iridanext_metadata.sample14.earliest_date == ""
+
+            assert iridanext_metadata.containsKey("sample15")
+            assert iridanext_metadata.sample15.earliest_date == ""
+
+            assert iridanext_metadata.containsKey("sample16")
+            assert iridanext_metadata.sample16.earliest_date == ""
+
+            assert iridanext_metadata.containsKey("sample17")
+            assert iridanext_metadata.sample17.earliest_date == ""
+
+            assert iridanext_metadata.containsKey("sample18")
+            assert iridanext_metadata.sample18.earliest_date == ""
+
+            assert iridanext_metadata.containsKey("sample19")
+            assert iridanext_metadata.sample19.earliest_date == ""
+
+            assert iridanext_metadata.containsKey("sample20")
+            assert iridanext_metadata.sample20.earliest_date == ""
+
+            assert iridanext_metadata.containsKey("sample21")
+            assert iridanext_metadata.sample21.earliest_date == ""
+
+            assert iridanext_metadata.containsKey("sample22")
+            assert iridanext_metadata.sample22.earliest_date == ""
+
+            assert iridanext_metadata.containsKey("sample23")
+            assert iridanext_metadata.sample23.earliest_date == ""
+
+            assert iridanext_metadata.containsKey("sample24")
+            assert iridanext_metadata.sample24.earliest_date == ""
+
+            assert iridanext_metadata.containsKey("sample25")
+            assert iridanext_metadata.sample25.earliest_date == "2000-01-01"
+
+            assert iridanext_metadata.containsKey("sample26")
+            assert iridanext_metadata.sample26.earliest_date == "2000-01-01"
+
+            assert iridanext_metadata.containsKey("sample27")
+            assert iridanext_metadata.sample27.earliest_date == "2000-01-01"
+        }
+    }
+
+    test("Rename earliest column") {
+        tag "pipeline_earliest"
+        tag "pipeline_earliest_rename"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/earliest/basic.csv"
+                outdir = "results"
+
+                transformation = "earliest"
+                earliest_header = "the earliest date"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.contains("sample,the earliest date")
+            assert transformation.text.contains("sample1,2000-01-01")
+            assert transformation.text.contains("sample2,2000-02-01")
+            assert transformation.text.contains("sample3,2000-03-01")
+
+            // Check Results (Human-Readable)
+            def results = path("$launchDir/results/transformation/results.csv")
+            assert results.exists()
+
+            assert results.text.contains("sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8,the earliest date,the earliest date_valid,the earliest date_error")
+            assert results.text.contains("sample1,ABC,2000-01-01,2000-01-02,2000-01-03,2000-01-04,2000-01-05,2000-01-06,2000-01-07,2000-01-08,2000-01-01,True,")
+            assert results.text.contains("sample2,DEF,2000-02-01,2000-02-02,2000-02-03,2000-02-04,2000-02-05,2000-02-06,2000-02-07,2000-02-08,2000-02-01,True,")
+            assert results.text.contains("sample3,GHI,2000-03-01,2000-03-02,2000-03-03,2000-03-04,2000-03-05,2000-03-06,2000-03-07,2000-03-08,2000-03-01,True,")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            assert iridanext_metadata.size() == 3
+
+            assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1."the earliest date" == "2000-01-01"
+
+            assert iridanext_metadata.containsKey("sample2")
+            assert iridanext_metadata.sample2."the earliest date" == "2000-02-01"
+
+            assert iridanext_metadata.containsKey("sample3")
+            assert iridanext_metadata.sample3."the earliest date" == "2000-03-01"
+        }
+    }
+}
