@@ -7,8 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### `Added`
 
-- `earliest` transformation: finds earliest date among metadata (#9)
-- `populate` transformation: populates an output column with a specific value (#10)
+- `earliest` transformation: finds earliest date among metadata [PR #9](https://github.com/phac-nml/metadatatransformation/pull/9)
+- `populate` transformation: populates an output column with a specific value [PR #10](https://github.com/phac-nml/metadatatransformation/pull/10)
 
 ## [1.0.0] - 2025/03/07
 
