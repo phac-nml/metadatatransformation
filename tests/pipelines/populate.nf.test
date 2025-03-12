@@ -1,0 +1,308 @@
+nextflow_pipeline {
+
+    name "Metadata Transformation: Populate"
+    script "main.nf"
+
+    test("Basic") {
+        tag "pipeline_populate"
+        tag "pipeline_populate_basic"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/populate/basic.csv"
+                outdir = "results"
+
+                transformation = "populate"
+                populate_header = "my_header"
+                populate_value = "my_value"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.contains("sample,my_header")
+            assert transformation.text.contains("sample1,my_value")
+            assert transformation.text.contains("sample2,my_value")
+            assert transformation.text.contains("sample3,my_value")
+
+            // Check Results (Human-Readable)
+            def results = path("$launchDir/results/transformation/results.csv")
+            assert results.exists()
+
+            assert results.text.contains("sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8,my_header")
+            assert results.text.contains("sample1,ABC,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,my_value")
+            assert results.text.contains("sample2,DEF,2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8,my_value")
+            assert results.text.contains("sample3,GHI,3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8,my_value")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            assert iridanext_metadata.size() == 3
+
+            assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1.size() == 1
+            assert iridanext_metadata.sample1.my_header == "my_value"
+
+            assert iridanext_metadata.containsKey("sample2")
+            assert iridanext_metadata.sample2.size() == 1
+            assert iridanext_metadata.sample2.my_header == "my_value"
+
+            assert iridanext_metadata.containsKey("sample3")
+            assert iridanext_metadata.sample3.size() == 1
+            assert iridanext_metadata.sample3.my_header == "my_value"
+        }
+    }
+
+    test("Spaces") {
+        tag "pipeline_populate"
+        tag "pipeline_populate_spaces"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/populate/basic.csv"
+                outdir = "results"
+
+                transformation = "populate"
+                populate_header = "my header"
+                populate_value = "my value"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.contains("sample,my header")
+            assert transformation.text.contains("sample1,my value")
+            assert transformation.text.contains("sample2,my value")
+            assert transformation.text.contains("sample3,my value")
+
+            // Check Results (Human-Readable)
+            def results = path("$launchDir/results/transformation/results.csv")
+            assert results.exists()
+
+            assert results.text.contains("sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8,my header")
+            assert results.text.contains("sample1,ABC,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,my value")
+            assert results.text.contains("sample2,DEF,2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8,my value")
+            assert results.text.contains("sample3,GHI,3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8,my value")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            assert iridanext_metadata.size() == 3
+
+            assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1.size() == 1
+            assert iridanext_metadata.sample1."my header" == "my value"
+
+            assert iridanext_metadata.containsKey("sample2")
+            assert iridanext_metadata.sample2.size() == 1
+            assert iridanext_metadata.sample2."my header" == "my value"
+
+            assert iridanext_metadata.containsKey("sample3")
+            assert iridanext_metadata.sample3.size() == 1
+            assert iridanext_metadata.sample3."my header" == "my value"
+        }
+    }
+
+    test("Overwrite") {
+        tag "pipeline_populate"
+        tag "pipeline_populate_overwrite"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/populate/basic.csv"
+                outdir = "results"
+
+                transformation = "populate"
+                populate_header = "metadata_2"
+                populate_value = "my_value"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.contains("sample,metadata_2")
+            assert transformation.text.contains("sample1,my_value")
+            assert transformation.text.contains("sample2,my_value")
+            assert transformation.text.contains("sample3,my_value")
+
+            // Check Results (Human-Readable)
+            def results = path("$launchDir/results/transformation/results.csv")
+            assert results.exists()
+
+            assert results.text.contains("sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8")
+            assert results.text.contains("sample1,ABC,1.1,my_value,1.3,1.4,1.5,1.6,1.7,1.8")
+            assert results.text.contains("sample2,DEF,2.1,my_value,2.3,2.4,2.5,2.6,2.7,2.8")
+            assert results.text.contains("sample3,GHI,3.1,my_value,3.3,3.4,3.5,3.6,3.7,3.8")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            assert iridanext_metadata.size() == 3
+
+            assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1.size() == 1
+            assert iridanext_metadata.sample1.metadata_2 == "my_value"
+
+            assert iridanext_metadata.containsKey("sample2")
+            assert iridanext_metadata.sample2.size() == 1
+            assert iridanext_metadata.sample2.metadata_2 == "my_value"
+
+            assert iridanext_metadata.containsKey("sample3")
+            assert iridanext_metadata.sample3.size() == 1
+            assert iridanext_metadata.sample3.metadata_2 == "my_value"
+        }
+    }
+
+    test("Missing metadata") {
+        tag "pipeline_populate"
+        tag "pipeline_populate_missing_metadata"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/populate/missing_metadata.csv"
+                outdir = "results"
+
+                transformation = "populate"
+                populate_header = "my_header"
+                populate_value = "my_value"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.contains("sample,my_header")
+            assert transformation.text.contains("sample1,my_value")
+            assert transformation.text.contains("sample2,my_value")
+            assert transformation.text.contains("sample3,my_value")
+
+            // Check Results (Human-Readable)
+            def results = path("$launchDir/results/transformation/results.csv")
+            assert results.exists()
+
+            assert results.text.contains("sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8,my_header")
+            assert results.text.contains("sample1,ABC,,1.2,1.3,,1.5,1.6,,,my_value")
+            assert results.text.contains("sample2,sample2,2.1,,2.3,2.4,,2.6,2.7,,my_value")
+            assert results.text.contains("sample3,GHI,3.1,3.2,,3.4,3.5,,3.7,,my_value")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            assert iridanext_metadata.size() == 3
+
+            assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1.size() == 1
+            assert iridanext_metadata.sample1.my_header == "my_value"
+
+            assert iridanext_metadata.containsKey("sample2")
+            assert iridanext_metadata.sample2.size() == 1
+            assert iridanext_metadata.sample2.my_header == "my_value"
+
+            assert iridanext_metadata.containsKey("sample3")
+            assert iridanext_metadata.sample3.size() == 1
+            assert iridanext_metadata.sample3.my_header == "my_value"
+        }
+    }
+
+    test("Unrelated parameters") {
+        tag "pipeline_populate"
+        tag "pipeline_populate_unrelated_parameters"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/populate/basic.csv"
+                outdir = "results"
+
+                transformation = "populate"
+                populate_header = "my_header"
+                populate_value = "my_value"
+
+                age_header = "no_effect"
+                earliest_header = "also_no_effect"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.contains("sample,my_header")
+            assert transformation.text.contains("sample1,my_value")
+            assert transformation.text.contains("sample2,my_value")
+            assert transformation.text.contains("sample3,my_value")
+
+            // Check Results (Human-Readable)
+            def results = path("$launchDir/results/transformation/results.csv")
+            assert results.exists()
+
+            assert results.text.contains("sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8,my_header")
+            assert results.text.contains("sample1,ABC,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,my_value")
+            assert results.text.contains("sample2,DEF,2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8,my_value")
+            assert results.text.contains("sample3,GHI,3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8,my_value")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            assert iridanext_metadata.size() == 3
+
+            assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1.size() == 1
+            assert iridanext_metadata.sample1.my_header == "my_value"
+
+            assert iridanext_metadata.containsKey("sample2")
+            assert iridanext_metadata.sample2.size() == 1
+            assert iridanext_metadata.sample2.my_header == "my_value"
+
+            assert iridanext_metadata.containsKey("sample3")
+            assert iridanext_metadata.sample3.size() == 1
+            assert iridanext_metadata.sample3.my_header == "my_value"
+        }
+    }
+}
