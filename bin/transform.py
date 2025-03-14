@@ -131,12 +131,12 @@ def calculate_age(row):
     date_1_string = row.iloc[DATE_1_INDEX]
     date_2_string = row.iloc[DATE_2_INDEX]
 
-    # Are the dates in the correct format?
+    # Are the dates in the correct type (string) and format?
     try:
         date_1 = datetime.strptime(date_1_string, DATE_FORMAT)
         date_2 = datetime.strptime(date_2_string, DATE_FORMAT)
 
-    except ValueError:
+    except (TypeError, ValueError) as error:
         age = numpy.nan
         age_valid = False
         age_error = "The date format does not match the expected format (YYYY-MM-DD)."
