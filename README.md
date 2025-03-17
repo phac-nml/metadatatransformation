@@ -28,6 +28,8 @@ You may specify the metadata transformation with the `--transformation` paramete
 | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | lock           | Locks, or copies and locks, the metadata in IRIDA Next.                                                                                                    |
 | age            | Calculates the age between the first and second metadata columns. Ages under 2 years old are calculated as (days/365) years old, showing 4 decimal places. |
+| earliest       | Reports the earliest date among the metadata columns.                                                                                                      |
+| populate       | Populates an output column with a specific value.                                                                                                          |
 
 ## Lock Parameters
 
@@ -65,6 +67,27 @@ sample2,DEF,2000-02-29,2024-02-29,24,True,
 sample3,GHI,2000-05-05,1950-12-31,,False,The dates are reversed.
 ```
 
+## Earliest Parameters
+
+The following parameters can be used to rename CSV-generated output columns as follows:
+
+- `--metadata_1_header`: names the first metadata_1 column header
+- `--metadata_2_header`: names the first metadata_2 column header
+- `--metadata_3_header`: names the first metadata_3 column header
+- `--metadata_4_header`: names the first metadata_4 column header
+- `--metadata_5_header`: names the first metadata_5 column header
+- `--metadata_6_header`: names the first metadata_6 column header
+- `--metadata_7_header`: names the first metadata_7 column header
+- `--metadata_8_header`: names the first metadata_8 column header
+- `--earliest_header`: names the earliest date column header and related output columns
+
+The above parameters will only affect the `results.csv` file and not the information returned to IRIDA Next. The earliest date column will be reported as `earliest_date` in `results.csv`, `transformation.csv`, and the `iridanext.output.json` file, which is returned to IRIDA Next.
+
+## Populate Parameters
+
+- `--populate_header`: names the header of the column to populate with `populate_value`
+- `--populate_value`: the value to populate every entry within the `populate_header` column
+
 ## Other Parameters
 
 Other parameters (defaults from nf-core) are defined in [nextflow_schema.json](nextflow_schema.json).
@@ -78,6 +101,7 @@ nextflow run phac-nml/metadatatransformation -profile singularity -r main -lates
 ```
 
 Where the `samplesheet.csv` is structured as specified in the [Input](#input) section.
+
 For more information see [usage doc](docs/usage.md)
 
 # Output

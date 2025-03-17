@@ -48,12 +48,30 @@
                     "type": "string",
                     "description": "The type of transformation to perform.",
                     "default": "lock",
-                    "enum": ["lock", "age"]
+                    "enum": ["lock", "age", "earliest", "populate"]
                 },
                 "age_header": {
                     "type": "string",
                     "default": "age",
                     "description": "The column header name for the calculated age in the calculate age metadata transformation.",
+                    "pattern": "^[^\\t\\\",]*$"
+                },
+                "earliest_header": {
+                    "type": "string",
+                    "default": "earliest_date",
+                    "description": "The column header name for the earliest date from among metadata columns for the earliest date metadata transformation.",
+                    "pattern": "^[^\\t\\\",]*$"
+                },
+                "populate_header": {
+                    "type": "string",
+                    "default": "populated_header",
+                    "description": "The column header name for the populate value transformation.",
+                    "pattern": "^[^\\t\\\",]*$"
+                },
+                "populate_value": {
+                    "type": "string",
+                    "default": "populated_value",
+                    "description": "The value specified will be written for every sample under the specified column for the population transformation.",
                     "pattern": "^[^\\t\\\",]*$"
                 }
             }

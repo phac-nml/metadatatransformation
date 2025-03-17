@@ -88,6 +88,63 @@ The following parameters can be used to rename CSV-generated output columns and 
 - `--metadata_2_header`: names the current/target data column header
 - `--age_header`: names the calculated age column header and related output columns
 
+### Earliest
+
+The earliest date transformation may be run as follows:
+
+```bash
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/earliest/basic.csv --outdir results --transformation earliest
+```
+
+For this transformation, the `metadata_1` column through `metadata_8` column of the sample sheet are understood as containing a date or being empty. The transformation will determine the earliest date among these metadata columns.
+
+You may wish to specify the `--metadata_1_header` through `--metadata_8_header` parameters to provide appropriate column names in the `results.csv` file, but these headers do not affect results returned to IRIDA Next.
+
+If at least one metadata column contains non-empty data that does not conform to the expected "YYYY-MM-DD" date format, then the sample will report an error and no date will be reported for the sample (even if one other valid date appears among the invalid metadata for that sample).
+
+### Populate
+
+The populate transformation may be run as follows:
+
+```bash
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/populate/basic.csv --outdir results --transformation populate --populate_header "new_header" --populate_value "new_value"
+```
+
+For this transformation, all input metadata (`metadata_1` through `metadata_8`) will be ignored. However, the transformation will write or overwrite the input metadata as specified by `--populate_header`. The value specified by `--populate_value` will be written for every sample under the column specified by `--populate_header`.
+
+For example, when running the transformation with the following sample sheet:
+
+```
+sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8
+sample1,"ABC",1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8
+sample2,"DEF",2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8
+sample3,"GHI",3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8
+```
+
+and command:
+
+```bash
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/populate/basic.csv --outdir results --transformation populate --populate_header "new_header" --populate_value "new_value"
+```
+
+following output `results.csv` file will be generated:
+
+```
+sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8,new_header
+sample1,ABC,1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8,new_value
+sample2,DEF,2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8,new_value
+sample3,GHI,3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8,new_value
+```
+
+and the following `transformation.csv` file (written back to IRIDA Next) will be generated:
+
+```
+sample,new_header
+sample1,new_value
+sample2,new_value
+sample3,new_value
+```
+
 ### Reproducibility
 
 It is a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.

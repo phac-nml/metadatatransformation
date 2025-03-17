@@ -404,4 +404,62 @@ nextflow_pipeline {
             assert iridanext_metadata.sample9."age at collection" == "49"
         }
     }
+
+    test("Float columns") {
+        tag "pipeline_age"
+        tag "pipeline_age_float_columns"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/age/float_columns.csv"
+                outdir = "results"
+
+                transformation = "age"
+                metadata_1_header "date_of_birth"
+                metadata_2_header "collection_date"
+                age_header "age_at_collection"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.contains("sample")
+            assert transformation.text.contains("sample1")
+            assert transformation.text.contains("sample2")
+            assert transformation.text.contains("sample3")
+
+            // Check Results (Human-Readable)
+            def results = path("$launchDir/results/transformation/results.csv")
+            assert results.exists()
+
+            assert results.text.contains("sample,sample_name,date_of_birth,collection_date,age_at_collection,age_at_collection_valid,age_at_collection_error")
+            assert results.text.contains("sample1,ABC,1.1000,1.2000,,False,The date format does not match the expected format (YYYY-MM-DD).")
+            assert results.text.contains("sample2,DEF,2,2,,False,The date format does not match the expected format (YYYY-MM-DD).")
+            assert results.text.contains("sample3,GHI,3,3,,False,The date format does not match the expected format (YYYY-MM-DD).")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            assert iridanext_metadata.size() == 3
+
+            assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1.containsKey("age_at_collection") == false
+
+            assert iridanext_metadata.containsKey("sample2")
+            assert iridanext_metadata.sample2.containsKey("age_at_collection") == false
+
+            assert iridanext_metadata.containsKey("sample3")
+            assert iridanext_metadata.sample3.containsKey("age_at_collection") == false
+        }
+    }
 }

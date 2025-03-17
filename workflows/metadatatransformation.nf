@@ -97,7 +97,9 @@ workflow METADATATRANSFORMATION {
     }.toList()
 
     // TRANSFORM METADATA
-    if(params.transformation == 'lock' || params.transformation == 'age') {
+    valid_transformations = ['lock', 'age', 'earliest', 'populate']
+
+    if(valid_transformations.contains(params.transformation)) {
         write_metadata = WRITE_METADATA (metadata_headers, metadata_rows)
         TRANSFORM_METADATA (write_metadata.results, params.transformation)
     }

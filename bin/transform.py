@@ -13,6 +13,9 @@ from datetime import datetime
 SAMPLE_HEADER = "sample"
 SAMPLE_NAME_HEADER = "sample_name"
 AGE_HEADER = "age"
+EARLIEST_HEADER = "earliest_date"
+POPULATE_HEADER = "populated"
+
 VALID_HEADER_EXTENSION = "_valid"
 ERROR_HEADER_EXTENSION = "_error"
 
@@ -23,13 +26,76 @@ DATE_2_INDEX = 3
 # Transformations:
 LOCK = "lock"
 AGE = "age"
+EARLIEST = "earliest"
+POPULATE = "populate"
+
+# Output Files:
+RESULTS_PATH = "results.csv"
+TRANSFORMATION_PATH = "transformation.csv"
 
 # Other:
+DATE_FORMAT = "%Y-%m-%d" # YYYY-MM-DD
 AGE_THRESHOLD = 2 # Ages less than this will include a decimal component.
 DAYS_IN_YEAR = 365.0
+COLUMN_WISE = 0 # i.e. axis=0 // axis="columns"
+POPULATE_VALUE = "NA"
 
 def remove_empty_columns(metadata):
     metadata.dropna(axis="columns", how="all", inplace=True)
+
+def populate(metadata, populate_header, populate_value):
+    metadata_readable = metadata.copy(deep=True)
+    metadata_readable[[populate_header]] = populate_value
+
+    metadata_irida = metadata_readable[[SAMPLE_HEADER, populate_header]].copy(deep=True)
+
+    return metadata_readable, metadata_irida
+
+def find_earliest_date(row):
+    earliest = ""
+    earliest_valid = False
+    earliest_error = "Unable to find the earliest age."
+
+    dates = []
+
+    # Are ALL dates missing?
+    if (row.iloc[DATE_1_INDEX:].isnull().values.all(axis=COLUMN_WISE) or
+        row.iloc[DATE_1_INDEX:].isna().values.all(axis=COLUMN_WISE)):
+        earliest = ""
+        earliest_valid = False
+        earliest_error = "No data was found."
+
+        return pandas.Series([earliest, earliest_valid, earliest_error])
+
+    try:
+        dates = pandas.to_datetime(row.iloc[DATE_1_INDEX:], format="%Y-%m-%d", errors="raise")
+        dates = dates.dropna()
+
+    except ValueError:
+        earliest = ""
+        earliest_valid = False
+        earliest_error = "At least one of the date values are incorrectly formatted."
+
+    # At least one valid date was found:
+    if len(dates) > 0:
+        earliest = min(dates).strftime(DATE_FORMAT)
+        earliest_valid = True
+        earliest_error = ""
+
+    result = pandas.Series([earliest, earliest_valid, earliest_error])
+
+    return result
+
+def earliest(metadata, earliest_header):
+    earliest_valid_header = earliest_header + VALID_HEADER_EXTENSION
+    earliest_error_header = earliest_header + ERROR_HEADER_EXTENSION
+
+    metadata_readable = metadata.copy(deep=True)
+    metadata_readable[[earliest_header, earliest_valid_header, earliest_error_header]] = metadata_readable.apply(find_earliest_date, axis="columns")
+
+    metadata_irida = metadata_readable[[SAMPLE_HEADER, earliest_header]].copy(deep=True)
+
+    return metadata_readable, metadata_irida
 
 def lock(metadata):
     metadata_readable = metadata.copy(deep=True)
@@ -46,7 +112,6 @@ def format_age(age):
     return formatted_age
 
 def calculate_age(row):
-    pattern = "%Y-%m-%d"
     age = numpy.nan
     # numpy.nan, not pandas.NA because numpy.nan is treated as a float.
     # Otherwise, there's a risk of mixing age floats with pandas.NA and having
@@ -66,12 +131,12 @@ def calculate_age(row):
     date_1_string = row.iloc[DATE_1_INDEX]
     date_2_string = row.iloc[DATE_2_INDEX]
 
-    # Are the dates in the correct format?
+    # Are the dates in the correct type (string) and format?
     try:
-        date_1 = datetime.strptime(date_1_string, pattern)
-        date_2 = datetime.strptime(date_2_string, pattern)
+        date_1 = datetime.strptime(date_1_string, DATE_FORMAT)
+        date_2 = datetime.strptime(date_2_string, DATE_FORMAT)
 
-    except ValueError:
+    except (TypeError, ValueError) as error:
         age = numpy.nan
         age_valid = False
         age_error = "The date format does not match the expected format (YYYY-MM-DD)."
@@ -125,10 +190,16 @@ def main():
 
     parser.add_argument("input", type=pathlib.Path,
                         help="The CSV-formatted input file to transform.")
-    parser.add_argument("transformation", choices=[LOCK, AGE],
+    parser.add_argument("transformation", choices=[LOCK, AGE, EARLIEST, POPULATE],
                         help="The type of transformation to perform.")
     parser.add_argument("--age_header", default=AGE_HEADER, required=False,
-                        help="The type of transformation to perform.")
+                        help="The output column header for the calculated age.")
+    parser.add_argument("--earliest_header", default=EARLIEST_HEADER, required=False,
+                        help="The output column header for the earliest date.")
+    parser.add_argument("--populate_header", default=POPULATE_HEADER, required=False,
+                        help="The output column header for the populate transformation.")
+    parser.add_argument("--populate_value", default=POPULATE_VALUE, required=False,
+                        help="The value to populate the specified column with for the populate transformation.")
 
     args = parser.parse_args()
     metadata = pandas.read_csv(args.input)
@@ -137,15 +208,29 @@ def main():
         metadata_readable, metadata_irida = lock(metadata)
 
         remove_empty_columns(metadata_irida)
-        metadata_readable.to_csv("results.csv", index=False)
-        metadata_irida.to_csv("transformation.csv", index=False)
+        metadata_readable.to_csv(RESULTS_PATH, index=False)
+        metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
     elif (args.transformation == AGE):
         metadata_readable, metadata_irida = age(metadata, args.age_header)
 
         remove_empty_columns(metadata_irida)
-        metadata_readable.to_csv("results.csv", index=False, float_format=format_age)
-        metadata_irida.to_csv("transformation.csv", index=False, float_format=format_age)
+        metadata_readable.to_csv(RESULTS_PATH, index=False, float_format=format_age)
+        metadata_irida.to_csv(TRANSFORMATION_PATH, index=False, float_format=format_age)
+
+    elif (args.transformation == EARLIEST):
+        metadata_readable, metadata_irida = earliest(metadata, args.earliest_header)
+
+        remove_empty_columns(metadata_irida)
+        metadata_readable.to_csv(RESULTS_PATH, index=False)
+        metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
+
+    elif (args.transformation == POPULATE):
+        metadata_readable, metadata_irida = populate(metadata, args.populate_header, args.populate_value)
+
+        remove_empty_columns(metadata_irida)
+        metadata_readable.to_csv(RESULTS_PATH, index=False)
+        metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
 if __name__ == '__main__':
     main()

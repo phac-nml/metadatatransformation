@@ -16,6 +16,8 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 
 - [Lock](#lock) - Locks the metadata for IRIDA Next.
 - [Age](#age) - Calculates the age between the first and second metadata columns.
+- [Earliest](#earliest) - Determines the earliest date among metadata columns.
+- [Populate](#populate) - Populates a specified column with a specified value. Existing values will be overwritten if the column already exists.
 
 ### Lock
 
@@ -34,6 +36,28 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - `transformation/`
   - An Irida-Next intended CSV-format file for reporting calculated ages within Irida Next: `transformation.csv`
   - A user-intended CSV-format file for reference: `result.csv`
+
+</details>
+
+### Earliest
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `transformation/`
+  - A CSV-formatted file for reporting to Irida Next the earliest dates among metadata columns for each sample: `transformation.csv`
+  - A user-intended CSV-formatted file for reference: `result.csv`
+
+</details>
+
+### Populate
+
+<details markdown="1">
+<summary>Output files</summary>
+
+- `transformation/`
+  - A CSV-formatted file for reporting to IRIDA Next the populated column for each sample: `transformation.csv`
+  - A user-intended CSV-formatted file for reference: `result.csv`
 
 </details>
 
