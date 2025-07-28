@@ -54,7 +54,7 @@ def populate(metadata, populate_header, populate_value):
 def find_earliest_date(row):
     earliest = ""
     earliest_valid = False
-    earliest_error = "Unable to find the earliest age."
+    earliest_error = "Unable to find the earliest date."
 
     dates = []
 
@@ -67,14 +67,12 @@ def find_earliest_date(row):
 
         return pandas.Series([earliest, earliest_valid, earliest_error])
 
-    try:
-        dates = pandas.to_datetime(row.iloc[DATE_1_INDEX:], format="%Y-%m-%d", errors="raise")
-        dates = dates.dropna()
+    dates = pandas.to_datetime(row.iloc[DATE_1_INDEX:], format="%Y-%m-%d", errors="coerce")
+    dates = dates.dropna()
 
-    except ValueError:
-        earliest = ""
-        earliest_valid = False
-        earliest_error = "At least one of the date values are incorrectly formatted."
+    earliest = ""
+    earliest_valid = False
+    earliest_error = "There appears to be a problem with the row."
 
     # At least one valid date was found:
     if len(dates) > 0:
