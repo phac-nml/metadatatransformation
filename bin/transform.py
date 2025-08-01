@@ -49,7 +49,7 @@ RESTRICTED_ACCESS = "Restricted Access"
 BLANK = ""
 
 SPECIAL_ENTRIES = [NOT_APPLICABLE, MISSING, NOT_COLLECTED,
-                   NOT_PROVIDED, RESTRICTED_ACCESS, BLANK]
+                    NOT_PROVIDED, RESTRICTED_ACCESS, BLANK]
 SPECIAL_ENTRIES_REGEX = ['(?i)^{}$'.format(x) for x in SPECIAL_ENTRIES] # case insensitive
 
 def remove_empty_columns(metadata):
