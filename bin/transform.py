@@ -40,6 +40,18 @@ DAYS_IN_YEAR = 365.0
 COLUMN_WISE = 0 # i.e. axis=0 // axis="columns"
 POPULATE_VALUE = "NA"
 
+# Special Entries
+NOT_APPLICABLE = "Not Applicable"
+MISSING = "Missing"
+NOT_COLLECTED = "Not Collected"
+NOT_PROVIDED = "Not Provided"
+RESTRICTED_ACCESS = "Restricted Access"
+BLANK = ""
+
+SPECIAL_ENTRIES = [NOT_APPLICABLE, MISSING, NOT_COLLECTED,
+                   NOT_PROVIDED, RESTRICTED_ACCESS, BLANK]
+SPECIAL_ENTRIES_REGEX = ['(?i)^{}$'.format(x) for x in SPECIAL_ENTRIES] # case insensitive
+
 def remove_empty_columns(metadata):
     metadata.dropna(axis="columns", how="all", inplace=True)
 
@@ -58,23 +70,44 @@ def find_earliest_date(row):
 
     dates = []
 
-    # Are ALL dates missing?
-    if (row.iloc[DATE_1_INDEX:].isnull().values.all(axis=COLUMN_WISE) or
-        row.iloc[DATE_1_INDEX:].isna().values.all(axis=COLUMN_WISE)):
+    # Replace special entries (not in place):
+    # We need everything to be a string (pandas.NA) and not another
+    # type (numpy.nan, etc.).
+    replaced = row.iloc[DATE_1_INDEX:].fillna(value=pandas.NA, inplace=False)
+
+    # We need to check for all NA at this point, because numpy
+    # will fail to replace if everything is NA:
+    if (replaced.isnull().values.all(axis=COLUMN_WISE)):
         earliest = ""
         earliest_valid = False
         earliest_error = "No data was found."
 
         return pandas.Series([earliest, earliest_valid, earliest_error])
 
+    # Not everything is NA. Replace special entries:
+    replaced = replaced.replace(to_replace=SPECIAL_ENTRIES_REGEX, value=pandas.NA, inplace=False, regex=True)
+
+    # After the replacement, are all dates NA?
+    # This will happen when the row is only
+    # special entries and blank, which at this point
+    # are all converted to pandas.NA.
+    if (replaced.isnull().values.all(axis=COLUMN_WISE)):
+        earliest = ""
+        earliest_valid = False
+        earliest_error = "No dates were found."
+
+        return pandas.Series([earliest, earliest_valid, earliest_error])
+
     try:
-        dates = pandas.to_datetime(row.iloc[DATE_1_INDEX:], format="%Y-%m-%d", errors="raise")
+        dates = pandas.to_datetime(replaced, format="%Y-%m-%d", errors="raise")
         dates = dates.dropna()
 
     except ValueError:
         earliest = ""
         earliest_valid = False
-        earliest_error = "At least one of the date values are incorrectly formatted."
+        earliest_error = "At least one of the dates are incorrectly formatted."
+
+        return pandas.Series([earliest, earliest_valid, earliest_error])
 
     # At least one valid date was found:
     if len(dates) > 0:
@@ -83,7 +116,6 @@ def find_earliest_date(row):
         earliest_error = ""
 
     result = pandas.Series([earliest, earliest_valid, earliest_error])
-
     return result
 
 def earliest(metadata, earliest_header):

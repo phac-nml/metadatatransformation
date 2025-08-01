@@ -1,0 +1,8 @@
+sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8
+sample1,"normal",2000-01-01,Not Applicable,Missing,Not Collected,Not Provided,Restricted Access,,2000-01-08
+sample2,"mixed_case",2000-02-01,not Applicable,MIssIng,not Collected,not Provided,restricted Access,,2000-02-08
+sample3,"lowercase",2000-03-01,not applicable,missing,not collected,not provided,restricted access,,2000-03-08
+sample4,"bad_data",2000-03-01,not applicable,BAD_DATA,not collected,not provided,restricted access,,2000-03-08
+sample5,"bad_date_format",2000-03-01,not applicable,2000-20-01,not collected,not provided,restricted access,,2000-03-08
+sample6,"all_special",not applicable,not applicable,missing,not collected,not provided,restricted access,not applicable,not applicable
+sample7,"all_special_and_blank",,not applicable,missing,not collected,not provided,restricted access,,
