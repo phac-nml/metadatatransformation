@@ -58,7 +58,7 @@
                 },
                 "earliest_header": {
                     "type": "string",
-                    "default": "earliest_date",
+                    "default": "calc_earliest_date",
                     "description": "The column header name for the earliest date from among metadata columns for the earliest date metadata transformation.",
                     "pattern": "^[^\\t\\\",]*$"
                 },
