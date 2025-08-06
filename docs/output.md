@@ -45,8 +45,8 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 <summary>Output files</summary>
 
 - `transformation/`
-  - A CSV-formatted file for reporting to Irida Next the earliest dates among metadata columns for each sample: `transformation.csv`
-  - A user-intended CSV-formatted file for reference: `result.csv`
+  - A CSV-formatted file for reporting to Irida Next the earliest dates among metadata columns for each sample (empty dates will not be reported): `transformation.csv`
+  - A user-intended CSV-formatted file for reference (all dates will be reported): `result.csv`
 
 </details>
 

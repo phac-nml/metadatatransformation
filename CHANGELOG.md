@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Special entries are now ignored when determining the earliest age: `Not Applicable`, `Missing`, `Not Collected`, `Not Provided`, `Restricted Access`, `(blank)` [PR #15](https://github.com/phac-nml/metadatatransformation/pull/15)
 
+### Changed
+
+- The pipeline will no longer report empty metadata values in the Irida Next JSON output file, meaning previous "earliest_date" entries will no longer be overwritten within Irida Next.
+
 ## [1.1.0] - 2025/03/17
 
 ### `Added`
