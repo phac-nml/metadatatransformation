@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- The pipeline will no longer report empty metadata values in the Irida Next JSON output file, meaning previous "earliest_date" entries will no longer be overwritten within Irida Next.
+- The pipeline will no longer report empty metadata values in the Irida Next JSON output file for the earliest date transformation, meaning previous "earliest_date" entries will no longer be overwritten within Irida Next.
 
 ## [1.1.0] - 2025/03/17
 
