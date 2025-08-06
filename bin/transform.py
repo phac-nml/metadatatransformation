@@ -38,7 +38,8 @@ TRANSFORMATION_PATH = "transformation.csv"
 DATE_FORMAT = "%Y-%m-%d" # YYYY-MM-DD
 AGE_THRESHOLD = 2 # Ages less than this will include a decimal component.
 DAYS_IN_YEAR = 365.0
-COLUMN_WISE = 0 # i.e. axis=0 // axis="columns"
+ROWS_AXIS = 0 # i.e. axis=0 // axis="rows"
+COLUMNS_AXIS = 1 # i.e. axis=1 // axis="columns"
 POPULATE_VALUE = "NA"
 
 # Special Entries
@@ -56,12 +57,12 @@ SPECIAL_ENTRIES_REGEX = ['(?i)^{}$'.format(x) for x in SPECIAL_ENTRIES] # case i
 def remove_any_NA_rows(metadata):
     # If at least one entry in the row is NA,
     # then remove the whole row.
-    metadata.dropna(axis=0, how="any", inplace=True)
+    metadata.dropna(axis=ROWS_AXIS, how="any", inplace=True)
 
 def remove_all_NA_columns(metadata):
     # If all entries in the column are NA,
     # then remove the whole column.
-    metadata.dropna(axis=1, how="all", inplace=True)
+    metadata.dropna(axis=COLUMNS_AXIS, how="all", inplace=True)
 
 def populate(metadata, populate_header, populate_value):
     metadata_readable = metadata.copy(deep=True)
@@ -85,7 +86,7 @@ def find_earliest_date(row):
 
     # We need to check for all NA at this point, because numpy
     # will fail to replace if everything is NA:
-    if (replaced.isnull().values.all(axis=COLUMN_WISE)):
+    if (replaced.isnull().values.all(axis=ROWS_AXIS)):
         earliest = pandas.NA
         earliest_valid = False
         earliest_error = "No data was found."
@@ -99,7 +100,7 @@ def find_earliest_date(row):
     # This will happen when the row is only
     # special entries and blank, which at this point
     # are all converted to pandas.NA.
-    if (replaced.isnull().values.all(axis=COLUMN_WISE)):
+    if (replaced.isnull().values.all(axis=ROWS_AXIS)):
         earliest = pandas.NA
         earliest_valid = False
         earliest_error = "No dates were found."
@@ -131,7 +132,7 @@ def earliest(metadata, earliest_header):
     earliest_error_header = earliest_header + ERROR_HEADER_EXTENSION
 
     metadata_readable = metadata.copy(deep=True)
-    metadata_readable[[earliest_header, earliest_valid_header, earliest_error_header]] = metadata_readable.apply(find_earliest_date, axis="columns")
+    metadata_readable[[earliest_header, earliest_valid_header, earliest_error_header]] = metadata_readable.apply(find_earliest_date, axis=COLUMNS_AXIS)
 
     metadata_irida = metadata_readable[[SAMPLE_HEADER, earliest_header]].copy(deep=True)
 
@@ -217,7 +218,7 @@ def age(metadata, age_header):
     age_error_header = age_header + ERROR_HEADER_EXTENSION
 
     metadata_readable = metadata.iloc[:, :DATE_2_INDEX+1].copy(deep=True) # drop extra columns in new copy
-    metadata_readable[[age_header, age_valid_header, age_error_header]] = metadata_readable.apply(calculate_age, axis="columns")
+    metadata_readable[[age_header, age_valid_header, age_error_header]] = metadata_readable.apply(calculate_age, axis=COLUMNS_AXIS)
 
     metadata_irida = metadata_readable[[SAMPLE_HEADER, age_header]].copy(deep=True)
 
