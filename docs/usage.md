@@ -100,7 +100,7 @@ For this transformation, the `metadata_1` column through `metadata_8` column of 
 
 You may wish to specify the `--metadata_1_header` through `--metadata_8_header` parameters to provide appropriate column names in the `results.csv` file, but these headers do not affect results returned to IRIDA Next.
 
-If at least one metadata column contains non-empty data that does not conform to the expected "YYYY-MM-DD" date format, then the sample will report an error and no date will be reported for the sample (even if one other valid date appears among the invalid metadata for that sample).
+If at least one metadata column contains non-empty data that does not conform to the expected "YYYY-MM-DD" date format, then the sample will report an error and no date will be reported for the sample (even if one other valid date appears among the invalid metadata for that sample). However, the following special entries are ignored when calculating the earliest age (they are not considered malformed data): `Not Applicable`, `Missing`, `Not Collected`, `Not Provided`, `Restricted Access`, `(blank)`
 
 ### Populate
 

@@ -20,6 +20,7 @@ VALID_HEADER_EXTENSION = "_valid"
 ERROR_HEADER_EXTENSION = "_error"
 
 # Column indices:
+# Note: The relative position of these matters.
 DATE_1_INDEX = 2
 DATE_2_INDEX = 3
 
@@ -37,11 +38,31 @@ TRANSFORMATION_PATH = "transformation.csv"
 DATE_FORMAT = "%Y-%m-%d" # YYYY-MM-DD
 AGE_THRESHOLD = 2 # Ages less than this will include a decimal component.
 DAYS_IN_YEAR = 365.0
-COLUMN_WISE = 0 # i.e. axis=0 // axis="columns"
+ROWS_AXIS = 0 # i.e. axis=0 // axis="rows"
+COLUMNS_AXIS = 1 # i.e. axis=1 // axis="columns"
 POPULATE_VALUE = "NA"
 
-def remove_empty_columns(metadata):
-    metadata.dropna(axis="columns", how="all", inplace=True)
+# Special Entries
+NOT_APPLICABLE = "Not Applicable"
+MISSING = "Missing"
+NOT_COLLECTED = "Not Collected"
+NOT_PROVIDED = "Not Provided"
+RESTRICTED_ACCESS = "Restricted Access"
+BLANK = ""
+
+SPECIAL_ENTRIES = [NOT_APPLICABLE, MISSING, NOT_COLLECTED,
+                    NOT_PROVIDED, RESTRICTED_ACCESS, BLANK]
+SPECIAL_ENTRIES_REGEX = ['(?i)^{}$'.format(x) for x in SPECIAL_ENTRIES] # case insensitive
+
+def remove_any_NA_rows(metadata):
+    # If at least one entry in the row is NA,
+    # then remove the whole row.
+    metadata.dropna(axis=ROWS_AXIS, how="any", inplace=True)
+
+def remove_all_NA_columns(metadata):
+    # If all entries in the column are NA,
+    # then remove the whole column.
+    metadata.dropna(axis=COLUMNS_AXIS, how="all", inplace=True)
 
 def populate(metadata, populate_header, populate_value):
     metadata_readable = metadata.copy(deep=True)
@@ -52,29 +73,50 @@ def populate(metadata, populate_header, populate_value):
     return metadata_readable, metadata_irida
 
 def find_earliest_date(row):
-    earliest = ""
+    earliest = pandas.NA
     earliest_valid = False
     earliest_error = "Unable to find the earliest age."
 
     dates = []
 
-    # Are ALL dates missing?
-    if (row.iloc[DATE_1_INDEX:].isnull().values.all(axis=COLUMN_WISE) or
-        row.iloc[DATE_1_INDEX:].isna().values.all(axis=COLUMN_WISE)):
-        earliest = ""
+    # Replace special entries (not in place):
+    # We need everything to be a string (pandas.NA) and not another
+    # type (numpy.nan, etc.).
+    replaced = row.iloc[DATE_1_INDEX:].fillna(value=pandas.NA, inplace=False)
+
+    # We need to check for all NA at this point, because numpy
+    # will fail to replace if everything is NA:
+    if (replaced.isnull().values.all(axis=ROWS_AXIS)):
+        earliest = pandas.NA
         earliest_valid = False
         earliest_error = "No data was found."
 
         return pandas.Series([earliest, earliest_valid, earliest_error])
 
+    # Not everything is NA. Replace special entries:
+    replaced = replaced.replace(to_replace=SPECIAL_ENTRIES_REGEX, value=pandas.NA, inplace=False, regex=True)
+
+    # After the replacement, are all dates NA?
+    # This will happen when the row is only
+    # special entries and blank, which at this point
+    # are all converted to pandas.NA.
+    if (replaced.isnull().values.all(axis=ROWS_AXIS)):
+        earliest = pandas.NA
+        earliest_valid = False
+        earliest_error = "No dates were found."
+
+        return pandas.Series([earliest, earliest_valid, earliest_error])
+
     try:
-        dates = pandas.to_datetime(row.iloc[DATE_1_INDEX:], format="%Y-%m-%d", errors="raise")
+        dates = pandas.to_datetime(replaced, format="%Y-%m-%d", errors="raise")
         dates = dates.dropna()
 
     except ValueError:
-        earliest = ""
+        earliest = pandas.NA
         earliest_valid = False
-        earliest_error = "At least one of the date values are incorrectly formatted."
+        earliest_error = "At least one of the dates are incorrectly formatted."
+
+        return pandas.Series([earliest, earliest_valid, earliest_error])
 
     # At least one valid date was found:
     if len(dates) > 0:
@@ -83,7 +125,6 @@ def find_earliest_date(row):
         earliest_error = ""
 
     result = pandas.Series([earliest, earliest_valid, earliest_error])
-
     return result
 
 def earliest(metadata, earliest_header):
@@ -91,7 +132,7 @@ def earliest(metadata, earliest_header):
     earliest_error_header = earliest_header + ERROR_HEADER_EXTENSION
 
     metadata_readable = metadata.copy(deep=True)
-    metadata_readable[[earliest_header, earliest_valid_header, earliest_error_header]] = metadata_readable.apply(find_earliest_date, axis="columns")
+    metadata_readable[[earliest_header, earliest_valid_header, earliest_error_header]] = metadata_readable.apply(find_earliest_date, axis=COLUMNS_AXIS)
 
     metadata_irida = metadata_readable[[SAMPLE_HEADER, earliest_header]].copy(deep=True)
 
@@ -177,7 +218,7 @@ def age(metadata, age_header):
     age_error_header = age_header + ERROR_HEADER_EXTENSION
 
     metadata_readable = metadata.iloc[:, :DATE_2_INDEX+1].copy(deep=True) # drop extra columns in new copy
-    metadata_readable[[age_header, age_valid_header, age_error_header]] = metadata_readable.apply(calculate_age, axis="columns")
+    metadata_readable[[age_header, age_valid_header, age_error_header]] = metadata_readable.apply(calculate_age, axis=COLUMNS_AXIS)
 
     metadata_irida = metadata_readable[[SAMPLE_HEADER, age_header]].copy(deep=True)
 
@@ -207,28 +248,29 @@ def main():
     if (args.transformation == LOCK):
         metadata_readable, metadata_irida = lock(metadata)
 
-        remove_empty_columns(metadata_irida)
+        remove_all_NA_columns(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
     elif (args.transformation == AGE):
         metadata_readable, metadata_irida = age(metadata, args.age_header)
 
-        remove_empty_columns(metadata_irida)
+        remove_all_NA_columns(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False, float_format=format_age)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False, float_format=format_age)
 
     elif (args.transformation == EARLIEST):
         metadata_readable, metadata_irida = earliest(metadata, args.earliest_header)
 
-        remove_empty_columns(metadata_irida)
+        remove_all_NA_columns(metadata_irida)
+        remove_any_NA_rows(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
     elif (args.transformation == POPULATE):
         metadata_readable, metadata_irida = populate(metadata, args.populate_header, args.populate_value)
 
-        remove_empty_columns(metadata_irida)
+        remove_all_NA_columns(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
