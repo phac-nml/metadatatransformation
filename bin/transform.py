@@ -20,6 +20,7 @@ VALID_HEADER_EXTENSION = "_valid"
 ERROR_HEADER_EXTENSION = "_error"
 
 # Column indices:
+# Note: The relative position of these matters.
 DATE_1_INDEX = 2
 DATE_2_INDEX = 3
 
@@ -52,8 +53,15 @@ SPECIAL_ENTRIES = [NOT_APPLICABLE, MISSING, NOT_COLLECTED,
                     NOT_PROVIDED, RESTRICTED_ACCESS, BLANK]
 SPECIAL_ENTRIES_REGEX = ['(?i)^{}$'.format(x) for x in SPECIAL_ENTRIES] # case insensitive
 
-def remove_empty_columns(metadata):
-    metadata.dropna(axis="columns", how="all", inplace=True)
+def remove_any_NA_rows(metadata):
+    # If at least one entry in the row is NA,
+    # then remove the whole row.
+    metadata.dropna(axis=0, how="any", inplace=True)
+
+def remove_all_NA_columns(metadata):
+    # If all entries in the column are NA,
+    # then remove the whole column.
+    metadata.dropna(axis=1, how="all", inplace=True)
 
 def populate(metadata, populate_header, populate_value):
     metadata_readable = metadata.copy(deep=True)
@@ -64,7 +72,7 @@ def populate(metadata, populate_header, populate_value):
     return metadata_readable, metadata_irida
 
 def find_earliest_date(row):
-    earliest = ""
+    earliest = pandas.NA
     earliest_valid = False
     earliest_error = "Unable to find the earliest age."
 
@@ -78,7 +86,7 @@ def find_earliest_date(row):
     # We need to check for all NA at this point, because numpy
     # will fail to replace if everything is NA:
     if (replaced.isnull().values.all(axis=COLUMN_WISE)):
-        earliest = ""
+        earliest = pandas.NA
         earliest_valid = False
         earliest_error = "No data was found."
 
@@ -92,7 +100,7 @@ def find_earliest_date(row):
     # special entries and blank, which at this point
     # are all converted to pandas.NA.
     if (replaced.isnull().values.all(axis=COLUMN_WISE)):
-        earliest = ""
+        earliest = pandas.NA
         earliest_valid = False
         earliest_error = "No dates were found."
 
@@ -103,7 +111,7 @@ def find_earliest_date(row):
         dates = dates.dropna()
 
     except ValueError:
-        earliest = ""
+        earliest = pandas.NA
         earliest_valid = False
         earliest_error = "At least one of the dates are incorrectly formatted."
 
@@ -239,28 +247,29 @@ def main():
     if (args.transformation == LOCK):
         metadata_readable, metadata_irida = lock(metadata)
 
-        remove_empty_columns(metadata_irida)
+        remove_all_NA_columns(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
     elif (args.transformation == AGE):
         metadata_readable, metadata_irida = age(metadata, args.age_header)
 
-        remove_empty_columns(metadata_irida)
+        remove_all_NA_columns(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False, float_format=format_age)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False, float_format=format_age)
 
     elif (args.transformation == EARLIEST):
         metadata_readable, metadata_irida = earliest(metadata, args.earliest_header)
 
-        remove_empty_columns(metadata_irida)
+        remove_all_NA_columns(metadata_irida)
+        remove_any_NA_rows(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
     elif (args.transformation == POPULATE):
         metadata_readable, metadata_irida = populate(metadata, args.populate_header, args.populate_value)
 
-        remove_empty_columns(metadata_irida)
+        remove_all_NA_columns(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
