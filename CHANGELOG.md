@@ -3,6 +3,17 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2025/08/06
+
+### Added
+
+- Special entries are now ignored when determining the earliest age: `Not Applicable`, `Missing`, `Not Collected`, `Not Provided`, `Restricted Access`, `(blank)` [PR #15](https://github.com/phac-nml/metadatatransformation/pull/15)
+
+### Changed
+
+- The pipeline will no longer report empty metadata values in the Irida Next JSON output file for the earliest date transformation, meaning previous "earliest_date" entries will no longer be overwritten within Irida Next. [PR #15](https://github.com/phac-nml/metadatatransformation/pull/15)
+- The default column name for the earliest date transformation ("earliest_date") is now "calc_earliest_date". [PR #16](https://github.com/phac-nml/metadatatransformation/pull/16)
+
 ## [1.1.0] - 2025/03/17
 
 ### `Added`
@@ -31,3 +42,4 @@ Initial release of phac-nml/metadatatransformation.
 
 [1.0.0]: https://github.com/phac-nml/metadatatransformation/releases/tag/1.0.0
 [1.1.0]: https://github.com/phac-nml/metadatatransformation/releases/tag/1.1.0
+[1.1.1]: https://github.com/phac-nml/metadatatransformation/releases/tag/1.1.1

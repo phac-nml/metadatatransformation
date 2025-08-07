@@ -81,7 +81,9 @@ The following parameters can be used to rename CSV-generated output columns as f
 - `--metadata_8_header`: names the first metadata_8 column header
 - `--earliest_header`: names the earliest date column header and related output columns
 
-The above parameters will only affect the `results.csv` file and not the information returned to IRIDA Next. The earliest date column will be reported as `earliest_date` in `results.csv`, `transformation.csv`, and the `iridanext.output.json` file, which is returned to IRIDA Next.
+The above parameters will only affect the `results.csv` file and not the information returned to IRIDA Next. The earliest date column will be reported as `calc_earliest_date` in `results.csv`, `transformation.csv`, and the `iridanext.output.json` file, which is returned to IRIDA Next.
+
+The following special entries are ignored when calculating the earliest age (they are not considered malformed data): `Not Applicable`, `Missing`, `Not Collected`, `Not Provided`, `Restricted Access`, `(blank)`
 
 ## Populate Parameters
 
