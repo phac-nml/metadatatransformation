@@ -24,7 +24,7 @@ nextflow_pipeline {
             def transformation = path("$launchDir/results/transformation/transformation.csv")
             assert transformation.exists()
 
-            assert transformation.text.contains("sample,earliest_date")
+            assert transformation.text.contains("sample,calc_earliest_date")
             assert transformation.text.contains("sample1,2000-01-01")
             assert transformation.text.contains("sample2,2000-02-01")
             assert transformation.text.contains("sample3,2000-03-01")
@@ -33,7 +33,7 @@ nextflow_pipeline {
             def results = path("$launchDir/results/transformation/results.csv")
             assert results.exists()
 
-            assert results.text.contains("sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8,earliest_date,earliest_date_valid,earliest_date_error")
+            assert results.text.contains("sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error")
             assert results.text.contains("sample1,ABC,2000-01-01,2000-01-02,2000-01-03,2000-01-04,2000-01-05,2000-01-06,2000-01-07,2000-01-08,2000-01-01,True,")
             assert results.text.contains("sample2,DEF,2000-02-01,2000-02-02,2000-02-03,2000-02-04,2000-02-05,2000-02-06,2000-02-07,2000-02-08,2000-02-01,True,")
             assert results.text.contains("sample3,GHI,2000-03-01,2000-03-02,2000-03-03,2000-03-04,2000-03-05,2000-03-06,2000-03-07,2000-03-08,2000-03-01,True,")
@@ -48,13 +48,13 @@ nextflow_pipeline {
             assert iridanext_metadata.size() == 3
 
             assert iridanext_metadata.containsKey("sample1")
-            assert iridanext_metadata.sample1.earliest_date == "2000-01-01"
+            assert iridanext_metadata.sample1.calc_earliest_date == "2000-01-01"
 
             assert iridanext_metadata.containsKey("sample2")
-            assert iridanext_metadata.sample2.earliest_date == "2000-02-01"
+            assert iridanext_metadata.sample2.calc_earliest_date == "2000-02-01"
 
             assert iridanext_metadata.containsKey("sample3")
-            assert iridanext_metadata.sample3.earliest_date == "2000-03-01"
+            assert iridanext_metadata.sample3.calc_earliest_date == "2000-03-01"
         }
     }
 
@@ -79,7 +79,7 @@ nextflow_pipeline {
             def transformation = path("$launchDir/results/transformation/transformation.csv")
             assert transformation.exists()
 
-            assert transformation.text.contains("sample,earliest_date")
+            assert transformation.text.contains("sample,calc_earliest_date")
             assert transformation.text.contains("sample1,2000-01-01")
             assert transformation.text.contains("sample2,") == false
             assert transformation.text.contains("sample3,2000-03-02")
@@ -112,7 +112,7 @@ nextflow_pipeline {
             def results = path("$launchDir/results/transformation/results.csv")
             assert results.exists()
 
-            assert results.text.contains("sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8,earliest_date,earliest_date_valid,earliest_date_error")
+            assert results.text.contains("sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error")
             assert results.text.contains("sample1,normal,2000-01-01,2000-01-02,2000-01-03,2000-01-04,2000-01-05,2000-01-06,2000-01-07,2000-01-08,2000-01-01,True,")
             assert results.text.contains("sample2,all_missing,,,,,,,,,,False,No data was found.")
             assert results.text.contains("sample3,some_missing,,2000-03-02,,2000-03-04,,2000-03-06,,2000-03-08,2000-03-02,True,")
@@ -151,12 +151,12 @@ nextflow_pipeline {
             assert iridanext_metadata.size() == 6
 
             assert iridanext_metadata.containsKey("sample1")
-            assert iridanext_metadata.sample1.earliest_date == "2000-01-01"
+            assert iridanext_metadata.sample1.calc_earliest_date == "2000-01-01"
 
             assert iridanext_metadata.containsKey("sample2") == false
 
             assert iridanext_metadata.containsKey("sample3")
-            assert iridanext_metadata.sample3.earliest_date == "2000-03-02"
+            assert iridanext_metadata.sample3.calc_earliest_date == "2000-03-02"
 
             assert iridanext_metadata.containsKey("sample4") == false
 
@@ -175,7 +175,7 @@ nextflow_pipeline {
             assert iridanext_metadata.containsKey("sample11") == false
 
             assert iridanext_metadata.containsKey("sample12")
-            assert iridanext_metadata.sample12.earliest_date == "2000-01-01"
+            assert iridanext_metadata.sample12.calc_earliest_date == "2000-01-01"
 
             assert iridanext_metadata.containsKey("sample13") == false
 
@@ -202,13 +202,13 @@ nextflow_pipeline {
             assert iridanext_metadata.containsKey("sample24") == false
 
             assert iridanext_metadata.containsKey("sample25")
-            assert iridanext_metadata.sample25.earliest_date == "2000-01-01"
+            assert iridanext_metadata.sample25.calc_earliest_date == "2000-01-01"
 
             assert iridanext_metadata.containsKey("sample26")
-            assert iridanext_metadata.sample26.earliest_date == "2000-01-01"
+            assert iridanext_metadata.sample26.calc_earliest_date == "2000-01-01"
 
             assert iridanext_metadata.containsKey("sample27")
-            assert iridanext_metadata.sample27.earliest_date == "2000-01-01"
+            assert iridanext_metadata.sample27.calc_earliest_date == "2000-01-01"
         }
     }
 
@@ -289,7 +289,7 @@ nextflow_pipeline {
             def transformation = path("$launchDir/results/transformation/transformation.csv")
             assert transformation.exists()
 
-            assert transformation.text.contains("sample,earliest_date")
+            assert transformation.text.contains("sample,calc_earliest_date")
             assert transformation.text.contains("sample1,2000-01-01")
             assert transformation.text.contains("sample2,2000-02-01")
             assert transformation.text.contains("sample3,2000-03-01")
@@ -302,7 +302,7 @@ nextflow_pipeline {
             def results = path("$launchDir/results/transformation/results.csv")
             assert results.exists()
 
-            assert results.text.contains("sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8,earliest_date,earliest_date_valid,earliest_date_error")
+            assert results.text.contains("sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error")
             assert results.text.contains("sample1,normal,2000-01-01,Not Applicable,Missing,Not Collected,Not Provided,Restricted Access,,2000-01-08,2000-01-01,True,")
             assert results.text.contains("sample2,mixed_case,2000-02-01,not Applicable,MIssIng,not Collected,not Provided,restricted Access,,2000-02-08,2000-02-01,True,")
             assert results.text.contains("sample3,lowercase,2000-03-01,not applicable,missing,not collected,not provided,restricted access,,2000-03-08,2000-03-01,True,")
@@ -321,13 +321,13 @@ nextflow_pipeline {
             assert iridanext_metadata.size() == 3
 
             assert iridanext_metadata.containsKey("sample1")
-            assert iridanext_metadata.sample1.earliest_date == "2000-01-01"
+            assert iridanext_metadata.sample1.calc_earliest_date == "2000-01-01"
 
             assert iridanext_metadata.containsKey("sample2")
-            assert iridanext_metadata.sample2.earliest_date == "2000-02-01"
+            assert iridanext_metadata.sample2.calc_earliest_date == "2000-02-01"
 
             assert iridanext_metadata.containsKey("sample3")
-            assert iridanext_metadata.sample3.earliest_date == "2000-03-01"
+            assert iridanext_metadata.sample3.calc_earliest_date == "2000-03-01"
 
             assert iridanext_metadata.containsKey("sample4") == false
 
@@ -364,13 +364,13 @@ nextflow_pipeline {
             assert transformation.text.contains("sample1")
             assert transformation.text.contains("sample2")
             assert transformation.text.contains("sample3")
-            assert transformation.text.contains("earliest_date") == false
+            assert transformation.text.contains("calc_earliest_date") == false
 
             // Check Results (Human-Readable)
             def results = path("$launchDir/results/transformation/results.csv")
             assert results.exists()
 
-            assert results.text.contains("sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8,earliest_date,earliest_date_valid,earliest_date_error")
+            assert results.text.contains("sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error")
             assert results.text.contains("sample1,ABC,a,a,a,a,a,a,a,a,,False,At least one of the dates are incorrectly formatted.")
             assert results.text.contains("sample2,DEF,b,b,b,b,b,b,b,b,,False,At least one of the dates are incorrectly formatted.")
             assert results.text.contains("sample3,GHI,c,c,c,c,c,c,c,c,,False,At least one of the dates are incorrectly formatted.")
@@ -385,13 +385,13 @@ nextflow_pipeline {
             assert iridanext_metadata.size() == 3
 
             assert iridanext_metadata.containsKey("sample1")
-            assert iridanext_metadata.sample1.containsKey("earliest_date") == false
+            assert iridanext_metadata.sample1.containsKey("calc_earliest_date") == false
 
             assert iridanext_metadata.containsKey("sample2")
-            assert iridanext_metadata.sample1.containsKey("earliest_date") == false
+            assert iridanext_metadata.sample1.containsKey("calc_earliest_date") == false
 
             assert iridanext_metadata.containsKey("sample3")
-            assert iridanext_metadata.sample1.containsKey("earliest_date") == false
+            assert iridanext_metadata.sample1.containsKey("calc_earliest_date") == false
         }
     }
 }

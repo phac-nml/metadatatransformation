@@ -13,7 +13,7 @@ from datetime import datetime
 SAMPLE_HEADER = "sample"
 SAMPLE_NAME_HEADER = "sample_name"
 AGE_HEADER = "age"
-EARLIEST_HEADER = "earliest_date"
+EARLIEST_HEADER = "calc_earliest_date"
 POPULATE_HEADER = "populated"
 
 VALID_HEADER_EXTENSION = "_valid"
