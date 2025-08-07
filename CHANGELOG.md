@@ -11,8 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- The pipeline will no longer report empty metadata values in the Irida Next JSON output file for the earliest date transformation, meaning previous "earliest_date" entries will no longer be overwritten within Irida Next.
-- The default column name for the earliest date transformation ("earliest_date") is now "calc_earliest_date".
+- The pipeline will no longer report empty metadata values in the Irida Next JSON output file for the earliest date transformation, meaning previous "earliest_date" entries will no longer be overwritten within Irida Next. [PR #15](https://github.com/phac-nml/metadatatransformation/pull/15)
+- The default column name for the earliest date transformation ("earliest_date") is now "calc_earliest_date". [PR #16](https://github.com/phac-nml/metadatatransformation/pull/16)
 
 ## [1.1.0] - 2025/03/17
 
