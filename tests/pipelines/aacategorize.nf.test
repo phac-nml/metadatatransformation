@@ -1,0 +1,24 @@
+nextflow_pipeline {
+
+    name "Metadata Transformation: Categorize"
+    script "main.nf"
+
+    test("Basic") {
+        tag "pipeline_categorize"
+        tag "pipeline_categorize_basic"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/categorize/basic.csv"
+                outdir = "results"
+
+                transformation = "categorize"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+        }
+    }
+}

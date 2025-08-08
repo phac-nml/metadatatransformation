@@ -29,6 +29,7 @@ LOCK = "lock"
 AGE = "age"
 EARLIEST = "earliest"
 POPULATE = "populate"
+CATEGORIZE = "categorize"
 
 # Output Files:
 RESULTS_PATH = "results.csv"
@@ -144,6 +145,11 @@ def lock(metadata):
 
     return metadata_readable, metadata_irida
 
+def categorize(metadata):
+    metadata_readable = metadata.copy(deep=True)
+    metadata_irida = metadata_readable[[SAMPLE_HEADER]].copy(deep=True)
+    return metadata_readable, metadata_irida
+
 def format_age(age):
     if age < AGE_THRESHOLD:
         formatted_age = "{:.4f}".format(age)
@@ -231,7 +237,7 @@ def main():
 
     parser.add_argument("input", type=pathlib.Path,
                         help="The CSV-formatted input file to transform.")
-    parser.add_argument("transformation", choices=[LOCK, AGE, EARLIEST, POPULATE],
+    parser.add_argument("transformation", choices=[LOCK, AGE, EARLIEST, POPULATE, CATEGORIZE],
                         help="The type of transformation to perform.")
     parser.add_argument("--age_header", default=AGE_HEADER, required=False,
                         help="The output column header for the calculated age.")
@@ -273,6 +279,14 @@ def main():
         remove_all_NA_columns(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
+    
+    elif (args.transformation == CATEGORIZE):
+        metadata_readable, metadata_irida = categorize(metadata)
+
+        remove_all_NA_columns(metadata_irida)
+        metadata_readable.to_csv(RESULTS_PATH, index=False)
+        metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
+
 
 if __name__ == '__main__':
     main()
