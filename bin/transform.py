@@ -55,6 +55,9 @@ SPECIAL_ENTRIES = [NOT_APPLICABLE, MISSING, NOT_COLLECTED,
                     NOT_PROVIDED, RESTRICTED_ACCESS, BLANK]
 SPECIAL_ENTRIES_REGEX = ['(?i)^{}$'.format(x) for x in SPECIAL_ENTRIES] # case insensitive
 
+def isna(metadata_series, empty_strs = SPECIAL_ENTRIES):
+    (metadata_series.isnull() | metadata_series.isin(empty_strs))
+
 def remove_any_NA_rows(metadata):
     # If at least one entry in the row is NA,
     # then remove the whole row.
@@ -146,8 +149,36 @@ def lock(metadata):
     return metadata_readable, metadata_irida
 
 def categorize(metadata):
+    
     metadata_readable = metadata.copy(deep=True)
+
+    # Headers need clarification
+    if (False):
+        metadata_readable['source_type'] = 'Unknown'
+
+        metadata_readable[
+            ~isna(metadata_readable['host']) & metadata_readable['host'] == 'human',
+            'source_type'
+        ] = 'Human'
+
+        metadata_readable[
+            ~isna(metadata_readable['host']) & metadata_readable['host'] == 'human',
+            'source_type'
+        ] = 'Animal'
+
+        metadata_readable[
+            ~isna(metadata_readable['food_product']) & isna(metadata_readable['host']),
+            'source_type'
+        ] = 'Food'
+
+        metadata_readable[
+            (~isna(metadata_readable['environmental_site']) | ~isna(metadata_readable['environmental_material'])) & 
+            isna(metadata_readable['food_product']) & isna(metadata_readable['host']),
+            'source_type'
+        ] = 'Environmental'
+
     metadata_irida = metadata_readable[[SAMPLE_HEADER]].copy(deep=True)
+
     return metadata_readable, metadata_irida
 
 def format_age(age):
