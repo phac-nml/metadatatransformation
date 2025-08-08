@@ -19,6 +19,17 @@ nextflow_pipeline {
         then {
             assert workflow.success
             assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.contains("sample,calc_source_type")
+            assert transformation.text.contains("sample1,Human")
+            assert transformation.text.contains("sample2,Animal")
+            assert transformation.text.contains("sample3,Food")
+            assert transformation.text.contains("sample4,Environmental")
+            assert transformation.text.contains("sample5,Unknown")
         }
     }
 }

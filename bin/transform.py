@@ -56,7 +56,7 @@ SPECIAL_ENTRIES = [NOT_APPLICABLE, MISSING, NOT_COLLECTED,
 SPECIAL_ENTRIES_REGEX = ['(?i)^{}$'.format(x) for x in SPECIAL_ENTRIES] # case insensitive
 
 def isna(metadata_series, empty_strs = SPECIAL_ENTRIES):
-    (metadata_series.isnull() | metadata_series.isin(empty_strs))
+    return (metadata_series.isnull() | metadata_series.isin(empty_strs))
 
 def remove_any_NA_rows(metadata):
     # If at least one entry in the row is NA,
@@ -150,53 +150,57 @@ def lock(metadata):
 
 def categorize(metadata):
     
+    # Aliasing header names
+    # These can be made constant if useful in other methods
+    host_scientific_name_header = 'metadata_1'
+    host_common_name_header = 'metadata_2'
+    food_product_header = 'metadata_3'
+    environmental_site_header = 'metadata_4'
+    environmental_material_header = 'metadata_5'
+
     metadata_readable = metadata.copy(deep=True)
 
-    metadata_readable["calc_sample_category"] = "Unknown"
+    metadata_readable["calc_source_type"] = "Unknown"
 
-    metadata_readable[
-        metadata_readable["host_scientific_name"].str.contains("homo sapiens", case=False) | 
-        metadata_readable["host_common_name"].str.contains("human", case=False),
-        "calc_sample_category"
+    metadata_readable.loc[
+        metadata_readable[host_scientific_name_header].str.contains("homo sapiens", case=False, na=False) | 
+        metadata_readable[host_common_name_header].str.contains("human", case=False, na=False),
+        "calc_source_type"
     ] = "Human"
 
-    metadata_readable[
-        (~isna(metadata_readable["host_scientific_name"]) | ~isna(metadata_readable["host_common_name"])) & 
-        (metadata_readable["calc_sample_category"] == "Unknown"),
-        "calc_sample_category"
+    metadata_readable.loc[
+        (~isna(metadata_readable[host_common_name_header]) | ~isna(metadata_readable[host_common_name_header])) & 
+        (metadata_readable["calc_source_type"] == "Unknown"),
+        "calc_source_type"
     ] = "Animal"
 
 
     # Catch sci name / common name mismatch
-    metadata_readable[
+    metadata_readable.loc[
         (
-            metadata_readable["host_scientific_name"].str.contains("homo sapiens", case=False) & 
-            ~metadata_readable["host_common_name"].str.contains("human", case=False) &
-            ~isna(metadata_readable["host_common_name"])
+            metadata_readable[host_scientific_name_header].str.contains("homo sapiens", case=False, na=False) & 
+            ~metadata_readable[host_common_name_header].str.contains("human", case=False, na=False) &
+            ~isna(metadata_readable[host_common_name_header])
         ) | (
-            ~metadata_readable["host_scientific_name"].str.contains("homo sapiens", case=False) & 
-            metadata_readable["host_common_name"].str.contains("human", case=False) &
-            ~isna(metadata_readable["host_scientific_name"])
+            ~metadata_readable[host_scientific_name_header].str.contains("homo sapiens", case=False, na=False) & 
+            metadata_readable[host_common_name_header].str.contains("human", case=False, na=False) &
+            ~isna(metadata_readable[host_scientific_name_header])
         ),
-        "calc_sample_category"
-    ] = "Unknown"
+        "calc_source_type"
+    ] = "Host Conflict"
 
-    metadata_readable[
-        ~isna(metadata_readable["food_product"]) & (metadata_readable["calc_sample_category"] == "Unknown"),
-        "calc_sample_category"
+    metadata_readable.loc[
+        ~isna(metadata_readable[food_product_header]) & (metadata_readable["calc_source_type"] == "Unknown"),
+        "calc_source_type"
     ] = "Food"
 
-    metadata_readable[
-        (~isna(metadata_readable["environmental_site"]) | ~isna(metadata_readable["environmental_material"])) & 
-        (metadata_readable["calc_sample_category"] == "Unknown"),
-        "calc_sample_category"
+    metadata_readable.loc[
+        (~isna(metadata_readable[environmental_site_header]) | ~isna(metadata_readable[environmental_material_header])) & 
+        (metadata_readable["calc_source_type"] == "Unknown"),
+        "calc_source_type"
     ] = "Environmental"
 
-    metadata_irida = metadata_readable[[
-        SAMPLE_HEADER, "calc_sample_category", 
-        "host_scientific_name", "host_common_name", 
-        "food_product", "environmental_site", "environmental_material"
-    ]].copy(deep=True)
+    metadata_irida = metadata_readable[[SAMPLE_HEADER, 'calc_source_type']].copy(deep=True)
 
     return metadata_readable, metadata_irida
 
