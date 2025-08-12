@@ -1,0 +1,7 @@
+sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5
+sample1,"ABC",homo sapiens,human,,,
+sample2,"DEF",,dog,,,
+sample3,"GHI",,,eggs,,
+sample4,"JKL",,,,farm,wastewater
+sample5,"MNO",,,,,
+sample6,"ABC",homo sapiens,dog,,,

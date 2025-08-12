@@ -47,6 +47,7 @@ nextflow_pipeline {
             assert results.text.contains("sample3,GHI,,,eggs,,,Food")
             assert results.text.contains("sample4,JKL,,,,farm,wastewater,Environmental")
             assert results.text.contains("sample5,MNO,,,,,,Unknown")
+            assert results.text.contains("sample6,"ABC",homo sapiens,dog,,,,Host Conflict")
         }
     }
 
