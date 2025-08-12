@@ -36,7 +36,7 @@ nextflow_pipeline {
             assert transformation.text.contains("sample3,Food")
             assert transformation.text.contains("sample4,Environmental")
             assert transformation.text.contains("sample5,Unknown")
-            assert transformation.text.contains("sample6,Unknown")
+            assert transformation.text.contains("sample6,Host Conflict")
 
             // Check Results (Human-Readable)
             def results = path("$launchDir/results/transformation/results.csv")

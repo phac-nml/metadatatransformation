@@ -116,7 +116,7 @@ sample2,"DEF",,dog,,,,Animal
 sample3,"GHI",,,eggs,,,Food
 sample4,"JKL",,,,farm,wastewater,Environmental
 sample5,"MNO",,,,,,Unknown
-sample6,"ABC",homo sapiens,dog,,,,Host Conflict
+sample6,"PQR",homo sapiens,dog,,,,Host Conflict
 ```
 
 ## Other Parameters

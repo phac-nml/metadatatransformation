@@ -162,7 +162,7 @@ sample2,"DEF",,dog,,,
 sample3,"GHI",,,eggs,,
 sample4,"JKL",,,,farm,wastewater
 sample5,"MNO",,,,,
-sample6,"ABC",homo sapiens,dog,,,
+sample6,"PQR",homo sapiens,dog,,,
 ```
 
 following output `results.csv` file will be generated:
@@ -174,7 +174,7 @@ sample2,"DEF",,dog,,,,Animal
 sample3,"GHI",,,eggs,,,Food
 sample4,"JKL",,,,farm,wastewater,Environmental
 sample5,"MNO",,,,,,Unknown
-sample6,"ABC",homo sapiens,dog,,,,Host Conflict
+sample6,"PQR",homo sapiens,dog,,,,Host Conflict
 ```
 
 and the following `transformation.csv` file (written back to IRIDA Next) will be generated:
@@ -186,6 +186,7 @@ sample2,Animal
 sample3,Food
 sample4,Environmental
 sample5,Unknown
+sample6,Host Conflict
 ```
 
 **NOTE** This is expecting specific metadata fields (host_scientific_name, host_common_name, food_product, environmental_site and environmental_material). It will error out if they're not provided
