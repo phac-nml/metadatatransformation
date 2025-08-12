@@ -1,0 +1,75 @@
+nextflow_pipeline {
+
+    name "Metadata Transformation: Categorize"
+    script "main.nf"
+
+    test("Basic") {
+        tag "pipeline_categorize"
+        tag "pipeline_categorize_basic"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/categorize/basic.csv"
+                outdir = "results"
+                
+                metadata_1_header = "host_scientific_name"
+                metadata_2_header = "host_common_name"
+                metadata_3_header = "food_product"
+                metadata_4_header = "environmental_site"
+                metadata_5_header = "environmental_material"
+
+                transformation = "categorize"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.contains("sample,calc_source_type")
+            assert transformation.text.contains("sample1,Human")
+            assert transformation.text.contains("sample2,Animal")
+            assert transformation.text.contains("sample3,Food")
+            assert transformation.text.contains("sample4,Environmental")
+            assert transformation.text.contains("sample5,Unknown")
+
+            // Check Results (Human-Readable)
+            def results = path("$launchDir/results/transformation/results.csv")
+            assert results.exists()
+
+            assert results.text.contains("sample,sample_name,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type")
+            assert results.text.contains("sample1,ABC,homo sapiens,human,,,,Human")
+            assert results.text.contains("sample2,DEF,,dog,,,,Animal")
+            assert results.text.contains("sample3,GHI,,,eggs,,,Food")
+            assert results.text.contains("sample4,JKL,,,,farm,wastewater,Environmental")
+            assert results.text.contains("sample5,MNO,,,,,,Unknown")
+        }
+    }
+
+    test("Missing Headers") {
+        tag "pipeline_categorize"
+        tag "pipeline_categorize_missing_headers"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/categorize/basic.csv"
+                outdir = "results"
+
+                metadata_1_header = "host_scientific_name"
+                metadata_2_header = "host_common_name"
+                metadata_3_header = "food_product"
+
+                transformation = "categorize"
+            }
+        }
+
+        then {
+            assert workflow.failed
+            //TODO: More specific check for if it raised the KeyError with expected message
+         }
+    }
+}

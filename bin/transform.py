@@ -5,6 +5,7 @@ import pathlib
 import pandas
 import numpy
 import math
+import re
 
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
@@ -149,27 +150,28 @@ def lock(metadata):
     return metadata_readable, metadata_irida
 
 def categorize(metadata):
-    
-    # Aliasing header names
-    # These can be made constant if useful in other methods
-    host_scientific_name_header = 'metadata_1'
-    host_common_name_header = 'metadata_2'
-    food_product_header = 'metadata_3'
-    environmental_site_header = 'metadata_4'
-    environmental_material_header = 'metadata_5'
+
+    needed_cols = [
+        "host_scientific_name", "host_common_name", "food_product",
+        "environmental_site", "environmental_material"
+    ]
+    missing_cols = [col for col in needed_cols if col not in metadata.columns]
+
+    if len(missing_cols)>0:
+        raise KeyError("Missing required fields: " + str(missing_cols))
 
     metadata_readable = metadata.copy(deep=True)
 
     metadata_readable["calc_source_type"] = "Unknown"
 
     metadata_readable.loc[
-        metadata_readable[host_scientific_name_header].str.contains("homo sapiens", case=False, na=False) | 
-        metadata_readable[host_common_name_header].str.contains("human", case=False, na=False),
+        metadata_readable["host_scientific_name"].str.contains("homo sapiens", case=False, na=False) | 
+        metadata_readable["host_common_name"].str.contains("human", case=False, na=False),
         "calc_source_type"
     ] = "Human"
 
     metadata_readable.loc[
-        (~isna(metadata_readable[host_common_name_header]) | ~isna(metadata_readable[host_common_name_header])) & 
+        (~isna(metadata_readable["host_common_name"]) | ~isna(metadata_readable["host_common_name"])) & 
         (metadata_readable["calc_source_type"] == "Unknown"),
         "calc_source_type"
     ] = "Animal"
@@ -178,24 +180,24 @@ def categorize(metadata):
     # Catch sci name / common name mismatch
     metadata_readable.loc[
         (
-            metadata_readable[host_scientific_name_header].str.contains("homo sapiens", case=False, na=False) & 
-            ~metadata_readable[host_common_name_header].str.contains("human", case=False, na=False) &
-            ~isna(metadata_readable[host_common_name_header])
+            metadata_readable["host_scientific_name"].str.contains("homo sapiens", case=False, na=False) & 
+            ~metadata_readable["host_common_name"].str.contains("human", case=False, na=False) &
+            ~isna(metadata_readable["host_common_name"])
         ) | (
-            ~metadata_readable[host_scientific_name_header].str.contains("homo sapiens", case=False, na=False) & 
-            metadata_readable[host_common_name_header].str.contains("human", case=False, na=False) &
-            ~isna(metadata_readable[host_scientific_name_header])
+            ~metadata_readable["host_scientific_name"].str.contains("homo sapiens", case=False, na=False) & 
+            metadata_readable["host_common_name"].str.contains("human", case=False, na=False) &
+            ~isna(metadata_readable["host_scientific_name"])
         ),
         "calc_source_type"
     ] = "Host Conflict"
 
     metadata_readable.loc[
-        ~isna(metadata_readable[food_product_header]) & (metadata_readable["calc_source_type"] == "Unknown"),
+        ~isna(metadata_readable["food_product"]) & (metadata_readable["calc_source_type"] == "Unknown"),
         "calc_source_type"
     ] = "Food"
 
     metadata_readable.loc[
-        (~isna(metadata_readable[environmental_site_header]) | ~isna(metadata_readable[environmental_material_header])) & 
+        (~isna(metadata_readable["environmental_site"]) | ~isna(metadata_readable["environmental_material"])) & 
         (metadata_readable["calc_source_type"] == "Unknown"),
         "calc_source_type"
     ] = "Environmental"
@@ -302,6 +304,7 @@ def main():
     parser.add_argument("--populate_value", default=POPULATE_VALUE, required=False,
                         help="The value to populate the specified column with for the populate transformation.")
 
+
     args = parser.parse_args()
     metadata = pandas.read_csv(args.input)
 
@@ -335,9 +338,12 @@ def main():
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
     
     elif (args.transformation == CATEGORIZE):
+
         metadata_readable, metadata_irida = categorize(metadata)
 
         remove_all_NA_columns(metadata_irida)
+        remove_all_NA_columns(metadata_readable)
+
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
