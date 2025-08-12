@@ -144,6 +144,51 @@ sample1,new_value
 sample2,new_value
 sample3,new_value
 ```
+### Categorize
+
+The categorize transformation may be run as follows:
+
+```bash
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/categorize/basic.csv --outdir results --transformation categorize --metadata_1_header host_scientific_name --metadata_2_header host_common_name  --metadata_3_header food_product --metadata_4_header environmental_site  --metadata_5_header environmental_material
+```
+For this transformation, a new field "calc_source_type" will be assigned based on the values of other fields in the input metadata. 
+
+For example, when running the transformation with the following sample sheet:
+
+```
+sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5
+sample1,"ABC",homo sapiens,human,,,
+sample2,"DEF",,dog,,,
+sample3,"GHI",,,eggs,,
+sample4,"JKL",,,,farm,wastewater
+sample5,"MNO",,,,,
+sample6,"ABC",homo sapiens,dog,,,
+```
+
+following output `results.csv` file will be generated:
+
+```
+sample,sample_name,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type
+sample1,"ABC",homo sapiens,human,,,,Human
+sample2,"DEF",,dog,,,,Animal
+sample3,"GHI",,,eggs,,,Food
+sample4,"JKL",,,,farm,wastewater,Environmental
+sample5,"MNO",,,,,,Unknown
+sample6,"ABC",homo sapiens,dog,,,,Host Conflict
+```
+
+and the following `transformation.csv` file (written back to IRIDA Next) will be generated:
+
+```
+sample,calc_source_type
+sample1,Human
+sample2,Animal
+sample3,Food
+sample4,Environmental
+sample5,Unknown
+```
+
+**NOTE** This is expecting specific metadata fields (host_scientific_name, host_common_name, food_product, environmental_site and environmental_material). It will error out if they're not provided
 
 ### Reproducibility
 
