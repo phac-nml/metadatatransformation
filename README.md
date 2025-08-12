@@ -30,6 +30,7 @@ You may specify the metadata transformation with the `--transformation` paramete
 | age            | Calculates the age between the first and second metadata columns. Ages under 2 years old are calculated as (days/365) years old, showing 4 decimal places. |
 | earliest       | Reports the earliest date among the metadata columns.                                                                                                      |
 | populate       | Populates an output column with a specific value.                                                                                                          |
+| categorize     | Categorizes data based on values in a specific set of fields                                                                                               |
 
 ## Lock Parameters
 
@@ -89,6 +90,34 @@ The following special entries are ignored when calculating the earliest age (the
 
 - `--populate_header`: names the header of the column to populate with `populate_value`
 - `--populate_value`: the value to populate every entry within the `populate_header` column
+
+## Categorize Parameters
+
+The following parameters can be used to rename CSV-generated output columns and Irida Next fields as follows:
+
+- `--metadata_1_header`: names the scientific host name column header
+- `--metadata_2_header`: names the common host name column header
+- `--metadata_3_header`: names the food product column header
+- `--metadata_4_header`: names the environmnetal source column header
+- `--metadata_5_header`: names the environmental site column header
+
+For example, the following code:
+
+```bash
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/categorize/basic.csv --outdir results --transformation categorize --metadata_1_header host_scientific_name --metadata_2_header host_common_name  --metadata_3_header food_product --metadata_4_header environmental_site  --metadata_5_header environmental_material
+```
+
+would generate the following `results.csv` file:
+
+```
+sample,sample_name,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type
+sample1,"ABC",homo sapiens,human,,,,Human
+sample2,"DEF",,dog,,,,Animal
+sample3,"GHI",,,eggs,,,Food
+sample4,"JKL",,,,farm,wastewater,Environmental
+sample5,"MNO",,,,,,Unknown
+sample6,"ABC",homo sapiens,dog,,,,Host Conflict
+```
 
 ## Other Parameters
 
