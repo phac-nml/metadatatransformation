@@ -11,7 +11,7 @@ nextflow_pipeline {
             params {
                 input = "$baseDir/tests/data/samplesheets/categorize/basic.csv"
                 outdir = "results"
-            
+
                 metadata_1_header = "host_scientific_name"
                 metadata_2_header = "host_common_name"
                 metadata_3_header = "food_product"
