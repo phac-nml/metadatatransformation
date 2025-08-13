@@ -144,6 +144,7 @@ sample1,new_value
 sample2,new_value
 sample3,new_value
 ```
+
 ### Categorize
 
 The categorize transformation may be run as follows:
@@ -151,7 +152,8 @@ The categorize transformation may be run as follows:
 ```bash
 nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/categorize/basic.csv --outdir results --transformation categorize --metadata_1_header host_scientific_name --metadata_2_header host_common_name  --metadata_3_header food_product --metadata_4_header environmental_site  --metadata_5_header environmental_material
 ```
-For this transformation, a new field "calc_source_type" will be assigned based on the values of other fields in the input metadata. 
+
+For this transformation, a new field "calc_source_type" will be assigned based on the values of other fields in the input metadata.
 
 For example, when running the transformation with the following sample sheet:
 
