@@ -165,13 +165,13 @@ def categorize(metadata):
     metadata_readable["calc_source_type"] = "Unknown"
 
     metadata_readable.loc[
-        metadata_readable["host_scientific_name"].str.contains("homo sapiens", case=False, na=False) | 
+        metadata_readable["host_scientific_name"].str.contains("homo sapiens", case=False, na=False) |
         metadata_readable["host_common_name"].str.contains("human", case=False, na=False),
         "calc_source_type"
     ] = "Human"
 
     metadata_readable.loc[
-        (~isna(metadata_readable["host_common_name"]) | ~isna(metadata_readable["host_common_name"])) & 
+        (~isna(metadata_readable["host_common_name"]) | ~isna(metadata_readable["host_common_name"])) &
         (metadata_readable["calc_source_type"] == "Unknown"),
         "calc_source_type"
     ] = "Animal"
@@ -180,11 +180,11 @@ def categorize(metadata):
     # Catch sci name / common name mismatch
     metadata_readable.loc[
         (
-            metadata_readable["host_scientific_name"].str.contains("homo sapiens", case=False, na=False) & 
+            metadata_readable["host_scientific_name"].str.contains("homo sapiens", case=False, na=False) &
             ~metadata_readable["host_common_name"].str.contains("human", case=False, na=False) &
             ~isna(metadata_readable["host_common_name"])
         ) | (
-            ~metadata_readable["host_scientific_name"].str.contains("homo sapiens", case=False, na=False) & 
+            ~metadata_readable["host_scientific_name"].str.contains("homo sapiens", case=False, na=False) &
             metadata_readable["host_common_name"].str.contains("human", case=False, na=False) &
             ~isna(metadata_readable["host_scientific_name"])
         ),
@@ -197,7 +197,7 @@ def categorize(metadata):
     ] = "Food"
 
     metadata_readable.loc[
-        (~isna(metadata_readable["environmental_site"]) | ~isna(metadata_readable["environmental_material"])) & 
+        (~isna(metadata_readable["environmental_site"]) | ~isna(metadata_readable["environmental_material"])) &
         (metadata_readable["calc_source_type"] == "Unknown"),
         "calc_source_type"
     ] = "Environmental"
