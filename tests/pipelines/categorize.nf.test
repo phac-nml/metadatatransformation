@@ -82,7 +82,7 @@ nextflow_pipeline {
         }
 
         then {
-            assert workflow.failed
+            assert workflow.success
 assert workflow.success
             assert path("$launchDir/results").exists()
 
@@ -114,13 +114,13 @@ assert workflow.success
         }
     }
 
-    test("Header Order") {
+    test("Reorder Headers") {
         tag "pipeline_categorize"
         tag "pipeline_categorize_basic"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/categorize/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/categorize/reorder_headers.csv"
                 outdir = "results"
 
                 metadata_1_header = "environmental_material"
@@ -159,7 +159,7 @@ assert workflow.success
             def results = path("$launchDir/results/transformation/results.csv")
             assert results.exists()
 
-            assert results.text.contains("sample,sample_name,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type")
+            assert results.text.contains("sample,sample_name,environmental_material,environmental_site,food_product,host_common_name,host_scientific_name,calc_source_type")
             assert results.text.contains("sample1,A,,,,Human NCBITaxon:9606,Homo sapiens (Human),Human")
             assert results.text.contains("sample2,B,,,,dog,,Animal")
             assert results.text.contains("sample3,C,,,eggs,,,Food")

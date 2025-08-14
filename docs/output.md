@@ -65,7 +65,7 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 <summary>Output files</summary>
 
 - `transformation/`
-  - A CSV-formatted file for reporting to IRIDA Next the populated column for each sample: `transformation.csv`
+  - A CSV-formatted file for reporting to IRIDA Next the source type column ("calc_source_type") for each sample: `transformation.csv`
   - A user-intended CSV-formatted file for reference: `result.csv`
 
 </details>

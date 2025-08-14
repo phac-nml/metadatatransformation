@@ -93,13 +93,16 @@ The following special entries are ignored when calculating the earliest age (the
 
 ## Categorize Parameters
 
-The following parameters can be used to rename CSV-generated output columns and Irida Next fields as follows:
+This code is expecting a specific set of metadata headers:
 
-- `--metadata_1_header`: names the scientific host name column header
-- `--metadata_2_header`: names the common host name column header
-- `--metadata_3_header`: names the food product column header
-- `--metadata_4_header`: names the environmnetal source column header
-- `--metadata_5_header`: names the environmental site column header
+- `host_scientific_name`: Scientific / latin name of host species (ie. *Genus species*)
+- `host_common_name`: The common name for host species
+- `food_product`: Name of food product (if food sample)
+- `environmental_site`: Name of environmental site/facility (if environmental sample)
+- `environmental_material`: Name of environmental material (if environmental sample)
+
+In order to ensure these columns are recognized, the metadata header parameters must be used to specify which input headers are which expected headers
+(ex. If `metadata_1` is host_common_name, `--metadata_1_header host_common_name` must be added to the command)
 
 For example, the following code:
 
