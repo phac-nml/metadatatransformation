@@ -111,12 +111,18 @@ would generate the following `results.csv` file:
 
 ```
 sample,sample_name,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type
-sample1,"ABC",homo sapiens,human,,,,Human
-sample2,"DEF",,dog,,,,Animal
-sample3,"GHI",,,eggs,,,Food
-sample4,"JKL",,,,farm,wastewater,Environmental
-sample5,"MNO",,,,,,Unknown
-sample6,"PQR",homo sapiens,dog,,,,Host Conflict
+sample1,"A",Homo sapiens (Human),Human NCBITaxon:9606,,,,Human
+sample2,"B",,dog,,,,Animal
+sample3,"C",,,eggs,,,Food
+sample4,"D",,,,farm,wastewater,Environmental
+sample5,"E",,,,,,Unknown
+sample6,"F",Homo sapiens (Human),dog,,,,Host Conflict
+sample7,"G",Homo sapiens (Human),,,,,Human
+sample8,"H",,Human NCBITaxon:9606,,,,Human
+sample9,"J",Homo sapiens (Human),Human NCBITaxon:9606,eggs,farm,wastewater,Human
+sample10,"K",,dog,eggs,,,Animal
+sample11,"L",,,eggs,farm,,Food
+sample12,"M",,,eggs,,wastewater,Food
 ```
 
 ## Other Parameters
