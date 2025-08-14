@@ -30,7 +30,7 @@ You may specify the metadata transformation with the `--transformation` paramete
 | age            | Calculates the age between the first and second metadata columns. Ages under 2 years old are calculated as (days/365) years old, showing 4 decimal places. |
 | earliest       | Reports the earliest date among the metadata columns.                                                                                                      |
 | populate       | Populates an output column with a specific value.                                                                                                          |
-| categorize     | Categorizes data based on values in a specific set of fields                                                                                               |
+| categorize     | Categorizes data into Human, Animal, Food or Environmental source based on values in a specific set of fields                                                                                               |
 
 ## Lock Parameters
 
