@@ -49,18 +49,18 @@ nextflow_pipeline {
             assert results.exists()
 
             assert results.text.contains("sample,sample_name,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type")
-            assert results.text.contains("sample1,A,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human)
-            assert results.text.contains("sample2,B,,dog,,,,Animal)
-            assert results.text.contains("sample3,C,,,eggs,,,Food)
-            assert results.text.contains("sample4,D,,,,farm,wastewater,Environmental)
-            assert results.text.contains("sample5,E,,,,,,Unknown)
-            assert results.text.contains("sample6,F,Homo sapiens (Human),dog,,,,Host Conflict)
-            assert results.text.contains("sample7,G,Homo sapiens (Human),,,,,Human)
-            assert results.text.contains("sample8,H,,Human NCBITaxon:9606,,,,Human)
-            assert results.text.contains("sample9,J,Homo sapiens (Human),Human NCBITaxon:9606,eggs,farm,wastewater,Human)
-            assert results.text.contains("sample10,K,,dog,eggs,,,Animal)
-            assert results.text.contains("sample11,L,,,eggs,farm,,Food)
-            assert results.text.contains("sample12,M,,,eggs,,wastewater,Food)
+            assert results.text.contains("sample1,A,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human")
+            assert results.text.contains("sample2,B,,dog,,,,Animal")
+            assert results.text.contains("sample3,C,,,eggs,,,Food")
+            assert results.text.contains("sample4,D,,,,farm,wastewater,Environmental")
+            assert results.text.contains("sample5,E,,,,,,Unknown")
+            assert results.text.contains("sample6,F,Homo sapiens (Human),dog,,,,Host Conflict")
+            assert results.text.contains("sample7,G,Homo sapiens (Human),,,,,Human")
+            assert results.text.contains("sample8,H,,Human NCBITaxon:9606,,,,Human")
+            assert results.text.contains("sample9,J,Homo sapiens (Human),Human NCBITaxon:9606,eggs,farm,wastewater,Human")
+            assert results.text.contains("sample10,K,,dog,eggs,,,Animal")
+            assert results.text.contains("sample11,L,,,eggs,farm,,Food")
+            assert results.text.contains("sample12,M,,,eggs,,wastewater,Food")
         }
     }
 
@@ -83,7 +83,95 @@ nextflow_pipeline {
 
         then {
             assert workflow.failed
-            //TODO: More specific check for if it raised the KeyError with expected message
+assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.contains("sample,calc_source_type")
+            assert transformation.text.contains("sample1,")
+            assert transformation.text.contains("sample2,")
+            assert transformation.text.contains("sample3,")
+            assert transformation.text.contains("sample4,")
+            assert transformation.text.contains("sample5,")
+            assert transformation.text.contains("sample6,")
+            assert transformation.text.contains("sample7,")
+            assert transformation.text.contains("sample8,")
+            assert transformation.text.contains("sample9,")
+            assert transformation.text.contains("sample10,")
+            assert transformation.text.contains("sample11,")
+            assert transformation.text.contains("sample12,")
+
+            // Check Results (Human-Readable)
+            def results = path("$launchDir/results/transformation/results.csv")
+            assert results.exists()
+
+            assert results.text.contains("Missing required headers:")
+            assert results.text.contains("environmental_site")
+            assert results.text.contains("environmental_material")
+        }
+    }
+
+    test("Header Order") {
+        tag "pipeline_categorize"
+        tag "pipeline_categorize_basic"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/categorize/basic.csv"
+                outdir = "results"
+
+                metadata_1_header = "environmental_material"
+                metadata_2_header = "environmental_site"
+                metadata_3_header = "food_product"
+                metadata_4_header = "host_common_name"
+                metadata_5_header = "host_scientific_name"
+
+                transformation = "categorize"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.contains("sample,calc_source_type")
+            assert transformation.text.contains("sample1,Human")
+            assert transformation.text.contains("sample2,Animal")
+            assert transformation.text.contains("sample3,Food")
+            assert transformation.text.contains("sample4,Environmental")
+            assert transformation.text.contains("sample5,Unknown")
+            assert transformation.text.contains("sample6,Host Conflict")
+            assert transformation.text.contains("sample7,Human")
+            assert transformation.text.contains("sample8,Human")
+            assert transformation.text.contains("sample9,Human")
+            assert transformation.text.contains("sample10,Animal")
+            assert transformation.text.contains("sample11,Food")
+            assert transformation.text.contains("sample12,Food")
+
+            // Check Results (Human-Readable)
+            def results = path("$launchDir/results/transformation/results.csv")
+            assert results.exists()
+
+            assert results.text.contains("sample,sample_name,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type")
+            assert results.text.contains("sample1,A,,,,Human NCBITaxon:9606,Homo sapiens (Human),Human")
+            assert results.text.contains("sample2,B,,,,dog,,Animal")
+            assert results.text.contains("sample3,C,,,eggs,,,Food")
+            assert results.text.contains("sample4,D,wastewater,farm,,,,Environmental")
+            assert results.text.contains("sample5,E,,,,,,Unknown")
+            assert results.text.contains("sample6,F,,,,dog,Homo sapiens (Human),Host Conflict")
+            assert results.text.contains("sample7,G,,,,,Homo sapiens (Human),Human")
+            assert results.text.contains("sample8,H,,,,Human NCBITaxon:9606,,Human")
+            assert results.text.contains("sample9,J,wastewater,farm,eggs,Human NCBITaxon:9606,Homo sapiens (Human),Human")
+            assert results.text.contains("sample10,K,,,eggs,dog,,Animal")
+            assert results.text.contains("sample11,L,,farm,eggs,,,Food")
+            assert results.text.contains("sample12,M,wastewater,,eggs,,,Food")
         }
     }
 }

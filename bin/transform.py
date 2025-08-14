@@ -189,7 +189,7 @@ def categorize(metadata):
         else:
             return UNKNOWN_VALUE
 
-    metadata_irida = metadata_readable[[SAMPLE_HEADER, 'calc_source_type']].copy(deep=True)
+    metadata_irida = metadata_readable[[SAMPLE_HEADER, "calc_source_type"]].copy(deep=True)
 
     return metadata_readable, metadata_irida
 

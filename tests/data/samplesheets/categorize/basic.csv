@@ -7,7 +7,7 @@ sample5,"E",,,,,
 sample6,"F",Homo sapiens (Human),dog,,,
 sample7,"G",Homo sapiens (Human),,,,
 sample8,"H",,Human NCBITaxon:9606,,,
-sample10,J,Homo sapiens (Human),Human NCBITaxon:9606,eggs,farm,wastewater
-sample11,"K",,dog,eggs,,
-sample12,"L",,,eggs,farm,
-sample13,"M",,,eggs,,wastewater
+sample9,"J",Homo sapiens (Human),Human NCBITaxon:9606,eggs,farm,wastewater
+sample10,"K",,dog,eggs,,
+sample11,"L",,,eggs,farm,
+sample12,"M",,,eggs,,wastewater
