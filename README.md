@@ -95,7 +95,7 @@ The following special entries are ignored when calculating the earliest age (the
 
 This code is expecting a specific set of metadata headers:
 
-- `host_scientific_name`: Scientific / latin name of host species (ie. *Genus species*)
+- `host_scientific_name`: Scientific / latin name of host species (ie. _Genus species_)
 - `host_common_name`: The common name for host species
 - `food_product`: Name of food product (if food sample)
 - `environmental_site`: Name of environmental site/facility (if environmental sample)

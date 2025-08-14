@@ -1,0 +1,13 @@
+sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5
+sample1,A,,,,Human NCBITaxon:9606,Homo sapiens (Human)
+sample2,B,,,,dog,
+sample3,C,,,eggs,,
+sample4,D,wastewater,farm,,,
+sample5,E,,,,,
+sample6,F,,,,dog,Homo sapiens (Human)
+sample7,G,,,,,Homo sapiens (Human)
+sample8,H,,,,Human NCBITaxon:9606,
+sample9,J,wastewater,farm,eggs,Human NCBITaxon:9606,Homo sapiens (Human)
+sample10,K,,,eggs,dog,
+sample11,L,,farm,eggs,,
+sample12,M,wastewater,,eggs,,

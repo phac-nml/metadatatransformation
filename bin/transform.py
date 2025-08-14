@@ -191,6 +191,7 @@ def categorize(metadata):
 
     metadata_readable["calc_source_type"] = metadata_readable.apply(categorize_row, axis = 1)
 
+    metadata_readable = metadata_readable[SAMPLE_HEADER + SAMPLE_NAME_HEADER + required_headers]
     metadata_irida = metadata_readable[[SAMPLE_HEADER, "calc_source_type"]].copy(deep=True)
 
     return metadata_readable, metadata_irida
