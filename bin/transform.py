@@ -161,7 +161,7 @@ def categorize(metadata):
     missing_headers = [col for col in required_headers if col not in metadata.columns]
 
     if len(missing_headers) > 0:
-        metadata_irida = metadata_readable[[SAMPLE_HEADER]].copy(deep=True)
+        metadata_irida = metadata[[SAMPLE_HEADER]].copy(deep=True)
         metadata_irida["calc_source_type"] = pandas.NA
         metadata_readable = pandas.Series(["Missing required headers:"] + missing_headers)
         return metadata_readable, metadata_irida

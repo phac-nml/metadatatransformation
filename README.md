@@ -102,7 +102,7 @@ This code is expecting a specific set of metadata headers:
 - `environmental_material`: Name of environmental material (if environmental sample)
 
 In order to ensure these columns are recognized, the metadata header parameters must be used to specify which input headers are which expected headers
-(ex. If `metadata_1` is host_common_name, `--metadata_1_header host_common_name` must be added to the command)
+(ie. If `metadata_1` contains the host species common name, `--metadata_1_header host_common_name` must be added to the command)
 
 For example, the following code:
 

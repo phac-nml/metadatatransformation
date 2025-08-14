@@ -116,7 +116,7 @@ assert workflow.success
 
     test("Reorder Headers") {
         tag "pipeline_categorize"
-        tag "pipeline_categorize_basic"
+        tag "pipeline_categorize_reorder_headers"
 
         when {
             params {
