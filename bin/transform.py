@@ -43,6 +43,7 @@ DAYS_IN_YEAR = 365.0
 ROWS_AXIS = 0 # i.e. axis=0 // axis="rows"
 COLUMNS_AXIS = 1 # i.e. axis=1 // axis="columns"
 POPULATE_VALUE = "NA"
+UNKNOWN_VALUE = "Unknown"
 
 # Special Entries
 NOT_APPLICABLE = "Not Applicable"
@@ -56,8 +57,8 @@ SPECIAL_ENTRIES = [NOT_APPLICABLE, MISSING, NOT_COLLECTED,
                     NOT_PROVIDED, RESTRICTED_ACCESS, BLANK]
 SPECIAL_ENTRIES_REGEX = ['(?i)^{}$'.format(x) for x in SPECIAL_ENTRIES] # case insensitive
 
-def isna(metadata_series, empty_strs = SPECIAL_ENTRIES):
-    return (metadata_series.isnull() | metadata_series.isin(empty_strs))
+def missing_val(x, empty_strs = SPECIAL_ENTRIES):
+    return (pandas.isna(x) | (x in empty_strs + [None]))
 
 def remove_any_NA_rows(metadata):
     # If at least one entry in the row is NA,
@@ -151,56 +152,42 @@ def lock(metadata):
 
 def categorize(metadata):
 
-    needed_cols = [
+    # Check for required headers (output error message and blank if missing)
+    required_headers = [
         "host_scientific_name", "host_common_name", "food_product",
         "environmental_site", "environmental_material"
     ]
-    missing_cols = [col for col in needed_cols if col not in metadata.columns]
 
-    if len(missing_cols)>0:
-        raise KeyError("Missing required fields: " + str(missing_cols))
+    missing_headers = [col for col in required_headers if col not in metadata.columns]
+
+    if len(missing_headers) > 0:
+        metadata_irida = metadata_readable[[SAMPLE_HEADER]].copy(deep=True)
+        metadata_irida["calc_source_type"] = pandas.NA
+        metadata_readable = pandas.Series(["Missing required headers:"] + missing_headers)
+        return metadata_readable, metadata_irida
 
     metadata_readable = metadata.copy(deep=True)
 
-    metadata_readable["calc_source_type"] = "Unknown"
-
-    metadata_readable.loc[
-        metadata_readable["host_scientific_name"].str.contains("homo sapiens", case=False, na=False) |
-        metadata_readable["host_common_name"].str.contains("human", case=False, na=False),
-        "calc_source_type"
-    ] = "Human"
-
-    metadata_readable.loc[
-        (~isna(metadata_readable["host_common_name"]) | ~isna(metadata_readable["host_common_name"])) &
-        (metadata_readable["calc_source_type"] == "Unknown"),
-        "calc_source_type"
-    ] = "Animal"
-
-
-    # Catch sci name / common name mismatch
-    metadata_readable.loc[
-        (
-            metadata_readable["host_scientific_name"].str.contains("homo sapiens", case=False, na=False) &
-            ~metadata_readable["host_common_name"].str.contains("human", case=False, na=False) &
-            ~isna(metadata_readable["host_common_name"])
-        ) | (
-            ~metadata_readable["host_scientific_name"].str.contains("homo sapiens", case=False, na=False) &
-            metadata_readable["host_common_name"].str.contains("human", case=False, na=False) &
-            ~isna(metadata_readable["host_scientific_name"])
-        ),
-        "calc_source_type"
-    ] = "Host Conflict"
-
-    metadata_readable.loc[
-        ~isna(metadata_readable["food_product"]) & (metadata_readable["calc_source_type"] == "Unknown"),
-        "calc_source_type"
-    ] = "Food"
-
-    metadata_readable.loc[
-        (~isna(metadata_readable["environmental_site"]) | ~isna(metadata_readable["environmental_material"])) &
-        (metadata_readable["calc_source_type"] == "Unknown"),
-        "calc_source_type"
-    ] = "Environmental"
+    # Helper fun for row-wise categorization
+    def categorize_row(row):
+        if ((row["host_scientific_name"] == "Homo sapiens (Human)") & (row["host_common_name"] == "Human NCBITaxon:9606")):
+            return "Human"
+        elif ((row["host_scientific_name"] == "Homo sapiens (Human)") & missing_val(row["host_common_name"])):
+            return "Human"
+        elif (missing_val(row["host_scientific_name"]) & (row["host_common_name"] == "Human NCBITaxon:9606")):
+            return "Human"
+        elif ((row["host_scientific_name"] == "Homo sapiens (Human)") & (row["host_common_name"] != "Human NCBITaxon:9606")):
+            return "Host Conflict"
+        elif ((row["host_scientific_name"] != "Homo sapiens (Human)") & (row["host_common_name"] == "Human NCBITaxon:9606")):
+            return "Host Conflict"
+        elif ((not missing_val(row["host_scientific_name"])) | (not missing_val(row["host_common_name"]))):
+            return "Animal"
+        elif ((not missing_val(row["food_product"]))):
+            return "Food"
+        elif ((not missing_val(row["environmental_site"])) | (not missing_val(row["environmental_material"]))):
+            return "Environmental"
+        else:
+            return UNKNOWN_VALUE
 
     metadata_irida = metadata_readable[[SAMPLE_HEADER, 'calc_source_type']].copy(deep=True)
 
@@ -340,9 +327,6 @@ def main():
     elif (args.transformation == CATEGORIZE):
 
         metadata_readable, metadata_irida = categorize(metadata)
-
-        remove_all_NA_columns(metadata_irida)
-        remove_all_NA_columns(metadata_readable)
 
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
