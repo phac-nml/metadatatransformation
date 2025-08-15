@@ -153,7 +153,7 @@ nextflow_pipeline {
             assert results.exists()
 
             assert results.text.contains("sample,sample_name,host_scientific_name,host_common_name,food_product,calc_source_type,calc_source_type_valid,calc_source_type_error")
-            assert results.text.contains("sample1,A,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
+            assert results.text.contains("sample1,A,Homo sapiens (Human),Human NCBITaxon:9606,,Human,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
             assert results.text.contains("sample2,B,,dog,,Animal,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
             assert results.text.contains("sample3,C,,,eggs,Food,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
             assert results.text.contains("sample4,D,,,,Environmental,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
