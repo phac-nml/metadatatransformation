@@ -145,6 +145,72 @@ sample2,new_value
 sample3,new_value
 ```
 
+### Categorize
+
+The categorize transformation may be run as follows:
+
+```bash
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/categorize/basic.csv --outdir results --transformation categorize --metadata_1_header host_scientific_name --metadata_2_header host_common_name  --metadata_3_header food_product --metadata_4_header environmental_site  --metadata_5_header environmental_material
+```
+
+For this transformation, a new field "calc_source_type" will be assigned based on the values of other fields in the input metadata.
+
+For example, when running the transformation with the following sample sheet:
+
+```
+sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5
+sample1,"A",Homo sapiens (Human),Human NCBITaxon:9606,,,
+sample2,"B",,dog,,,
+sample3,"C",,,eggs,,
+sample4,"D",,,,farm,wastewater
+sample5,"E",,,,,
+sample6,"F",Homo sapiens (Human),dog,,,
+sample7,"G",Homo sapiens (Human),,,,
+sample8,"H",,Human NCBITaxon:9606,,,
+sample9,"J",Homo sapiens (Human),Human NCBITaxon:9606,eggs,farm,wastewater
+sample10,"K",,dog,eggs,,
+sample11,"L",,,eggs,farm,
+sample12,"M",,,eggs,,wastewater
+```
+
+following output `results.csv` file will be generated:
+
+```
+sample,sample_name,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type,calc_source_type_valid,calc_source_type_error
+sample1,A,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,
+sample2,B,,dog,,,,Animal,True,
+sample3,C,,,eggs,,,Food,True,
+sample4,D,,,,farm,wastewater,Environmental,True,
+sample5,E,,,,,,Unknown,True,
+sample6,F,Homo sapiens (Human),dog,,,,Host Conflict,True,
+sample7,G,Homo sapiens (Human),,,,,Human,True,
+sample8,H,,Human NCBITaxon:9606,,,,Human,True,
+sample9,J,Homo sapiens (Human),Human NCBITaxon:9606,eggs,farm,wastewater,Human,True,
+sample10,K,,dog,eggs,,,Animal,True,
+sample11,L,,,eggs,farm,,Food,True,
+sample12,M,,,eggs,,wastewater,Food,True,
+```
+
+and the following `transformation.csv` file (written back to IRIDA Next) will be generated:
+
+```
+sample,calc_source_type
+sample1,Human
+sample2,Animal
+sample3,Food
+sample4,Environmental
+sample5,Unknown
+sample6,Host Conflict
+sample7,Human
+sample8,Human
+sample9,Human
+sample10,Animal
+sample11,Food
+sample12,Food
+```
+
+**NOTE** This is expecting specific metadata fields (host_scientific_name, host_common_name, food_product, environmental_site and environmental_material). It will error out if they're not provided.
+
 ### Reproducibility
 
 It is a good idea to specify a pipeline version when running the pipeline on your data. This ensures that a specific version of the pipeline code and software are used when you run your pipeline. If you keep using the same tag, you'll be running the same version of the pipeline, even if there have been changes to the code since.

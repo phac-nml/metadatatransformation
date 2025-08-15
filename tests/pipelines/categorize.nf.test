@@ -1,0 +1,298 @@
+nextflow_pipeline {
+
+    name "Metadata Transformation: Categorize"
+    script "main.nf"
+
+    test("Basic") {
+        tag "pipeline_categorize"
+        tag "pipeline_categorize_basic"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/categorize/basic.csv"
+                outdir = "results"
+
+                metadata_1_header = "host_scientific_name"
+                metadata_2_header = "host_common_name"
+                metadata_3_header = "food_product"
+                metadata_4_header = "environmental_site"
+                metadata_5_header = "environmental_material"
+
+                transformation = "categorize"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.contains("sample,calc_source_type")
+            assert transformation.text.contains("sample1,Human")
+            assert transformation.text.contains("sample2,Animal")
+            assert transformation.text.contains("sample3,Food")
+            assert transformation.text.contains("sample4,Environmental")
+            assert transformation.text.contains("sample5,Unknown")
+            assert transformation.text.contains("sample6,Host Conflict")
+            assert transformation.text.contains("sample7,Human")
+            assert transformation.text.contains("sample8,Human")
+            assert transformation.text.contains("sample9,Human")
+            assert transformation.text.contains("sample10,Animal")
+            assert transformation.text.contains("sample11,Food")
+            assert transformation.text.contains("sample12,Food")
+
+            // Check Results (Human-Readable)
+            def results = path("$launchDir/results/transformation/results.csv")
+            assert results.exists()
+
+            assert results.text.contains("sample,sample_name,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type,calc_source_type_valid,calc_source_type_error")
+            assert results.text.contains("sample1,A,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,")
+            assert results.text.contains("sample2,B,,dog,,,,Animal,True,")
+            assert results.text.contains("sample3,C,,,eggs,,,Food,True,")
+            assert results.text.contains("sample4,D,,,,farm,wastewater,Environmental,True,")
+            assert results.text.contains("sample5,E,,,,,,Unknown,True,")
+            assert results.text.contains("sample6,F,Homo sapiens (Human),dog,,,,Host Conflict,True,")
+            assert results.text.contains("sample7,G,Homo sapiens (Human),,,,,Human,True,")
+            assert results.text.contains("sample8,H,,Human NCBITaxon:9606,,,,Human,True,")
+            assert results.text.contains("sample9,J,Homo sapiens (Human),Human NCBITaxon:9606,eggs,farm,wastewater,Human,True,")
+            assert results.text.contains("sample10,K,,dog,eggs,,,Animal,True,")
+            assert results.text.contains("sample11,L,,,eggs,farm,,Food,True,")
+            assert results.text.contains("sample12,M,,,eggs,,wastewater,Food,True,")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            assert iridanext_metadata.size() == 12
+
+            assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1.size() == 1
+            assert iridanext_metadata.sample1.calc_source_type == "Human"
+
+            assert iridanext_metadata.containsKey("sample2")
+            assert iridanext_metadata.sample2.size() == 1
+            assert iridanext_metadata.sample2.calc_source_type == "Animal"
+
+            assert iridanext_metadata.containsKey("sample3")
+            assert iridanext_metadata.sample3.size() == 1
+            assert iridanext_metadata.sample3.calc_source_type == "Food"
+
+            assert iridanext_metadata.containsKey("sample4")
+            assert iridanext_metadata.sample4.size() == 1
+            assert iridanext_metadata.sample4.calc_source_type == "Environmental"
+
+            assert iridanext_metadata.containsKey("sample5")
+            assert iridanext_metadata.sample5.size() == 1
+            assert iridanext_metadata.sample5.calc_source_type == "Unknown"
+
+            assert iridanext_metadata.containsKey("sample6")
+            assert iridanext_metadata.sample6.size() == 1
+            assert iridanext_metadata.sample6.calc_source_type == "Host Conflict"
+
+            assert iridanext_metadata.containsKey("sample7")
+            assert iridanext_metadata.sample7.size() == 1
+            assert iridanext_metadata.sample7.calc_source_type == "Human"
+
+            assert iridanext_metadata.containsKey("sample8")
+            assert iridanext_metadata.sample8.size() == 1
+            assert iridanext_metadata.sample8.calc_source_type == "Human"
+
+            assert iridanext_metadata.containsKey("sample9")
+            assert iridanext_metadata.sample9.size() == 1
+            assert iridanext_metadata.sample9.calc_source_type == "Human"
+
+            assert iridanext_metadata.containsKey("sample10")
+            assert iridanext_metadata.sample10.size() == 1
+            assert iridanext_metadata.sample10.calc_source_type == "Animal"
+
+            assert iridanext_metadata.containsKey("sample11")
+            assert iridanext_metadata.sample11.size() == 1
+            assert iridanext_metadata.sample11.calc_source_type == "Food"
+
+            assert iridanext_metadata.containsKey("sample12")
+            assert iridanext_metadata.sample12.size() == 1
+            assert iridanext_metadata.sample12.calc_source_type == "Food"
+        }
+    }
+
+    test("Missing Headers") {
+        tag "pipeline_categorize"
+        tag "pipeline_categorize_missing_headers"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/categorize/basic.csv"
+                outdir = "results"
+
+                metadata_1_header = "host_scientific_name"
+                metadata_2_header = "host_common_name"
+                metadata_3_header = "food_product"
+
+                transformation = "categorize"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.contains("sample")
+
+            // Check Results (Human-Readable)
+            def results = path("$launchDir/results/transformation/results.csv")
+            assert results.exists()
+
+            assert results.text.contains("sample,sample_name,host_scientific_name,host_common_name,food_product,calc_source_type,calc_source_type_valid,calc_source_type_error")
+            assert results.text.contains("sample1,A,Homo sapiens (Human),Human NCBITaxon:9606,,,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
+            assert results.text.contains("sample2,B,,dog,,,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
+            assert results.text.contains("sample3,C,,,eggs,,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
+            assert results.text.contains("sample4,D,,,,,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
+            assert results.text.contains("sample5,E,,,,,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
+            assert results.text.contains("sample6,F,Homo sapiens (Human),dog,,,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
+            assert results.text.contains("sample7,G,Homo sapiens (Human),,,,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
+            assert results.text.contains("sample8,H,,Human NCBITaxon:9606,,,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
+            assert results.text.contains("sample9,J,Homo sapiens (Human),Human NCBITaxon:9606,eggs,,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
+            assert results.text.contains("sample10,K,,dog,eggs,,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
+            assert results.text.contains("sample11,L,,,eggs,,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
+            assert results.text.contains("sample12,M,,,eggs,,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            assert iridanext_metadata.size() == 0
+
+        }
+    }
+
+    test("Reorder Headers") {
+        tag "pipeline_categorize"
+        tag "pipeline_categorize_reorder_headers"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/categorize/reorder_headers.csv"
+                outdir = "results"
+
+                metadata_1_header = "environmental_material"
+                metadata_2_header = "environmental_site"
+                metadata_3_header = "food_product"
+                metadata_4_header = "host_common_name"
+                metadata_5_header = "host_scientific_name"
+
+                transformation = "categorize"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.contains("sample,calc_source_type")
+            assert transformation.text.contains("sample1,Human")
+            assert transformation.text.contains("sample2,Animal")
+            assert transformation.text.contains("sample3,Food")
+            assert transformation.text.contains("sample4,Environmental")
+            assert transformation.text.contains("sample5,Unknown")
+            assert transformation.text.contains("sample6,Host Conflict")
+            assert transformation.text.contains("sample7,Human")
+            assert transformation.text.contains("sample8,Human")
+            assert transformation.text.contains("sample9,Human")
+            assert transformation.text.contains("sample10,Animal")
+            assert transformation.text.contains("sample11,Food")
+            assert transformation.text.contains("sample12,Food")
+
+            // Check Results (Human-Readable)
+            def results = path("$launchDir/results/transformation/results.csv")
+            assert results.exists()
+
+            assert results.text.contains("sample,sample_name,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type,calc_source_type_valid,calc_source_type_error")
+            assert results.text.contains("sample1,A,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,")
+            assert results.text.contains("sample2,B,,dog,,,,Animal,True,")
+            assert results.text.contains("sample3,C,,,eggs,,,Food,True,")
+            assert results.text.contains("sample4,D,,,,farm,wastewater,Environmental,True,")
+            assert results.text.contains("sample5,E,,,,,,Unknown,True,")
+            assert results.text.contains("sample6,F,Homo sapiens (Human),dog,,,,Host Conflict,True,")
+            assert results.text.contains("sample7,G,Homo sapiens (Human),,,,,Human,True,")
+            assert results.text.contains("sample8,H,,Human NCBITaxon:9606,,,,Human,True,")
+            assert results.text.contains("sample9,J,Homo sapiens (Human),Human NCBITaxon:9606,eggs,farm,wastewater,Human,True,")
+            assert results.text.contains("sample10,K,,dog,eggs,,,Animal,True,")
+            assert results.text.contains("sample11,L,,,eggs,farm,,Food,True,")
+            assert results.text.contains("sample12,M,,,eggs,,wastewater,Food,True,")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            assert iridanext_metadata.size() == 12
+
+            assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1.size() == 1
+            assert iridanext_metadata.sample1.calc_source_type == "Human"
+
+            assert iridanext_metadata.containsKey("sample2")
+            assert iridanext_metadata.sample2.size() == 1
+            assert iridanext_metadata.sample2.calc_source_type == "Animal"
+
+            assert iridanext_metadata.containsKey("sample3")
+            assert iridanext_metadata.sample3.size() == 1
+            assert iridanext_metadata.sample3.calc_source_type == "Food"
+
+            assert iridanext_metadata.containsKey("sample4")
+            assert iridanext_metadata.sample4.size() == 1
+            assert iridanext_metadata.sample4.calc_source_type == "Environmental"
+
+            assert iridanext_metadata.containsKey("sample5")
+            assert iridanext_metadata.sample5.size() == 1
+            assert iridanext_metadata.sample5.calc_source_type == "Unknown"
+
+            assert iridanext_metadata.containsKey("sample6")
+            assert iridanext_metadata.sample6.size() == 1
+            assert iridanext_metadata.sample6.calc_source_type == "Host Conflict"
+
+            assert iridanext_metadata.containsKey("sample7")
+            assert iridanext_metadata.sample7.size() == 1
+            assert iridanext_metadata.sample7.calc_source_type == "Human"
+
+            assert iridanext_metadata.containsKey("sample8")
+            assert iridanext_metadata.sample8.size() == 1
+            assert iridanext_metadata.sample8.calc_source_type == "Human"
+
+            assert iridanext_metadata.containsKey("sample9")
+            assert iridanext_metadata.sample9.size() == 1
+            assert iridanext_metadata.sample9.calc_source_type == "Human"
+
+            assert iridanext_metadata.containsKey("sample10")
+            assert iridanext_metadata.sample10.size() == 1
+            assert iridanext_metadata.sample10.calc_source_type == "Animal"
+
+            assert iridanext_metadata.containsKey("sample11")
+            assert iridanext_metadata.sample11.size() == 1
+            assert iridanext_metadata.sample11.calc_source_type == "Food"
+
+            assert iridanext_metadata.containsKey("sample12")
+            assert iridanext_metadata.sample12.size() == 1
+            assert iridanext_metadata.sample12.calc_source_type == "Food"
+        }
+    }
+}
