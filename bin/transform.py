@@ -166,7 +166,7 @@ def categorize(metadata):
 
     missing_required_headers = [col for col in required_headers if col not in metadata.columns]
     included_required_headers = [col for col in required_headers if col in metadata.columns]
-    
+
     if (len(missing_required_headers) > 0):
         metadata_irida = pandas.DataFrame({SAMPLE_HEADER:[]})
         metadata_readable[results_headers] = pandas.Series([pandas.NA, False, "Missing required headers: " + str(missing_required_headers)])
