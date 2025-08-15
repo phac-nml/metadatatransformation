@@ -65,7 +65,7 @@ def missing_headers_error(metadata, required_headers):
     if len(missing_headers) > 0:
         return pandas.Series(["Missing required headers:"] + missing_headers)
     else:
-        return
+        return pandas.Series()
 
 def remove_any_NA_rows(metadata):
     # If at least one entry in the row is NA,
@@ -165,7 +165,7 @@ def categorize(metadata):
         "environmental_site", "environmental_material"
     ]
     error_message = missing_headers_error(metadata, required_headers)
-    if (error_message != None):
+    if (len(error_message) > 0):
         metadata_irida = pandas.DataFrame({SAMPLE_HEADER:[], "calc_source_type":[]})
         metadata_readable = error_message
         return metadata_readable, metadata_irida
