@@ -164,10 +164,13 @@ def categorize(metadata):
 
     metadata_readable = metadata.copy(deep=True)
 
-    missing_headers = [col for col in required_headers if col not in metadata.columns]
-    if (len(missing_headers) > 0):
+    missing_required_headers = [col for col in required_headers if col not in metadata.columns]
+    included_required_headers = [col for col in required_headers if col in metadata.columns]
+    
+    if (len(missing_required_headers) > 0):
         metadata_irida = pandas.DataFrame({SAMPLE_HEADER:[]})
-        metadata_readable[results_headers] = pandas.Series([pandas.NA, False, "Missing required headers: " + str(missing_headers)])
+        metadata_readable[results_headers] = pandas.Series([pandas.NA, False, "Missing required headers: " + str(missing_required_headers)])
+        metadata_readable = metadata_readable[[SAMPLE_HEADER, SAMPLE_NAME_HEADER] + included_required_headers + results_headers]
         return metadata_readable, metadata_irida
 
     # Helper fun for row-wise categorization
@@ -195,7 +198,7 @@ def categorize(metadata):
     metadata_readable[source_type_valid_header] = True
     metadata_readable[source_type_error_header] = ""
 
-    metadata_readable = metadata_readable[[SAMPLE_HEADER, SAMPLE_NAME_HEADER] + required_headers + results_headers]
+    metadata_readable = metadata_readable[[SAMPLE_HEADER, SAMPLE_NAME_HEADER] + included_required_headers + results_headers]
     metadata_irida = metadata_readable[[SAMPLE_HEADER, source_type_header]].copy(deep=True)
 
     return metadata_readable, metadata_irida
