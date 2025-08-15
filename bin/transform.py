@@ -60,13 +60,6 @@ SPECIAL_ENTRIES_REGEX = ['(?i)^{}$'.format(x) for x in SPECIAL_ENTRIES] # case i
 def missing_val(x, empty_strs = SPECIAL_ENTRIES):
     return (pandas.isna(x) | (x in empty_strs + [None]))
 
-def missing_headers_error(metadata, required_headers):
-    missing_headers = [col for col in required_headers if col not in metadata.columns]
-    if len(missing_headers) > 0:
-        return pandas.Series(["Missing required headers:"] + missing_headers)
-    else:
-        return pandas.Series()
-
 def remove_any_NA_rows(metadata):
     # If at least one entry in the row is NA,
     # then remove the whole row.
@@ -164,13 +157,18 @@ def categorize(metadata):
         "host_scientific_name", "host_common_name", "food_product",
         "environmental_site", "environmental_material"
     ]
-    error_message = missing_headers_error(metadata, required_headers)
-    if (len(error_message) > 0):
-        metadata_irida = pandas.DataFrame({SAMPLE_HEADER:[], "calc_source_type":[]})
-        metadata_readable = error_message
-        return metadata_readable, metadata_irida
+    source_type_header = "calc_source_type"
+    source_type_valid_header = source_type_header + VALID_HEADER_EXTENSION
+    source_type_error_header = source_type_header + VALID_HEADER_EXTENSION
+    results_headers = [source_type_header, source_type_valid_header, source_type_error_header]
 
     metadata_readable = metadata.copy(deep=True)
+
+    missing_headers = [col for col in required_headers if col not in metadata.columns]
+    if (len(missing_headers) > 0):
+        metadata_irida = pandas.DataFrame({SAMPLE_HEADER:[]})
+        metadata_readable[results_headers] = pandas.Series([pandas.NA, False, "Missing required headers: " + str(missing_headers)])
+        return metadata_readable, metadata_irida
 
     # Helper fun for row-wise categorization
     def categorize_row(row):
@@ -193,10 +191,12 @@ def categorize(metadata):
         else:
             return UNKNOWN_VALUE
 
-    metadata_readable["calc_source_type"] = metadata_readable.apply(categorize_row, axis = COLUMNS_AXIS)
+    metadata_readable[source_type_header] = metadata_readable.apply(categorize_row, axis = COLUMNS_AXIS)
+    metadata_readable[source_type_valid_header] = True
+    metadata_readable[source_type_error_header] = ""
 
-    metadata_readable = metadata_readable[[SAMPLE_HEADER, SAMPLE_NAME_HEADER] + required_headers + ["calc_source_type"]]
-    metadata_irida = metadata_readable[[SAMPLE_HEADER, "calc_source_type"]].copy(deep=True)
+    metadata_readable = metadata_readable[[SAMPLE_HEADER, SAMPLE_NAME_HEADER] + required_headers + results_headers]
+    metadata_irida = metadata_readable[[SAMPLE_HEADER, source_type_header]].copy(deep=True)
 
     return metadata_readable, metadata_irida
 
@@ -298,7 +298,6 @@ def main():
     parser.add_argument("--populate_value", default=POPULATE_VALUE, required=False,
                         help="The value to populate the specified column with for the populate transformation.")
 
-
     args = parser.parse_args()
     metadata = pandas.read_csv(args.input)
 
@@ -332,12 +331,11 @@ def main():
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
     elif (args.transformation == CATEGORIZE):
-
         metadata_readable, metadata_irida = categorize(metadata)
 
+        remove_all_NA_columns(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
-
 
 if __name__ == '__main__':
     main()

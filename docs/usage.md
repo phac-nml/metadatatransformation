@@ -176,19 +176,19 @@ sample12,"M",,,eggs,,wastewater
 following output `results.csv` file will be generated:
 
 ```
-sample,sample_name,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type
-sample1,"A",Homo sapiens (Human),Human NCBITaxon:9606,,,,Human
-sample2,"B",,dog,,,,Animal
-sample3,"C",,,eggs,,,Food
-sample4,"D",,,,farm,wastewater,Environmental
-sample5,"E",,,,,,Unknown
-sample6,"F",Homo sapiens (Human),dog,,,,Host Conflict
-sample7,"G",Homo sapiens (Human),,,,,Human
-sample8,"H",,Human NCBITaxon:9606,,,,Human
-sample9,"J",Homo sapiens (Human),Human NCBITaxon:9606,eggs,farm,wastewater,Human
-sample10,"K",,dog,eggs,,,Animal
-sample11,"L",,,eggs,farm,,Food
-sample12,"M",,,eggs,,wastewater,Food
+sample,sample_name,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type,calc_source_type_valid,calc_source_type_error
+sample1,A,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,
+sample2,B,,dog,,,,Animal,True,
+sample3,C,,,eggs,,,Food,True,
+sample4,D,,,,farm,wastewater,Environmental,True,
+sample5,E,,,,,,Unknown,True,
+sample6,F,Homo sapiens (Human),dog,,,,Host Conflict,True,
+sample7,G,Homo sapiens (Human),,,,,Human,True,
+sample8,H,,Human NCBITaxon:9606,,,,Human,True,
+sample9,J,Homo sapiens (Human),Human NCBITaxon:9606,eggs,farm,wastewater,Human,True,
+sample10,K,,dog,eggs,,,Animal,True,
+sample11,L,,,eggs,farm,,Food,True,
+sample12,M,,,eggs,,wastewater,Food,True,
 ```
 
 and the following `transformation.csv` file (written back to IRIDA Next) will be generated:
