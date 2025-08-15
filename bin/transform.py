@@ -333,7 +333,8 @@ def main():
     elif (args.transformation == CATEGORIZE):
         metadata_readable, metadata_irida = categorize(metadata)
 
-        remove_all_NA_columns(metadata_irida)
+        if (metadata_irida.columns != ['sample']):
+           remove_all_NA_columns(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
