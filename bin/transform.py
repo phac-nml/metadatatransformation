@@ -334,7 +334,8 @@ def main():
         metadata_readable, metadata_irida = categorize(metadata)
 
         if len(metadata_irida) > 0:
-           remove_all_NA_columns(metadata_irida)
+            remove_all_NA_columns(metadata_irida)
+
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
