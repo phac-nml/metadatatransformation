@@ -30,6 +30,7 @@ You may specify the metadata transformation with the `--transformation` paramete
 | age            | Calculates the age between the first and second metadata columns. Ages under 2 years old are calculated as (days/365) years old, showing 4 decimal places. |
 | earliest       | Reports the earliest date among the metadata columns.                                                                                                      |
 | populate       | Populates an output column with a specific value.                                                                                                          |
+| categorize     | Categorizes data into Human, Animal, Food or Environmental source based on values in a specific set of fields                                              |
 
 ## Lock Parameters
 
@@ -89,6 +90,43 @@ The following special entries are ignored when calculating the earliest age (the
 
 - `--populate_header`: names the header of the column to populate with `populate_value`
 - `--populate_value`: the value to populate every entry within the `populate_header` column
+
+## Categorize Parameters
+
+This transformation is expecting a specific set of metadata headers:
+
+- `host_scientific_name`: Scientific / latin name of host species (ie. _Genus species_)
+- `host_common_name`: The common name for host species
+- `food_product`: Name of food product (if food sample)
+- `environmental_site`: Name of environmental site/facility (if environmental sample)
+- `environmental_material`: Name of environmental material (if environmental sample)
+
+In order to ensure these columns are recognized, the metadata header parameters must be used to specify which input headers are which expected headers
+(ie. If `metadata_1` contains the host species common name, `--metadata_1_header host_common_name` must be added to the command)
+
+For example, the following code:
+
+```bash
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/categorize/basic.csv --outdir results --transformation categorize --metadata_1_header host_scientific_name --metadata_2_header host_common_name  --metadata_3_header food_product --metadata_4_header environmental_site  --metadata_5_header environmental_material
+```
+
+would generate the following `results.csv` file:
+
+```
+sample,sample_name,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type
+sample1,"A",Homo sapiens (Human),Human NCBITaxon:9606,,,,Human
+sample2,"B",,dog,,,,Animal
+sample3,"C",,,eggs,,,Food
+sample4,"D",,,,farm,wastewater,Environmental
+sample5,"E",,,,,,Unknown
+sample6,"F",Homo sapiens (Human),dog,,,,Host Conflict
+sample7,"G",Homo sapiens (Human),,,,,Human
+sample8,"H",,Human NCBITaxon:9606,,,,Human
+sample9,"J",Homo sapiens (Human),Human NCBITaxon:9606,eggs,farm,wastewater,Human
+sample10,"K",,dog,eggs,,,Animal
+sample11,"L",,,eggs,farm,,Food
+sample12,"M",,,eggs,,wastewater,Food
+```
 
 ## Other Parameters
 

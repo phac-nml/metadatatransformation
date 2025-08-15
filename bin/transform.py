@@ -5,6 +5,7 @@ import pathlib
 import pandas
 import numpy
 import math
+import re
 
 from dateutil.relativedelta import relativedelta
 from datetime import datetime
@@ -29,6 +30,7 @@ LOCK = "lock"
 AGE = "age"
 EARLIEST = "earliest"
 POPULATE = "populate"
+CATEGORIZE = "categorize"
 
 # Output Files:
 RESULTS_PATH = "results.csv"
@@ -41,6 +43,7 @@ DAYS_IN_YEAR = 365.0
 ROWS_AXIS = 0 # i.e. axis=0 // axis="rows"
 COLUMNS_AXIS = 1 # i.e. axis=1 // axis="columns"
 POPULATE_VALUE = "NA"
+UNKNOWN_VALUE = "Unknown"
 
 # Special Entries
 NOT_APPLICABLE = "Not Applicable"
@@ -53,6 +56,9 @@ BLANK = ""
 SPECIAL_ENTRIES = [NOT_APPLICABLE, MISSING, NOT_COLLECTED,
                     NOT_PROVIDED, RESTRICTED_ACCESS, BLANK]
 SPECIAL_ENTRIES_REGEX = ['(?i)^{}$'.format(x) for x in SPECIAL_ENTRIES] # case insensitive
+
+def missing_val(x, empty_strs = SPECIAL_ENTRIES):
+    return (pandas.isna(x) | (x in empty_strs + [None]))
 
 def remove_any_NA_rows(metadata):
     # If at least one entry in the row is NA,
@@ -144,6 +150,59 @@ def lock(metadata):
 
     return metadata_readable, metadata_irida
 
+def categorize(metadata):
+
+    # Check for required headers (output error message and blank if missing)
+    required_headers = [
+        "host_scientific_name", "host_common_name", "food_product",
+        "environmental_site", "environmental_material"
+    ]
+    source_type_header = "calc_source_type"
+    source_type_valid_header = source_type_header + VALID_HEADER_EXTENSION
+    source_type_error_header = source_type_header + ERROR_HEADER_EXTENSION
+    results_headers = [source_type_header, source_type_valid_header, source_type_error_header]
+
+    metadata_readable = metadata.copy(deep=True)
+
+    missing_required_headers = [col for col in required_headers if col not in metadata.columns]
+    included_required_headers = [col for col in required_headers if col in metadata.columns]
+
+    if (len(missing_required_headers) > 0):
+        metadata_irida = pandas.DataFrame({SAMPLE_HEADER:[]})
+        metadata_readable[results_headers] = pandas.Series([pandas.NA, False, "Missing required headers: " + str(missing_required_headers)])
+        metadata_readable = metadata_readable[[SAMPLE_HEADER, SAMPLE_NAME_HEADER] + included_required_headers + results_headers]
+        return metadata_readable, metadata_irida
+
+    # Helper fun for row-wise categorization
+    def categorize_row(row):
+        if ((row["host_scientific_name"] == "Homo sapiens (Human)") & (row["host_common_name"] == "Human NCBITaxon:9606")):
+            return "Human"
+        elif ((row["host_scientific_name"] == "Homo sapiens (Human)") & missing_val(row["host_common_name"])):
+            return "Human"
+        elif (missing_val(row["host_scientific_name"]) & (row["host_common_name"] == "Human NCBITaxon:9606")):
+            return "Human"
+        elif ((row["host_scientific_name"] == "Homo sapiens (Human)") & (row["host_common_name"] != "Human NCBITaxon:9606")):
+            return "Host Conflict"
+        elif ((row["host_scientific_name"] != "Homo sapiens (Human)") & (row["host_common_name"] == "Human NCBITaxon:9606")):
+            return "Host Conflict"
+        elif ((not missing_val(row["host_scientific_name"])) | (not missing_val(row["host_common_name"]))):
+            return "Animal"
+        elif ((not missing_val(row["food_product"]))):
+            return "Food"
+        elif ((not missing_val(row["environmental_site"])) | (not missing_val(row["environmental_material"]))):
+            return "Environmental"
+        else:
+            return UNKNOWN_VALUE
+
+    metadata_readable[source_type_header] = metadata_readable.apply(categorize_row, axis = COLUMNS_AXIS)
+    metadata_readable[source_type_valid_header] = True
+    metadata_readable[source_type_error_header] = ""
+
+    metadata_readable = metadata_readable[[SAMPLE_HEADER, SAMPLE_NAME_HEADER] + included_required_headers + results_headers]
+    metadata_irida = metadata_readable[[SAMPLE_HEADER, source_type_header]].copy(deep=True)
+
+    return metadata_readable, metadata_irida
+
 def format_age(age):
     if age < AGE_THRESHOLD:
         formatted_age = "{:.4f}".format(age)
@@ -231,7 +290,7 @@ def main():
 
     parser.add_argument("input", type=pathlib.Path,
                         help="The CSV-formatted input file to transform.")
-    parser.add_argument("transformation", choices=[LOCK, AGE, EARLIEST, POPULATE],
+    parser.add_argument("transformation", choices=[LOCK, AGE, EARLIEST, POPULATE, CATEGORIZE],
                         help="The type of transformation to perform.")
     parser.add_argument("--age_header", default=AGE_HEADER, required=False,
                         help="The output column header for the calculated age.")
@@ -271,6 +330,15 @@ def main():
         metadata_readable, metadata_irida = populate(metadata, args.populate_header, args.populate_value)
 
         remove_all_NA_columns(metadata_irida)
+        metadata_readable.to_csv(RESULTS_PATH, index=False)
+        metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
+
+    elif (args.transformation == CATEGORIZE):
+        metadata_readable, metadata_irida = categorize(metadata)
+
+        if len(metadata_irida) > 0:
+            remove_all_NA_columns(metadata_irida)
+
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
