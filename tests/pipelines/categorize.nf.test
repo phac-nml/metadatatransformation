@@ -154,17 +154,17 @@ nextflow_pipeline {
 
             assert results.text.contains("sample,sample_name,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type,calc_source_type_valid,calc_source_type_error")
             assert results.text.contains("sample1,A,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
-            assert results.text.contains("sample2,B,,dog,,,,Animal,False,\"Missing required headers: ['environmental_site', 'environmental_material']\")
-            assert results.text.contains("sample3,C,,,eggs,,,Food,False,\"Missing required headers: ['environmental_site', 'environmental_material']\")
-            assert results.text.contains("sample4,D,,,,farm,wastewater,Environmental,False,\"Missing required headers: ['environmental_site', 'environmental_material']\")
-            assert results.text.contains("sample5,E,,,,,,Unknown,False,\"Missing required headers: ['environmental_site', 'environmental_material']\")
-            assert results.text.contains("sample6,F,Homo sapiens (Human),dog,,,,Host Conflict,False,\"Missing required headers: ['environmental_site', 'environmental_material']\")
-            assert results.text.contains("sample7,G,Homo sapiens (Human),,,,,Human,False,\"Missing required headers: ['environmental_site', 'environmental_material']\")
-            assert results.text.contains("sample8,H,,Human NCBITaxon:9606,,,,Human,False,\"Missing required headers: ['environmental_site', 'environmental_material']\")
-            assert results.text.contains("sample9,J,Homo sapiens (Human),Human NCBITaxon:9606,eggs,farm,wastewater,Human,False,\"Missing required headers: ['environmental_site', 'environmental_material']\")
-            assert results.text.contains("sample10,K,,dog,eggs,,,Animal,False,\"Missing required headers: ['environmental_site', 'environmental_material']\")
-            assert results.text.contains("sample11,L,,,eggs,farm,,Food,False,\"Missing required headers: ['environmental_site', 'environmental_material']\")
-            assert results.text.contains("sample12,M,,,eggs,,wastewater,Food,False,\"Missing required headers: ['environmental_site', 'environmental_material']\")
+            assert results.text.contains("sample2,B,,dog,,,,Animal,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
+            assert results.text.contains("sample3,C,,,eggs,,,Food,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
+            assert results.text.contains("sample4,D,,,,farm,wastewater,Environmental,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
+            assert results.text.contains("sample5,E,,,,,,Unknown,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
+            assert results.text.contains("sample6,F,Homo sapiens (Human),dog,,,,Host Conflict,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
+            assert results.text.contains("sample7,G,Homo sapiens (Human),,,,,Human,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
+            assert results.text.contains("sample8,H,,Human NCBITaxon:9606,,,,Human,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
+            assert results.text.contains("sample9,J,Homo sapiens (Human),Human NCBITaxon:9606,eggs,farm,wastewater,Human,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
+            assert results.text.contains("sample10,K,,dog,eggs,,,Animal,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
+            assert results.text.contains("sample11,L,,,eggs,farm,,Food,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
+            assert results.text.contains("sample12,M,,,eggs,,wastewater,Food,False,\"Missing required headers: ['environmental_site', 'environmental_material']\"")
 
             // Check IRIDA Next JSON Output
             def iridanext_json = path("$launchDir/results/iridanext.output.json").json
