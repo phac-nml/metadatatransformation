@@ -61,6 +61,60 @@ nextflow_pipeline {
             assert results.text.contains("sample10,K,,dog,eggs,,,Animal")
             assert results.text.contains("sample11,L,,,eggs,farm,,Food")
             assert results.text.contains("sample12,M,,,eggs,,wastewater,Food")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            assert iridanext_metadata.size() == 12
+
+            assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1.calc_source_type == "Human"
+
+            assert iridanext_metadata.containsKey("sample2")
+            assert iridanext_metadata.sample2.calc_source_type == "Animal"
+
+            assert iridanext_metadata.containsKey("sample3")
+            assert iridanext_metadata.sample3.calc_source_type == "Food"
+
+            assert iridanext_metadata.containsKey("sample4")
+            assert iridanext_metadata.sample1.size() == 1
+            assert iridanext_metadata.sample1.calc_source_type == "Environmental"
+
+            assert iridanext_metadata.containsKey("sample5")
+            assert iridanext_metadata.sample2.size() == 1
+            assert iridanext_metadata.sample2.calc_source_type == "Unknown"
+
+            assert iridanext_metadata.containsKey("sample6")
+            assert iridanext_metadata.sample3.size() == 1
+            assert iridanext_metadata.sample3.calc_source_type == "Host Conflict"
+
+            assert iridanext_metadata.containsKey("sample7")
+            assert iridanext_metadata.sample3.size() == 1
+            assert iridanext_metadata.sample3.calc_source_type == "Human"
+
+            assert iridanext_metadata.containsKey("sample8")
+            assert iridanext_metadata.sample3.size() == 1
+            assert iridanext_metadata.sample3.calc_source_type == "Human"
+
+            assert iridanext_metadata.containsKey("sample9")
+            assert iridanext_metadata.sample3.size() == 1
+            assert iridanext_metadata.sample3.calc_source_type == "Human"
+
+            assert iridanext_metadata.containsKey("sample10")
+            assert iridanext_metadata.sample3.size() == 1
+            assert iridanext_metadata.sample3.calc_source_type == "Animal"
+
+            assert iridanext_metadata.containsKey("sample11")
+            assert iridanext_metadata.sample3.size() == 1
+            assert iridanext_metadata.sample3.calc_source_type == "Food"
+
+            assert iridanext_metadata.containsKey("sample12")
+            assert iridanext_metadata.sample3.size() == 1
+            assert iridanext_metadata.sample3.calc_source_type == "Food"
         }
     }
 
@@ -83,7 +137,6 @@ nextflow_pipeline {
 
         then {
             assert workflow.success
-assert workflow.success
             assert path("$launchDir/results").exists()
 
             // Check Transformation (Machine-Readable)
@@ -91,18 +144,6 @@ assert workflow.success
             assert transformation.exists()
 
             assert transformation.text.contains("sample,calc_source_type")
-            assert transformation.text.contains("sample1,")
-            assert transformation.text.contains("sample2,")
-            assert transformation.text.contains("sample3,")
-            assert transformation.text.contains("sample4,")
-            assert transformation.text.contains("sample5,")
-            assert transformation.text.contains("sample6,")
-            assert transformation.text.contains("sample7,")
-            assert transformation.text.contains("sample8,")
-            assert transformation.text.contains("sample9,")
-            assert transformation.text.contains("sample10,")
-            assert transformation.text.contains("sample11,")
-            assert transformation.text.contains("sample12,")
 
             // Check Results (Human-Readable)
             def results = path("$launchDir/results/transformation/results.csv")
@@ -172,6 +213,60 @@ assert workflow.success
             assert results.text.contains("sample10,K,,dog,eggs,,,Animal")
             assert results.text.contains("sample11,L,,,eggs,farm,,Food")
             assert results.text.contains("sample12,M,,,eggs,,wastewater,Food")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            assert iridanext_metadata.size() == 12
+
+            assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1.calc_source_type == "Human"
+
+            assert iridanext_metadata.containsKey("sample2")
+            assert iridanext_metadata.sample2.calc_source_type == "Animal"
+
+            assert iridanext_metadata.containsKey("sample3")
+            assert iridanext_metadata.sample3.calc_source_type == "Food"
+
+            assert iridanext_metadata.containsKey("sample4")
+            assert iridanext_metadata.sample1.size() == 1
+            assert iridanext_metadata.sample1.calc_source_type == "Environmental"
+
+            assert iridanext_metadata.containsKey("sample5")
+            assert iridanext_metadata.sample2.size() == 1
+            assert iridanext_metadata.sample2.calc_source_type == "Unknown"
+
+            assert iridanext_metadata.containsKey("sample6")
+            assert iridanext_metadata.sample3.size() == 1
+            assert iridanext_metadata.sample3.calc_source_type == "Host Conflict"
+
+            assert iridanext_metadata.containsKey("sample7")
+            assert iridanext_metadata.sample3.size() == 1
+            assert iridanext_metadata.sample3.calc_source_type == "Human"
+
+            assert iridanext_metadata.containsKey("sample8")
+            assert iridanext_metadata.sample3.size() == 1
+            assert iridanext_metadata.sample3.calc_source_type == "Human"
+
+            assert iridanext_metadata.containsKey("sample9")
+            assert iridanext_metadata.sample3.size() == 1
+            assert iridanext_metadata.sample3.calc_source_type == "Human"
+
+            assert iridanext_metadata.containsKey("sample10")
+            assert iridanext_metadata.sample3.size() == 1
+            assert iridanext_metadata.sample3.calc_source_type == "Animal"
+
+            assert iridanext_metadata.containsKey("sample11")
+            assert iridanext_metadata.sample3.size() == 1
+            assert iridanext_metadata.sample3.calc_source_type == "Food"
+
+            assert iridanext_metadata.containsKey("sample12")
+            assert iridanext_metadata.sample3.size() == 1
+            assert iridanext_metadata.sample3.calc_source_type == "Food"
         }
     }
 }

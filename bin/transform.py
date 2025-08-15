@@ -64,9 +64,9 @@ def missing_headers_error(metadata, required_headers):
     missing_headers = [col for col in required_headers if col not in metadata.columns]
     if len(missing_headers) > 0:
         return pandas.Series(["Missing required headers:"] + missing_headers)
-    else: 
+    else:
         return
-    
+
 def remove_any_NA_rows(metadata):
     # If at least one entry in the row is NA,
     # then remove the whole row.
