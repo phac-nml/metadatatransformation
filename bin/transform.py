@@ -60,6 +60,13 @@ SPECIAL_ENTRIES_REGEX = ['(?i)^{}$'.format(x) for x in SPECIAL_ENTRIES] # case i
 def missing_val(x, empty_strs = SPECIAL_ENTRIES):
     return (pandas.isna(x) | (x in empty_strs + [None]))
 
+def missing_headers_error(metadata, required_headers):
+    missing_headers = [col for col in required_headers if col not in metadata.columns]
+    if len(missing_headers) > 0:
+        return pandas.Series(["Missing required headers:"] + missing_headers)
+    else: 
+        return
+    
 def remove_any_NA_rows(metadata):
     # If at least one entry in the row is NA,
     # then remove the whole row.
@@ -157,13 +164,10 @@ def categorize(metadata):
         "host_scientific_name", "host_common_name", "food_product",
         "environmental_site", "environmental_material"
     ]
-
-    missing_headers = [col for col in required_headers if col not in metadata.columns]
-
-    if len(missing_headers) > 0:
-        metadata_irida = metadata[[SAMPLE_HEADER]].copy(deep=True)
-        metadata_irida["calc_source_type"] = pandas.NA
-        metadata_readable = pandas.Series(["Missing required headers:"] + missing_headers)
+    error_message = missing_headers_error(metadata, required_headers)
+    if (error_message != None):
+        metadata_irida = pandas.DataFrame({SAMPLE_HEADER:[], "calc_source_type":[]})
+        metadata_readable = error_message
         return metadata_readable, metadata_irida
 
     metadata_readable = metadata.copy(deep=True)
@@ -189,7 +193,7 @@ def categorize(metadata):
         else:
             return UNKNOWN_VALUE
 
-    metadata_readable["calc_source_type"] = metadata_readable.apply(categorize_row, axis = 1)
+    metadata_readable["calc_source_type"] = metadata_readable.apply(categorize_row, axis = COLUMNS_AXIS)
 
     metadata_readable = metadata_readable[[SAMPLE_HEADER, SAMPLE_NAME_HEADER] + required_headers + ["calc_source_type"]]
     metadata_irida = metadata_readable[[SAMPLE_HEADER, "calc_source_type"]].copy(deep=True)
