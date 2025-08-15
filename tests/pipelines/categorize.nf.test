@@ -72,49 +72,52 @@ nextflow_pipeline {
             assert iridanext_metadata.size() == 12
 
             assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1.size() == 1
             assert iridanext_metadata.sample1.calc_source_type == "Human"
 
             assert iridanext_metadata.containsKey("sample2")
+            assert iridanext_metadata.sample2.size() == 1
             assert iridanext_metadata.sample2.calc_source_type == "Animal"
 
             assert iridanext_metadata.containsKey("sample3")
+            assert iridanext_metadata.sample3.size() == 1
             assert iridanext_metadata.sample3.calc_source_type == "Food"
 
             assert iridanext_metadata.containsKey("sample4")
-            assert iridanext_metadata.sample1.size() == 1
-            assert iridanext_metadata.sample1.calc_source_type == "Environmental"
+            assert iridanext_metadata.sample4.size() == 1
+            assert iridanext_metadata.sample4.calc_source_type == "Environmental"
 
             assert iridanext_metadata.containsKey("sample5")
-            assert iridanext_metadata.sample2.size() == 1
-            assert iridanext_metadata.sample2.calc_source_type == "Unknown"
+            assert iridanext_metadata.sample5.size() == 1
+            assert iridanext_metadata.sample5.calc_source_type == "Unknown"
 
             assert iridanext_metadata.containsKey("sample6")
-            assert iridanext_metadata.sample3.size() == 1
-            assert iridanext_metadata.sample3.calc_source_type == "Host Conflict"
+            assert iridanext_metadata.sample6.size() == 1
+            assert iridanext_metadata.sample6.calc_source_type == "Host Conflict"
 
             assert iridanext_metadata.containsKey("sample7")
-            assert iridanext_metadata.sample3.size() == 1
-            assert iridanext_metadata.sample3.calc_source_type == "Human"
+            assert iridanext_metadata.sample7.size() == 1
+            assert iridanext_metadata.sample7.calc_source_type == "Human"
 
             assert iridanext_metadata.containsKey("sample8")
-            assert iridanext_metadata.sample3.size() == 1
-            assert iridanext_metadata.sample3.calc_source_type == "Human"
+            assert iridanext_metadata.sample8.size() == 1
+            assert iridanext_metadata.sample8.calc_source_type == "Human"
 
             assert iridanext_metadata.containsKey("sample9")
-            assert iridanext_metadata.sample3.size() == 1
-            assert iridanext_metadata.sample3.calc_source_type == "Human"
+            assert iridanext_metadata.sample9.size() == 1
+            assert iridanext_metadata.sample9.calc_source_type == "Human"
 
             assert iridanext_metadata.containsKey("sample10")
-            assert iridanext_metadata.sample3.size() == 1
-            assert iridanext_metadata.sample3.calc_source_type == "Animal"
+            assert iridanext_metadata.sample10.size() == 1
+            assert iridanext_metadata.sample10.calc_source_type == "Animal"
 
             assert iridanext_metadata.containsKey("sample11")
-            assert iridanext_metadata.sample3.size() == 1
-            assert iridanext_metadata.sample3.calc_source_type == "Food"
+            assert iridanext_metadata.sample11.size() == 1
+            assert iridanext_metadata.sample11.calc_source_type == "Food"
 
             assert iridanext_metadata.containsKey("sample12")
-            assert iridanext_metadata.sample3.size() == 1
-            assert iridanext_metadata.sample3.calc_source_type == "Food"
+            assert iridanext_metadata.sample12.size() == 1
+            assert iridanext_metadata.sample12.calc_source_type == "Food"
         }
     }
 
@@ -224,49 +227,52 @@ nextflow_pipeline {
             assert iridanext_metadata.size() == 12
 
             assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1.size() == 1
             assert iridanext_metadata.sample1.calc_source_type == "Human"
 
             assert iridanext_metadata.containsKey("sample2")
+            assert iridanext_metadata.sample2.size() == 1
             assert iridanext_metadata.sample2.calc_source_type == "Animal"
 
             assert iridanext_metadata.containsKey("sample3")
+            assert iridanext_metadata.sample3.size() == 1
             assert iridanext_metadata.sample3.calc_source_type == "Food"
 
             assert iridanext_metadata.containsKey("sample4")
-            assert iridanext_metadata.sample1.size() == 1
-            assert iridanext_metadata.sample1.calc_source_type == "Environmental"
+            assert iridanext_metadata.sample4.size() == 1
+            assert iridanext_metadata.sample4.calc_source_type == "Environmental"
 
             assert iridanext_metadata.containsKey("sample5")
-            assert iridanext_metadata.sample2.size() == 1
-            assert iridanext_metadata.sample2.calc_source_type == "Unknown"
+            assert iridanext_metadata.sample5.size() == 1
+            assert iridanext_metadata.sample5.calc_source_type == "Unknown"
 
             assert iridanext_metadata.containsKey("sample6")
-            assert iridanext_metadata.sample3.size() == 1
-            assert iridanext_metadata.sample3.calc_source_type == "Host Conflict"
+            assert iridanext_metadata.sample6.size() == 1
+            assert iridanext_metadata.sample6.calc_source_type == "Host Conflict"
 
             assert iridanext_metadata.containsKey("sample7")
-            assert iridanext_metadata.sample3.size() == 1
-            assert iridanext_metadata.sample3.calc_source_type == "Human"
+            assert iridanext_metadata.sample7.size() == 1
+            assert iridanext_metadata.sample7.calc_source_type == "Human"
 
             assert iridanext_metadata.containsKey("sample8")
-            assert iridanext_metadata.sample3.size() == 1
-            assert iridanext_metadata.sample3.calc_source_type == "Human"
+            assert iridanext_metadata.sample8.size() == 1
+            assert iridanext_metadata.sample8.calc_source_type == "Human"
 
             assert iridanext_metadata.containsKey("sample9")
-            assert iridanext_metadata.sample3.size() == 1
-            assert iridanext_metadata.sample3.calc_source_type == "Human"
+            assert iridanext_metadata.sample9.size() == 1
+            assert iridanext_metadata.sample9.calc_source_type == "Human"
 
             assert iridanext_metadata.containsKey("sample10")
-            assert iridanext_metadata.sample3.size() == 1
-            assert iridanext_metadata.sample3.calc_source_type == "Animal"
+            assert iridanext_metadata.sample10.size() == 1
+            assert iridanext_metadata.sample10.calc_source_type == "Animal"
 
             assert iridanext_metadata.containsKey("sample11")
-            assert iridanext_metadata.sample3.size() == 1
-            assert iridanext_metadata.sample3.calc_source_type == "Food"
+            assert iridanext_metadata.sample11.size() == 1
+            assert iridanext_metadata.sample11.calc_source_type == "Food"
 
             assert iridanext_metadata.containsKey("sample12")
-            assert iridanext_metadata.sample3.size() == 1
-            assert iridanext_metadata.sample3.calc_source_type == "Food"
+            assert iridanext_metadata.sample12.size() == 1
+            assert iridanext_metadata.sample12.calc_source_type == "Food"
         }
     }
 }
