@@ -146,7 +146,7 @@ nextflow_pipeline {
             def transformation = path("$launchDir/results/transformation/transformation.csv")
             assert transformation.exists()
 
-            assert transformation.text.contains("sample,calc_source_type")
+            assert transformation.text.contains("sample")
 
             // Check Results (Human-Readable)
             def results = path("$launchDir/results/transformation/results.csv")

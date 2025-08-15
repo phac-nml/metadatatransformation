@@ -159,7 +159,7 @@ def categorize(metadata):
     ]
     source_type_header = "calc_source_type"
     source_type_valid_header = source_type_header + VALID_HEADER_EXTENSION
-    source_type_error_header = source_type_header + VALID_HEADER_EXTENSION
+    source_type_error_header = source_type_header + ERROR_HEADER_EXTENSION
     results_headers = [source_type_header, source_type_valid_header, source_type_error_header]
 
     metadata_readable = metadata.copy(deep=True)
