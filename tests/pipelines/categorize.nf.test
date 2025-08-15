@@ -155,6 +155,16 @@ nextflow_pipeline {
             assert results.text.contains("Missing required headers:")
             assert results.text.contains("environmental_site")
             assert results.text.contains("environmental_material")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            assert iridanext_metadata.size() == 0
+
         }
     }
 
