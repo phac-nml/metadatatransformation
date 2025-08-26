@@ -21,7 +21,7 @@ VALID_HEADER_EXTENSION = "_valid"
 ERROR_HEADER_EXTENSION = "_error"
 
 # Age Headers:
-DATE_OF_BIRTH_HEADER = "date_of_birth_dob"
+DATE_OF_BIRTH_HEADER = "date_of_birth_DOB"
 DATE_HEADER = "calc_earliest_date"
 HOST_AGE_HEADER = "host_age"
 HOST_AGE_UNIT_HEADER = "host_age_unit"
