@@ -20,10 +20,12 @@ POPULATE_HEADER = "populated"
 VALID_HEADER_EXTENSION = "_valid"
 ERROR_HEADER_EXTENSION = "_error"
 
-# Column indices:
-# Note: The relative position of these matters.
-DATE_1_INDEX = 2
-DATE_2_INDEX = 3
+# Age Headers:
+DATE_OF_BIRTH_HEADER = "date_of_birth_dob"
+DATE_HEADER = "calc_earliest_date"
+HOST_AGE_HEADER = "host_age"
+HOST_AGE_UNIT_HEADER = "host_age_unit"
+AGE_HEADERS = [SAMPLE_HEADER, SAMPLE_NAME_HEADER, DATE_OF_BIRTH_HEADER, DATE_HEADER, HOST_AGE_HEADER, HOST_AGE_UNIT_HEADER]
 
 # Transformations:
 LOCK = "lock"
@@ -221,15 +223,15 @@ def calculate_age(row):
     age_error = "Unable to calculate age."
 
     # Is a date missing?
-    if pandas.isnull(row.iloc[DATE_1_INDEX]) or pandas.isnull(row.iloc[DATE_2_INDEX]):
+    if pandas.isnull(row[DATE_OF_BIRTH_HEADER]) or pandas.isnull(row[DATE_HEADER]):
         age = numpy.nan
         age_valid = False
         age_error = "At least one of the dates is missing."
 
         return pandas.Series([age, age_valid, age_error])
 
-    date_1_string = row.iloc[DATE_1_INDEX]
-    date_2_string = row.iloc[DATE_2_INDEX]
+    date_1_string = row[DATE_OF_BIRTH_HEADER]
+    date_2_string = row[DATE_HEADER]
 
     # Are the dates in the correct type (string) and format?
     try:
@@ -276,7 +278,7 @@ def age(metadata, age_header):
     age_valid_header = age_header + VALID_HEADER_EXTENSION
     age_error_header = age_header + ERROR_HEADER_EXTENSION
 
-    metadata_readable = metadata.iloc[:, :DATE_2_INDEX+1].copy(deep=True) # drop extra columns in new copy
+    metadata_readable = metadata[AGE_HEADERS].copy(deep=True) # drop extra columns in new copy
     metadata_readable[[age_header, age_valid_header, age_error_header]] = metadata_readable.apply(calculate_age, axis=COLUMNS_AXIS)
 
     metadata_irida = metadata_readable[[SAMPLE_HEADER, age_header]].copy(deep=True)
