@@ -213,7 +213,7 @@ def format_age(age):
 
     return formatted_age
 
-def calculate_age(row):
+def calculate_age_between_dates(date_1_string, date_2_string):
     age = numpy.nan
     # numpy.nan, not pandas.NA because numpy.nan is treated as a float.
     # Otherwise, there's a risk of mixing age floats with pandas.NA and having
@@ -221,17 +221,6 @@ def calculate_age(row):
     # .to_csv(..., float_format=format_age) from working.
     age_valid = False
     age_error = "Unable to calculate age."
-
-    # Is a date missing?
-    if pandas.isnull(row[DATE_OF_BIRTH_HEADER]) or pandas.isnull(row[DATE_HEADER]):
-        age = numpy.nan
-        age_valid = False
-        age_error = "At least one of the dates is missing."
-
-        return pandas.Series([age, age_valid, age_error])
-
-    date_1_string = row[DATE_OF_BIRTH_HEADER]
-    date_2_string = row[DATE_HEADER]
 
     # Are the dates in the correct type (string) and format?
     try:
@@ -270,7 +259,47 @@ def calculate_age(row):
         age_valid = False
         age_error = "The dates are reversed."
 
-    result = pandas.Series([age, age_valid, age_error])
+    return pandas.Series([age, age_valid, age_error])
+
+def calculate_age_by_units(age_string, age_unit_string):
+    return pandas.Series([1, True, ""])
+
+def calculate_age(row):
+    age_dob = pandas.Series()
+    age_units = pandas.Series()
+
+    # Are too many data missing?
+    # We need at least one of either:
+    # 1) DATE_OF_BIRTH_HEADER and DATE_HEADER
+    # 2) HOST_AGE_HEADER and HOST_AGE_UNIT_HEADER
+    if (not (pandas.isnull(row[DATE_OF_BIRTH_HEADER]) or pandas.isnull(row[DATE_HEADER]))
+        and not (pandas.isnull(row[HOST_AGE_HEADER]) or pandas.isnull(row[HOST_AGE_UNIT_HEADER]))):
+        age = numpy.nan
+        age_valid = False
+        age_error = "Missing data."
+
+        return pandas.Series([age, age_valid, age_error])
+
+    # Calculate the date based on the date of birth and date:
+    if not pandas.isnull(row[DATE_OF_BIRTH_HEADER]) and not pandas.isnull(row[DATE_HEADER]):
+        dob_string = row[DATE_OF_BIRTH_HEADER]
+        date_string = row[DATE_HEADER]
+        age_dob = calculate_age_between_dates(dob_string, date_string)
+
+    # Calculate the date based on the host age and host age units:
+    if not pandas.isnull(row[HOST_AGE_HEADER]) and not pandas.isnull(row[HOST_AGE_UNIT_HEADER]):
+        age_string = row[HOST_AGE_HEADER]
+        age_unit_string = row[HOST_AGE_UNIT_HEADER]
+        age_units = calculate_age_by_units(age_string, age_unit_string)
+
+    if not age_dob.empty and age_units.empty:
+        result = age_dob
+    elif age_dob.empty and not age_units.empty:
+        result = age_units
+    elif not age_dob.empty and not age_units.empty:
+        result = age_dob
+    else:
+        result = pandas.Series([numpy.nan, False, "Unexpected error."])
 
     return result
 
