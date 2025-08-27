@@ -26,3 +26,5 @@ sample24,24,,,24,months
 sample25,25,,,1,year
 sample26,26,,,2,years
 sample27,27,,,3,years
+sample28,28,2000-01-01,2000-01-01,0,day
+sample29,29,2000-01-01,2000-12-31,366,day

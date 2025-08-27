@@ -293,6 +293,29 @@ def calculate_age_by_units(age_string, age_unit_string):
 
     return age
 
+def consolidate_ages(age1, age2):
+    PERCENTAGE_THRESHOLD = 0.10
+
+    # Are there any problems?
+    if pandas.isnull(age1[0]) or pandas.isnull(age2[0]):
+        return pandas.Series([numpy.nan, False, "Unexpected error consolidating ages."])
+
+    larger = max(age1[0], age2[0])
+    smaller = min(age1[0], age2[0])
+
+    # Are they the same?
+    if(age1[0] == age2[0]):
+        return age1.copy(deep=True)
+
+    # Are they close enough?
+    elif (smaller > larger - larger * PERCENTAGE_THRESHOLD):
+        print("close enough!")
+        return pandas.Series([numpy.mean([age1[0], age2[0]]), True, ""])
+
+    # Too different from each other:
+    else:
+        return pandas.Series([numpy.nan, False, f"The two ages are too different to be consolidated: ({age1[0]}, {age2[0]})"])
+
 def calculate_age(row):
     age_dob = pandas.Series()
     age_units = pandas.Series()
@@ -318,7 +341,7 @@ def calculate_age(row):
     # Both a date of birth-based and unit-based age was calculated:
     elif not age_dob.empty and not age_units.empty:
         # One may contain an error!
-        result = age_dob
+        result = consolidate_ages(age_dob, age_units)
     # No age was calculated because of missing data.
     else:
         result = pandas.Series([numpy.nan, False, "Insufficient data to calculate an age."])
