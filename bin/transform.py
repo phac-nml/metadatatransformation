@@ -42,6 +42,8 @@ TRANSFORMATION_PATH = "transformation.csv"
 DATE_FORMAT = "%Y-%m-%d" # YYYY-MM-DD
 AGE_THRESHOLD = 2 # Ages less than this will include a decimal component.
 DAYS_IN_YEAR = 365.0
+WEEKS_IN_YEAR = 52.0
+MONTHS_IN_YEAR = 12.0
 ROWS_AXIS = 0 # i.e. axis=0 // axis="rows"
 COLUMNS_AXIS = 1 # i.e. axis=1 // axis="columns"
 POPULATE_VALUE = "NA"
@@ -262,23 +264,38 @@ def calculate_age_between_dates(date_1_string, date_2_string):
     return pandas.Series([age, age_valid, age_error])
 
 def calculate_age_by_units(age_string, age_unit_string):
-    return pandas.Series([1, True, ""])
+    DAY_UNITS = ["day", "days"]
+    WEEK_UNITS = ["week", "weeks"]
+    MONTH_UNITS = ["month", "months"]
+    YEAR_UNITS = ["year", "years"]
+
+    # Convert age_string into a number:
+    try:
+        age_number = float(age_string)
+    except ValueError:
+        return pandas.Series([numpy.nan, False, f"{HOST_AGE_HEADER} ({age_string}) could not be converted to a number."])
+
+    # Calculate age in years:
+    if age_unit_string.lower() in (unit.lower() for unit in DAY_UNITS):
+        age_in_years = age_number / DAYS_IN_YEAR
+        age = pandas.Series([age_in_years, True, ""])
+    elif age_unit_string.lower() in (unit.lower() for unit in WEEK_UNITS):
+        age_in_years = age_number / WEEKS_IN_YEAR
+        age = pandas.Series([age_in_years, True, ""])
+    elif age_unit_string.lower() in (unit.lower() for unit in MONTH_UNITS):
+        age_in_years = age_number / MONTHS_IN_YEAR
+        age = pandas.Series([age_in_years, True, ""])
+    elif age_unit_string.lower() in (unit.lower() for unit in YEAR_UNITS):
+        age_in_years = age_number
+        age = pandas.Series([age_in_years, True, ""])
+    else:
+        age = pandas.Series([numpy.nan, False, f"{HOST_AGE_UNIT_HEADER} ({age_unit_string}) is not a recognized age unit."])
+
+    return age
 
 def calculate_age(row):
     age_dob = pandas.Series()
     age_units = pandas.Series()
-
-    # Are too many data missing?
-    # We need at least one of either:
-    # 1) DATE_OF_BIRTH_HEADER and DATE_HEADER
-    # 2) HOST_AGE_HEADER and HOST_AGE_UNIT_HEADER
-    if (not (pandas.isnull(row[DATE_OF_BIRTH_HEADER]) or pandas.isnull(row[DATE_HEADER]))
-        and not (pandas.isnull(row[HOST_AGE_HEADER]) or pandas.isnull(row[HOST_AGE_UNIT_HEADER]))):
-        age = numpy.nan
-        age_valid = False
-        age_error = "Missing data."
-
-        return pandas.Series([age, age_valid, age_error])
 
     # Calculate the date based on the date of birth and date:
     if not pandas.isnull(row[DATE_OF_BIRTH_HEADER]) and not pandas.isnull(row[DATE_HEADER]):
@@ -292,14 +309,19 @@ def calculate_age(row):
         age_unit_string = row[HOST_AGE_UNIT_HEADER]
         age_units = calculate_age_by_units(age_string, age_unit_string)
 
+    # Only a date of birth-based age was calculated:
     if not age_dob.empty and age_units.empty:
         result = age_dob
+    # Only a unit-based age was calculated:
     elif age_dob.empty and not age_units.empty:
         result = age_units
+    # Both a date of birth-based and unit-based age was calculated:
     elif not age_dob.empty and not age_units.empty:
+        # One may contain an error!
         result = age_dob
+    # No age was calculated because of missing data.
     else:
-        result = pandas.Series([numpy.nan, False, "Unexpected error."])
+        result = pandas.Series([numpy.nan, False, "Insufficient data to calculate an age."])
 
     return result
 
