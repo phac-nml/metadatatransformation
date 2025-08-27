@@ -1,4 +1,4 @@
-sample,sample_name,host_age,host_age_unit,host_date_of_birth_dob,calc_earliest_date,calc_host_age,calc_host_age_reason
+sample,sample_name,host_age,host_age_unit,host_date_of_birth_DOB,calc_earliest_date,calc_host_age,calc_host_age_reason
 sample1,1,1,month,2025-01-01,2025-02-01,0.083,
 sample2,2,90,day,2025-04-01,2025-04-11,0.247,
 sample3,3,40,year,1985-08-10,2025-08-11,40,
@@ -9,7 +9,7 @@ sample7,7,1,month,Not Applicable,2025-02-01,0.083,
 sample8,8,90,day,Missing,2025-04-11,0.247,
 sample9,9,40,year,Not Collected,2025-08-11,40,
 sample10,10,1,month,Not Provided,2025-02-01,0.083,
-sample11,11,90,day,Restricted Acces,2025-04-11,0.247,
+sample11,11,90,day,Restricted Access,2025-04-11,0.247,
 sample12,12,10,,,,10,
 sample13,13,10,cycles,,,,Invalid HOST_AGE_UNIT
 sample14,14,10,units,,,,Invalid HOST_AGE_UNIT
@@ -22,7 +22,7 @@ sample20,20,10,Not Applicable,,,10,
 sample21,21,10,Missing,,,10,
 sample22,22,10,Not Collected,,,10,
 sample23,23,10,Not Provided,,,10,
-sample24,24,10,Restricted Acces,,,10,
+sample24,24,10,Restricted Access,,,10,
 sample25,25,10,,,,10,
 sample26,26,-1,,,2020-01-12,,negative value
 sample27,27,500,year,,1998-06-15,,age is not reasonable
