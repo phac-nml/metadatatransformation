@@ -7,19 +7,29 @@ from datetime import datetime
 
 from transformations.constants import (SAMPLE_HEADER, SAMPLE_NAME_HEADER, DATE_FORMAT,
                                        VALID_HEADER_EXTENSION, ERROR_HEADER_EXTENSION,
-                                       COLUMNS_AXIS)
+                                       COLUMNS_AXIS, SPECIAL_ENTRIES_REGEX, BLANK)
+
+# TODO: PNC-specific metadata in nextflow
 
 # Age Headers:
-DATE_OF_BIRTH_HEADER = "date_of_birth_DOB"
+DATE_OF_BIRTH_HEADER = "host_date_of_birth_DOB"
 DATE_HEADER = "calc_earliest_date"
 HOST_AGE_HEADER = "host_age"
 HOST_AGE_UNIT_HEADER = "host_age_unit"
 AGE_HEADERS = [SAMPLE_HEADER, SAMPLE_NAME_HEADER, DATE_OF_BIRTH_HEADER, DATE_HEADER, HOST_AGE_HEADER, HOST_AGE_UNIT_HEADER]
 
+PERCENTAGE_THRESHOLD = 0.10 # Threshold for accepting differences in DOB-based and units-based ages.
+# TODO: age difference should be a flat 1-year difference (>1 year), not a percentage
 AGE_THRESHOLD = 2 # Ages less than this will include a decimal component.
 DAYS_IN_YEAR = 365.0
 WEEKS_IN_YEAR = 52.0
 MONTHS_IN_YEAR = 12.0
+MAX_AGE = 150 # years
+
+DAY_UNITS = ["day", "days"]
+WEEK_UNITS = ["week", "weeks"]
+MONTH_UNITS = ["month", "months"]
+YEAR_UNITS = ["year", "years"]
 
 def format_age(age):
     if age < AGE_THRESHOLD:
@@ -78,11 +88,6 @@ def calculate_age_between_dates(date_1_string, date_2_string):
     return pandas.Series([age, age_valid, age_error])
 
 def calculate_age_by_units(age_string, age_unit_string):
-    DAY_UNITS = ["day", "days"]
-    WEEK_UNITS = ["week", "weeks"]
-    MONTH_UNITS = ["month", "months"]
-    YEAR_UNITS = ["year", "years"]
-
     # Convert age_string into a number:
     try:
         age_number = float(age_string)
@@ -108,8 +113,6 @@ def calculate_age_by_units(age_string, age_unit_string):
     return age
 
 def consolidate_ages(age1, age2):
-    PERCENTAGE_THRESHOLD = 0.10
-
     # Are there any problems?
     if pandas.isnull(age1[0]) or pandas.isnull(age2[0]):
         return pandas.Series([numpy.nan, False, "Unexpected error consolidating ages."])
@@ -133,6 +136,16 @@ def calculate_age(row):
     age_dob = pandas.Series()
     age_units = pandas.Series()
 
+    # Replace special entries:
+    row = row.replace(to_replace=SPECIAL_ENTRIES_REGEX, value=pandas.NA, inplace=False, regex=True)
+
+    # Special entries and blanks in host_age_unit are
+    # to be interpretted as "years". At this point,
+    # special entries have already been replaced with null.
+    if (pandas.isnull(row[HOST_AGE_UNIT_HEADER])
+        or row[HOST_AGE_UNIT_HEADER] == BLANK):
+        row[HOST_AGE_UNIT_HEADER] = YEAR_UNITS[0]
+
     # Calculate the date based on the date of birth and date:
     if not pandas.isnull(row[DATE_OF_BIRTH_HEADER]) and not pandas.isnull(row[DATE_HEADER]):
         dob_string = row[DATE_OF_BIRTH_HEADER]
@@ -140,6 +153,7 @@ def calculate_age(row):
         age_dob = calculate_age_between_dates(dob_string, date_string)
 
     # Calculate the date based on the host age and host age units:
+    # TODO: If there's a DOB but no earliest date, throw a special error.
     if not pandas.isnull(row[HOST_AGE_HEADER]) and not pandas.isnull(row[HOST_AGE_UNIT_HEADER]):
         age_string = row[HOST_AGE_HEADER]
         age_unit_string = row[HOST_AGE_UNIT_HEADER]
@@ -158,6 +172,21 @@ def calculate_age(row):
     # No age was calculated because of missing data.
     else:
         result = pandas.Series([numpy.nan, False, "Insufficient data to calculate an age."])
+
+    # Check if age is within an acceptable range:
+    if (not pandas.isnull(result[0])):
+
+        age_value = result[0]
+
+        # TODO: Check for exactly 0
+
+        # Negative:
+        if age_value < 0:
+            result = pandas.Series([age_value, False, "The age is negative."])
+        
+        # Too large:
+        elif age_value > MAX_AGE:
+            result = pandas.Series([age_value, False, "The age is too large."])
 
     return result
 
