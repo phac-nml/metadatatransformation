@@ -29,7 +29,7 @@ sample27,27,1998-06-15,500,year,,,age is not reasonable
 sample28,28,1900-01-01,500,,,,"age is not reasonable, Invalid HOST_AGE_UNIT"
 sample29,29,,150,year,,150,
 sample30,30,,fledgling,year,,,invalid host age
-sample31,31,2019-12-22, 1/2,,,,invalid host age
+sample31,31,2019-12-22,1/2,,,,invalid host age
 sample32,32,2017-06-14,0,,,,invalid host age
 sample33,33,2019-07-12,5,week,,0.096,
 sample34,34,2018-01-08,toddler,,,,"invalid host age, Invalid HOST_AGE_UNIT"

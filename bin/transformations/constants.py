@@ -1,3 +1,8 @@
+# Default Column Headers:
+AGE_HEADER = "calc_host_age"
+EARLIEST_HEADER = "calc_earliest_date"
+POPULATE_HEADER = "populated"
+
 # Headers:
 SAMPLE_HEADER = "sample"
 SAMPLE_NAME_HEADER = "sample_name"
