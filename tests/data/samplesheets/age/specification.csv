@@ -1,35 +1,37 @@
-sample,sample_name,host_age,host_age_unit,host_date_of_birth_DOB,calc_earliest_date,calc_host_age,calc_host_age_reason
-sample1,1,1,month,2025-01-01,2025-02-01,0.083,
-sample2,2,90,day,2025-04-01,2025-04-11,0.247,
-sample3,3,40,year,1985-08-10,2025-08-11,40,
-sample4,4,1,month,,2025-02-01,0.083,
-sample5,5,90,day,,2025-04-11,0.247,
-sample6,6,40,year,,2025-08-11,40,
-sample7,7,1,month,Not Applicable,2025-02-01,0.083,
-sample8,8,90,day,Missing,2025-04-11,0.247,
-sample9,9,40,year,Not Collected,2025-08-11,40,
-sample10,10,1,month,Not Provided,2025-02-01,0.083,
-sample11,11,90,day,Restricted Access,2025-04-11,0.247,
-sample12,12,10,,,,10,
-sample13,13,10,cycles,,,,Invalid HOST_AGE_UNIT
-sample14,14,10,units,,,,Invalid HOST_AGE_UNIT
-sample15,15,10,bananas,,,,Invalid HOST_AGE_UNIT
-sample16,16,10,,2025-01-01,,,
-sample17,17,10,cycles,2025-01-01,,,"Invalid HOST_AGE_UNIT, EALIEST DATE MISSING"
-sample18,18,10,units,2025-01-01,,,"Invalid HOST_AGE_UNIT, EALIEST DATE MISSING"
-sample19,19,10,bananas,2025-01-01,,,"Invalid HOST_AGE_UNIT, EALIEST DATE MISSING"
-sample20,20,10,Not Applicable,,,10,
-sample21,21,10,Missing,,,10,
-sample22,22,10,Not Collected,,,10,
-sample23,23,10,Not Provided,,,10,
-sample24,24,10,Restricted Access,,,10,
-sample25,25,10,,,,10,
-sample26,26,-1,,,2020-01-12,,negative value
-sample27,27,500,year,,1998-06-15,,age is not reasonable
-sample28,28,500,,,1900-01-01,,age is not reasonable
-sample29,29,150,year,,,150,
-sample30,30,fledgling,year,,,,invalid host age
-sample31,31, 1/2,,,2019-12-22,,invalid host age
-sample32,32,0,,,2017-06-14,,invalid host age
-sample33,33,5,week,,2019-07-12,0.096,
-sample34,34,toddler,,,2018-01-08,,invalid host age
+sample,sample_name,calc_earliest_date,host_age,host_age_unit,host_date_of_birth_DOB,calc_host_age,calc_host_age_error
+sample1,1,2025-02-01,1,month,2025-01-01,0.083,
+sample2,2,2025-04-11,90,day,2025-04-01,0.027,Mismatch between CALC_HOST_AGE and HOST_AGE
+sample3,3,2025-08-11,40,year,1985-08-10,40,
+sample4,4,2025-02-01,1,month,,0.083,
+sample5,5,2025-04-11,90,day,,0.247,
+sample6,6,2025-08-11,40,year,,40,
+sample7,7,2025-02-01,1,month,Not Applicable,0.083,
+sample8,8,2025-04-11,90,day,Missing,0.247,
+sample9,9,2025-08-11,40,year,Not Collected,40,
+sample10,10,2025-02-01,1,month,Not Provided,0.083,
+sample11,11,2025-04-11,90,day,Restricted Access,0.247,
+sample12,12,,10,,,10,
+sample13,13,,10,cycles,,,Invalid HOST_AGE_UNIT
+sample14,14,,10,units,,,Invalid HOST_AGE_UNIT
+sample15,15,,10,Restricted Access,,,Invalid HOST_AGE_UNIT
+sample16,16,,10,,2025-01-01,,EARLIEST DATE MISSING
+sample17,17,,10,cycles,2025-01-01,,"Invalid HOST_AGE_UNIT, EARLIEST DATE MISSING"
+sample18,18,,10,units,2025-01-01,,"Invalid HOST_AGE_UNIT, EARLIEST DATE MISSING"
+sample19,19,,10,bananas,2025-01-01,,"Invalid HOST_AGE_UNIT, EARLIEST DATE MISSING"
+sample20,20,,10,Not Applicable,,10,
+sample21,21,,10,Missing,,10,
+sample22,22,,10,Not Collected,,10,
+sample23,23,,10,Not Provided,,10,
+sample24,24,,10,Restricted Access,,10,
+sample25,25,,10,,,,
+sample26,26,2020-01-12,-1,,,,"negative value, Invalid HOST_AGE_UNIT"
+sample27,27,1998-06-15,500,year,,,age is not reasonable
+sample28,28,1900-01-01,500,,,,"age is not reasonable, Invalid HOST_AGE_UNIT"
+sample29,29,,150,year,,150,
+sample30,30,,fledgling,year,,,invalid host age
+sample31,31,2019-12-22, 1/2,,,,invalid host age
+sample32,32,2017-06-14,0,,,,invalid host age
+sample33,33,2019-07-12,5,week,,0.096,
+sample34,34,2018-01-08,toddler,,,,"invalid host age, Invalid HOST_AGE_UNIT"
+sample35,35,2015-06-30,40,year,2015-06-30,, CALC_HOST_AGE and HOST_AGE are greater than 1 year different
+sample36,36,2013-06-19,1,month,2010-06-19,, CALC_HOST_AGE and HOST_AGE are greater than 1 year different
