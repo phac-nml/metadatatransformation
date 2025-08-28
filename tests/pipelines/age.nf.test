@@ -13,9 +13,12 @@ nextflow_pipeline {
                 outdir = "results"
 
                 transformation = "age"
-                metadata_1_header "date_of_birth"
-                metadata_2_header "collection_date"
-                age_header "age_at_collection"
+                age_header = "calc_host_age"
+
+                metadata_1_header = "host_date_of_birth_DOB"
+                metadata_2_header = "calc_earliest_date"
+                metadata_3_header = "host_age"
+                metadata_4_header = "host_age_unit"
             }
         }
 
@@ -27,9 +30,9 @@ nextflow_pipeline {
             def transformation = path("$launchDir/results/transformation/transformation.csv")
             assert transformation.exists()
 
-            assert transformation.text.contains("sample,age_at_collection")
-            assert transformation.text.contains("sample1,0.0000")
-            assert transformation.text.contains("sample2,0.0027")
+            assert transformation.text.contains("sample,calc_host_age")
+            assert transformation.text.contains("sample1,0.0027")
+            assert transformation.text.contains("sample2,0.0055")
             assert transformation.text.contains("sample3,0.2493")
             assert transformation.text.contains("sample4,1.0000")
             assert transformation.text.contains("sample5,1.2493")
@@ -37,21 +40,61 @@ nextflow_pipeline {
             assert transformation.text.contains("sample7,2")
             assert transformation.text.contains("sample8,24")
             assert transformation.text.contains("sample9,49")
+            assert transformation.text.contains("sample10,0.0027")
+            assert transformation.text.contains("sample11,0.0055")
+            assert transformation.text.contains("sample12,0.0082")
+            assert transformation.text.contains("sample13,1.0000")
+            assert transformation.text.contains("sample14,1.9973")
+            assert transformation.text.contains("sample15,2")
+            assert transformation.text.contains("sample16,2")
+            assert transformation.text.contains("sample17,0.0192")
+            assert transformation.text.contains("sample18,0.0385")
+            assert transformation.text.contains("sample19,1.0000")
+            assert transformation.text.contains("sample20,2")
+            assert transformation.text.contains("sample21,0.0833")
+            assert transformation.text.contains("sample22,0.1667")
+            assert transformation.text.contains("sample23,1.0000")
+            assert transformation.text.contains("sample24,2")
+            assert transformation.text.contains("sample25,1.0000")
+            assert transformation.text.contains("sample26,2")
+            assert transformation.text.contains("sample27,3")
+            assert transformation.text.contains("sample28,0.0014")
+            assert transformation.text.contains("sample29,1.0014")
 
             // Check Results (Human-Readable)
             def results = path("$launchDir/results/transformation/results.csv")
             assert results.exists()
 
-            assert results.text.contains("sample,sample_name,date_of_birth,collection_date,age_at_collection,age_at_collection_valid,age_at_collection_error")
-            assert results.text.contains("sample1,ABC,2000-01-01,2000-01-01,0.0000,True,")
-            assert results.text.contains("sample2,DEF,2000-01-01,2000-01-02,0.0027,True,")
-            assert results.text.contains("sample3,GHI,2000-01-01,2000-04-01,0.2493,True,")
-            assert results.text.contains("sample4,JKL,2000-01-01,2000-12-31,1.0000,True,")
-            assert results.text.contains("sample5,MNO,2000-01-01,2001-04-01,1.2493,True,")
-            assert results.text.contains("sample6,PQR,2000-01-01,2001-12-31,2,True,")
-            assert results.text.contains("sample7,STU,2000-01-01,2002-01-01,2,True,")
-            assert results.text.contains("sample8,VWX,2000-02-29,2024-02-29,24,True,")
-            assert results.text.contains("sample9,YZ,1950-12-31,2000-05-05,49,True,")
+            assert results.text.contains("sample,sample_name,host_date_of_birth_DOB,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
+            assert results.text.contains("sample1,1,2000-01-01,2000-01-02,,,0.0027,True,")
+            assert results.text.contains("sample2,2,2000-01-01,2000-01-03,,,0.0055,True,")
+            assert results.text.contains("sample3,3,2000-01-01,2000-04-01,,,0.2493,True,")
+            assert results.text.contains("sample4,4,2000-01-01,2000-12-31,,,1.0000,True,")
+            assert results.text.contains("sample5,5,2000-01-01,2001-04-01,,,1.2493,True,")
+            assert results.text.contains("sample6,6,2000-01-01,2001-12-31,,,2,True,")
+            assert results.text.contains("sample7,7,2000-01-01,2002-01-01,,,2,True,")
+            assert results.text.contains("sample8,8,2000-02-29,2024-02-29,,,24,True,")
+            assert results.text.contains("sample9,9,1950-12-31,2000-05-05,,,49,True,")
+            assert results.text.contains("sample10,10,,,1.0000,day,0.0027,True,")
+            assert results.text.contains("sample11,11,,,2,days,0.0055,True,")
+            assert results.text.contains("sample12,12,,,3,days,0.0082,True,")
+            assert results.text.contains("sample13,13,,,365,days,1.0000,True,")
+            assert results.text.contains("sample14,14,,,729,days,1.9973,True,")
+            assert results.text.contains("sample15,15,,,730,days,2,True,")
+            assert results.text.contains("sample16,16,,,731,days,2,True,")
+            assert results.text.contains("sample17,17,,,1.0000,week,0.0192,True,")
+            assert results.text.contains("sample18,18,,,2,weeks,0.0385,True,")
+            assert results.text.contains("sample19,19,,,52,weeks,1.0000,True,")
+            assert results.text.contains("sample20,20,,,104,weeks,2,True,")
+            assert results.text.contains("sample21,21,,,1.0000,month,0.0833,True,")
+            assert results.text.contains("sample22,22,,,2,months,0.1667,True,")
+            assert results.text.contains("sample23,23,,,12,months,1.0000,True,")
+            assert results.text.contains("sample24,24,,,24,months,2,True,")
+            assert results.text.contains("sample25,25,,,1.0000,year,1.0000,True,")
+            assert results.text.contains("sample26,26,,,2,years,2,True,")
+            assert results.text.contains("sample27,27,,,3,years,3,True,")
+            assert results.text.contains("sample28,28,2000-01-02,2000-01-02,1.0000,day,0.0014,True,")
+            assert results.text.contains("sample29,29,2000-01-01,2000-12-31,366,day,1.0014,True,")
 
             // Check IRIDA Next JSON Output
             def iridanext_json = path("$launchDir/results/iridanext.output.json").json
@@ -60,34 +103,94 @@ nextflow_pipeline {
 
             assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
 
-            assert iridanext_metadata.size() == 9
+            assert iridanext_metadata.size() == 29
 
             assert iridanext_metadata.containsKey("sample1")
-            assert iridanext_metadata.sample1.age_at_collection == "0.0000"
+            assert iridanext_metadata.sample1.calc_host_age == "0.0027"
 
             assert iridanext_metadata.containsKey("sample2")
-            assert iridanext_metadata.sample2.age_at_collection == "0.0027"
+            assert iridanext_metadata.sample2.calc_host_age == "0.0055"
 
             assert iridanext_metadata.containsKey("sample3")
-            assert iridanext_metadata.sample3.age_at_collection == "0.2493"
+            assert iridanext_metadata.sample3.calc_host_age == "0.2493"
 
             assert iridanext_metadata.containsKey("sample4")
-            assert iridanext_metadata.sample4.age_at_collection == "1.0000"
+            assert iridanext_metadata.sample4.calc_host_age == "1.0000"
 
             assert iridanext_metadata.containsKey("sample5")
-            assert iridanext_metadata.sample5.age_at_collection == "1.2493"
+            assert iridanext_metadata.sample5.calc_host_age == "1.2493"
 
             assert iridanext_metadata.containsKey("sample6")
-            assert iridanext_metadata.sample6.age_at_collection == "2"
+            assert iridanext_metadata.sample6.calc_host_age == "2"
 
             assert iridanext_metadata.containsKey("sample7")
-            assert iridanext_metadata.sample7.age_at_collection == "2"
+            assert iridanext_metadata.sample7.calc_host_age == "2"
 
             assert iridanext_metadata.containsKey("sample8")
-            assert iridanext_metadata.sample8.age_at_collection == "24"
+            assert iridanext_metadata.sample8.calc_host_age == "24"
 
             assert iridanext_metadata.containsKey("sample9")
-            assert iridanext_metadata.sample9.age_at_collection == "49"
+            assert iridanext_metadata.sample9.calc_host_age == "49"
+
+            assert iridanext_metadata.containsKey("sample10")
+            assert iridanext_metadata.sample10.calc_host_age == "0.0027"
+
+            assert iridanext_metadata.containsKey("sample11")
+            assert iridanext_metadata.sample11.calc_host_age == "0.0055"
+
+            assert iridanext_metadata.containsKey("sample12")
+            assert iridanext_metadata.sample12.calc_host_age == "0.0082"
+
+            assert iridanext_metadata.containsKey("sample13")
+            assert iridanext_metadata.sample13.calc_host_age == "1.0000"
+
+            assert iridanext_metadata.containsKey("sample14")
+            assert iridanext_metadata.sample14.calc_host_age == "1.9973"
+
+            assert iridanext_metadata.containsKey("sample15")
+            assert iridanext_metadata.sample15.calc_host_age == "2"
+
+            assert iridanext_metadata.containsKey("sample16")
+            assert iridanext_metadata.sample16.calc_host_age == "2"
+
+            assert iridanext_metadata.containsKey("sample17")
+            assert iridanext_metadata.sample17.calc_host_age == "0.0192"
+
+            assert iridanext_metadata.containsKey("sample18")
+            assert iridanext_metadata.sample18.calc_host_age == "0.0385"
+
+            assert iridanext_metadata.containsKey("sample19")
+            assert iridanext_metadata.sample19.calc_host_age == "1.0000"
+
+            assert iridanext_metadata.containsKey("sample20")
+            assert iridanext_metadata.sample20.calc_host_age == "2"
+
+            assert iridanext_metadata.containsKey("sample21")
+            assert iridanext_metadata.sample21.calc_host_age == "0.0833"
+
+            assert iridanext_metadata.containsKey("sample22")
+            assert iridanext_metadata.sample22.calc_host_age == "0.1667"
+
+            assert iridanext_metadata.containsKey("sample23")
+            assert iridanext_metadata.sample23.calc_host_age == "1.0000"
+
+            assert iridanext_metadata.containsKey("sample24")
+            assert iridanext_metadata.sample24.calc_host_age == "2"
+
+            assert iridanext_metadata.containsKey("sample25")
+            assert iridanext_metadata.sample25.calc_host_age == "1.0000"
+
+            assert iridanext_metadata.containsKey("sample26")
+            assert iridanext_metadata.sample26.calc_host_age == "2"
+
+            assert iridanext_metadata.containsKey("sample27")
+            assert iridanext_metadata.sample27.calc_host_age == "3"
+
+            assert iridanext_metadata.containsKey("sample28")
+            assert iridanext_metadata.sample28.calc_host_age == "0.0014"
+
+            assert iridanext_metadata.containsKey("sample29")
+            assert iridanext_metadata.sample29.calc_host_age == "1.0014"
         }
     }
 
