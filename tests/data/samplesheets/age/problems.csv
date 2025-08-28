@@ -1,14 +1,14 @@
-sample,sample_name,metadata_1,metadata_2
-reverse_dates_under_2,rd_1,2001-01-01,2000-01-01
-reverse_dates_over_2,rd_2,2010-01-01,2000-01-01
-bad_format_1,bf_1,00-01-01,2000-11-11
-bad_format_2,bf_2,2000-01-01,00-11-11
-bad_format_3,bf_3,2000/01/01,2000/11/11
-bad_format_4,bf_4,2000.01.01,2000.11.11
-bad_format_5,bf_5,2000-01-01,2000-11-11 23:59:59
-wrong_order_1,wo_1,2000-31-01,2000-01-02
-wrong_order_2,wo_2,2000-01-01,2000-31-02
-negative_date_1,nd_1,-2000-01-01,2001-01-01
-negative_date_2,nd_2,2000-01-01,-2001-01-01
-missing_date_1,md_1,,2001-01-01
-missing_date_2,md_2,2000-01-01,
+sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4
+reverse_dates_under_2,rd_1,2001-01-01,2000-01-01,,
+reverse_dates_over_2,rd_2,2010-01-01,2000-01-01,,
+bad_format_1,bf_1,00-01-01,2000-11-11,,
+bad_format_2,bf_2,2000-01-01,00-11-11,,
+bad_format_3,bf_3,2000/01/01,2000/11/11,,
+bad_format_4,bf_4,2000.01.01,2000.11.11,,
+bad_format_5,bf_5,2000-01-01,2000-11-11 23:59:59,,
+wrong_order_1,wo_1,2000-31-01,2000-01-02,,
+wrong_order_2,wo_2,2000-01-01,2000-31-02,,
+negative_date_1,nd_1,-2000-01-01,2001-01-01,,
+negative_date_2,nd_2,2000-01-01,-2001-01-01,,
+missing_date_1,md_1,,2001-01-01,,
+missing_date_2,md_2,2000-01-01,,,

@@ -56,7 +56,7 @@ def calculate_age_between_dates(date_1_string, date_2_string):
     except (TypeError, ValueError) as error:
         age = numpy.nan
         age_valid = False
-        age_error = "The date format does not match the expected format (YYYY-MM-DD)."
+        age_error = "The date format does not match the expected format (YYYY-MM-DD)"
 
         return pandas.Series([age, age_valid, age_error])
 
@@ -83,7 +83,7 @@ def calculate_age_between_dates(date_1_string, date_2_string):
     else:
         age = numpy.nan
         age_valid = False
-        age_error = "The dates are reversed."
+        age_error = "The dates are reversed"
 
     return pandas.Series([age, age_valid, age_error])
 
@@ -93,6 +93,10 @@ def calculate_age_by_units(age_string, age_unit_string):
         age_number = float(age_string)
     except ValueError:
         return pandas.Series([numpy.nan, False, f"{HOST_AGE_HEADER} ({age_string}) could not be converted to a number"])
+
+    # Check that age_unit_string is a string:
+    if not type(age_unit_string) is str:
+        return pandas.Series([numpy.nan, False, f"invalid {HOST_AGE_UNIT_HEADER} ({age_unit_string})"])
 
     # Calculate age in years:
     if age_unit_string.lower() in (unit.lower() for unit in DAY_UNITS):
@@ -113,13 +117,21 @@ def calculate_age_by_units(age_string, age_unit_string):
     return age
 
 def consolidate_ages(age1, age2):
-    # Are there any problems?
-    if pandas.isnull(age1[0]) or pandas.isnull(age2[0]):
-        return pandas.Series([numpy.nan, False, "Unexpected error consolidating ages."])
+    VALUE = 0
+    ERROR_FLAG = 1
+    ERROR_MESSAGE = 2
+
+    # Do they both have problems?
+    if not age1[ERROR_FLAG] and not age2[ERROR_FLAG]:
+        return pandas.Series([numpy.nan, False, str(age1[ERROR_MESSAGE]) + "; " + str(age2[ERROR_MESSAGE])])
+    # Does only one have problems?
+    elif not age1[ERROR_FLAG] or not age2[ERROR_FLAG]:
+        # The other string will be blank ("").
+        return pandas.Series([numpy.nan, False, str(age1[ERROR_MESSAGE]) + str(age2[ERROR_MESSAGE])])
 
     # Are they the same?
-    if(abs(age1[0] - age2[0]) <= AGE_CONSOLIDATION_THRESHOLD):
-        return pandas.Series([numpy.mean([age1[0], age2[0]]), True, ""])
+    if(abs(age1[VALUE] - age2[VALUE]) <= AGE_CONSOLIDATION_THRESHOLD):
+        return pandas.Series([numpy.mean([age1[VALUE], age2[VALUE]]), True, ""])
 
     # Too different from each other:
     else:
@@ -169,7 +181,7 @@ def calculate_age(row):
         result = consolidate_ages(age_dob, age_units)
     # No age was calculated because of missing data.
     else:
-        result = pandas.Series([numpy.nan, False, "Insufficient data to calculate an age."])
+        result = pandas.Series([numpy.nan, False, "Insufficient data to calculate an age"])
 
     # Check if age is within an acceptable range:
     if (not pandas.isnull(result[0])):
@@ -189,6 +201,7 @@ def calculate_age(row):
     return result
 
 def age(metadata, age_header):
+    print(metadata)
     age_valid_header = age_header + VALID_HEADER_EXTENSION
     age_error_header = age_header + ERROR_HEADER_EXTENSION
 

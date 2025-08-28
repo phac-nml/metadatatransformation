@@ -1,4 +1,4 @@
-sample,sample_name,metadata_1,metadata_2
-sample1,"ABC",2000-01-01,2000-12-31
-sample2,"DEF",2000-02-29,2024-02-29
-sample3,"GHI",2000-05-05,1950-12-31
+sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4
+sample1,"ABC",2000-01-01,2000-12-31,,
+sample2,"DEF",2000-02-29,2024-02-29,,
+sample3,"GHI",2000-05-05,1950-12-31,,
