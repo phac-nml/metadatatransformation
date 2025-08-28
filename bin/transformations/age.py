@@ -18,8 +18,7 @@ HOST_AGE_HEADER = "host_age"
 HOST_AGE_UNIT_HEADER = "host_age_unit"
 AGE_HEADERS = [SAMPLE_HEADER, SAMPLE_NAME_HEADER, DATE_OF_BIRTH_HEADER, DATE_HEADER, HOST_AGE_HEADER, HOST_AGE_UNIT_HEADER]
 
-PERCENTAGE_THRESHOLD = 0.10 # Threshold for accepting differences in DOB-based and units-based ages.
-# TODO: age difference should be a flat 1-year difference (>1 year), not a percentage
+AGE_CONSOLIDATION_THRESHOLD = 1 # Threshold for accepting differences in DOB-based and units-based ages.
 AGE_THRESHOLD = 2 # Ages less than this will include a decimal component.
 DAYS_IN_YEAR = 365.0
 WEEKS_IN_YEAR = 52.0
@@ -117,15 +116,8 @@ def consolidate_ages(age1, age2):
     if pandas.isnull(age1[0]) or pandas.isnull(age2[0]):
         return pandas.Series([numpy.nan, False, "Unexpected error consolidating ages."])
 
-    larger = max(age1[0], age2[0])
-    smaller = min(age1[0], age2[0])
-
     # Are they the same?
-    if(age1[0] == age2[0]):
-        return age1.copy(deep=True)
-
-    # Are they close enough?
-    elif (smaller > larger - larger * PERCENTAGE_THRESHOLD):
+    if(abs(age1[0] - age2[0]) <= AGE_CONSOLIDATION_THRESHOLD):
         return pandas.Series([numpy.mean([age1[0], age2[0]]), True, ""])
 
     # Too different from each other:
@@ -141,10 +133,16 @@ def calculate_age(row):
 
     # Special entries and blanks in host_age_unit are
     # to be interpretted as "years". At this point,
-    # special entries have already been replaced with null.
+    # special entries have already been replaced with null,
+    # so they'll be treated the same as blanks.
     if (pandas.isnull(row[HOST_AGE_UNIT_HEADER])
         or row[HOST_AGE_UNIT_HEADER] == BLANK):
         row[HOST_AGE_UNIT_HEADER] = YEAR_UNITS[0]
+
+    # If there's a date of birth but no earliest date,
+    # then throw an error:
+    if not pandas.isnull(row[DATE_OF_BIRTH_HEADER]) and pandas.isnull(row[DATE_HEADER]):
+        return pandas.Series([numpy.nan, False, f"{DATE_OF_BIRTH_HEADER} was provided, but {DATE_HEADER} was not."])
 
     # Calculate the date based on the date of birth and date:
     if not pandas.isnull(row[DATE_OF_BIRTH_HEADER]) and not pandas.isnull(row[DATE_HEADER]):
@@ -153,7 +151,6 @@ def calculate_age(row):
         age_dob = calculate_age_between_dates(dob_string, date_string)
 
     # Calculate the date based on the host age and host age units:
-    # TODO: If there's a DOB but no earliest date, throw a special error.
     if not pandas.isnull(row[HOST_AGE_HEADER]) and not pandas.isnull(row[HOST_AGE_UNIT_HEADER]):
         age_string = row[HOST_AGE_HEADER]
         age_unit_string = row[HOST_AGE_UNIT_HEADER]
@@ -178,12 +175,12 @@ def calculate_age(row):
 
         age_value = result[0]
 
-        # TODO: Check for exactly 0
-
         # Negative:
         if age_value < 0:
             result = pandas.Series([age_value, False, "The age is negative."])
-        
+        # Exactly zero:
+        elif age_value == 0:
+            result = pandas.Series([age_value, False, "The age cannot be exactly zero."])
         # Too large:
         elif age_value > MAX_AGE:
             result = pandas.Series([age_value, False, "The age is too large."])
