@@ -4,7 +4,7 @@ import argparse
 import pathlib
 import pandas
 
-from transformations.age import age, format_age
+from transformations.age import age
 
 from transformations.constants import (SPECIAL_ENTRIES, ROWS_AXIS, COLUMNS_AXIS,
                                        SPECIAL_ENTRIES_REGEX, DATE_FORMAT,
@@ -208,8 +208,8 @@ def main():
 
         remove_all_NA_columns(metadata_irida)
         print(metadata_readable["host_date_of_birth_DOB"])
-        metadata_readable.to_csv(RESULTS_PATH, index=False, float_format=format_age)
-        metadata_irida.to_csv(TRANSFORMATION_PATH, index=False, float_format=format_age)
+        metadata_readable.to_csv(RESULTS_PATH, index=False)
+        metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
     elif (args.transformation == EARLIEST):
         metadata_readable, metadata_irida = earliest(metadata, args.earliest_header)

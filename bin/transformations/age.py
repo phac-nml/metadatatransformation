@@ -31,11 +31,32 @@ WEEK_UNITS = ["week", "weeks"]
 MONTH_UNITS = ["month", "months"]
 YEAR_UNITS = ["year", "years"]
 
+# Age results positions:
+VALUE = 0
+ERROR_FLAG = 1
+ERROR_MESSAGE = 2
+
 def format_age(age):
-    if age < AGE_THRESHOLD and age > -AGE_THRESHOLD:
-        formatted_age = "{:.4f}".format(age)
+    # We can't return empty strings with this function,
+    # because it will ultimately be intepretted by
+    # nf-irida next as writing a blank and deleting metadata.
+
+    # Check for nulls / nan:
+    if pandas.isnull(age) or age is None:
+        formatted_age = None
+
+    # age needs to be either an int or a float:
+    elif isinstance(age, int) or isinstance(age, float):
+
+        # 4-decimal special case:
+        if age < AGE_THRESHOLD and age > -AGE_THRESHOLD:
+            formatted_age = "{:.4f}".format(age)
+        # No decimals:
+        else:
+            formatted_age = "{:.0f}".format(math.floor(age))
+
     else:
-        formatted_age = "{:.0f}".format(math.floor(age))
+        formatted_age = None
 
     return formatted_age
 
@@ -117,10 +138,6 @@ def calculate_age_by_units(age_string, age_unit_string):
     return age
 
 def consolidate_ages(age1, age2):
-    VALUE = 0
-    ERROR_FLAG = 1
-    ERROR_MESSAGE = 2
-
     # Do they both have problems?
     if not age1[ERROR_FLAG] and not age2[ERROR_FLAG]:
         return pandas.Series([numpy.nan, False, str(age1[ERROR_MESSAGE]) + "; " + str(age2[ERROR_MESSAGE])])
@@ -184,9 +201,9 @@ def calculate_age(row):
         result = pandas.Series([numpy.nan, False, "Insufficient data to calculate an age"])
 
     # Check if age is within an acceptable range:
-    if (not pandas.isnull(result[0])):
+    if (not pandas.isnull(result[VALUE])):
 
-        age_value = result[0]
+        age_value = result[VALUE]
 
         # Negative:
         if age_value < 0:
@@ -201,12 +218,16 @@ def calculate_age(row):
     return result
 
 def age(metadata, age_header):
-    print(metadata)
     age_valid_header = age_header + VALID_HEADER_EXTENSION
     age_error_header = age_header + ERROR_HEADER_EXTENSION
 
     metadata_readable = metadata[AGE_HEADERS].copy(deep=True) # drop extra columns in new copy
     metadata_readable[[age_header, age_valid_header, age_error_header]] = metadata_readable.apply(calculate_age, axis=COLUMNS_AXIS)
+
+    # Need to convert the age to a string.
+    # This can't be handled with a .to_csv's float_format option
+    # because there may be other floats (host_age) in the dataframe.
+    metadata_readable[age_header] = metadata_readable[age_header].apply(format_age)
 
     metadata_irida = metadata_readable[[SAMPLE_HEADER, age_header]].copy(deep=True)
 
