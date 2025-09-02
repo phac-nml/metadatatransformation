@@ -2,7 +2,7 @@
 
 # Metadata Transformation Pipeline for IRIDA Next
 
-This pipeline transforms metadata from IRIDA Next. 
+This pipeline transforms metadata from IRIDA Next.
 
 # Input
 
