@@ -246,7 +246,7 @@ nextflow_pipeline {
             assert transformation.text.contains("junk_3")
             assert transformation.text.contains("junk_4")
             assert transformation.text.contains("junk_5")
-            assert transformation.text.contains("junk_6")            
+            assert transformation.text.contains("junk_6")
 
             // Check Results (Human-Readable)
             def results = path("$launchDir/results/transformation/results.csv")

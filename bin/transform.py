@@ -7,10 +7,10 @@ import pandas
 from transformations.age import age
 
 from transformations.constants import (SPECIAL_ENTRIES, ROWS_AXIS, COLUMNS_AXIS,
-                                       SPECIAL_ENTRIES_REGEX, DATE_FORMAT,
-                                       VALID_HEADER_EXTENSION, ERROR_HEADER_EXTENSION,
-                                       SAMPLE_HEADER, SAMPLE_NAME_HEADER,
-                                       AGE_HEADER, EARLIEST_HEADER, POPULATE_HEADER)
+                                        SPECIAL_ENTRIES_REGEX, DATE_FORMAT,
+                                        VALID_HEADER_EXTENSION, ERROR_HEADER_EXTENSION,
+                                        SAMPLE_HEADER, SAMPLE_NAME_HEADER,
+                                        AGE_HEADER, EARLIEST_HEADER, POPULATE_HEADER)
 
 # Transformations:
 LOCK = "lock"
