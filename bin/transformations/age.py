@@ -115,9 +115,8 @@ def calculate_age_by_units(age_string, age_unit_string):
     except ValueError:
         return pandas.Series([numpy.nan, False, f"{HOST_AGE_HEADER} ({age_string}) could not be converted to a number"])
 
-    # Check that age_unit_string is a string:
-    if not type(age_unit_string) is str:
-        return pandas.Series([numpy.nan, False, f"invalid {HOST_AGE_UNIT_HEADER} ({age_unit_string})"])
+    # Ensure that age_unit_string is a string:
+    age_unit_string = str(age_unit_string)
 
     # Calculate age in years:
     if age_unit_string.lower() in (unit.lower() for unit in DAY_UNITS):

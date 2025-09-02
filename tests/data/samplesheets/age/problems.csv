@@ -12,3 +12,14 @@ negative_date_1,nd_1,-2000-01-01,2001-01-01,,
 negative_date_2,nd_2,2000-01-01,-2001-01-01,,
 missing_date_1,md_1,,2001-01-01,,
 missing_date_2,md_2,2000-01-01,,,
+age_not_a_number_1,age_nan_1,,,one,year
+age_unit_not_string_1,au_nas_1,,,1,1
+age_unit_not_string_2,au_nas_1,,,1,1.0
+age_unit_invalid_1,aui_1,,,1,cat
+consolidation_error_1,ce_1,2000-01-01,2001-01-01,1000,year
+junk_1,j_1,cat,dog,fish,mouse
+junk_2,j_2,,,,
+junk_3,j_3,0,0,0,0
+junk_4,j_4,0000-00-00,0000-00-00,0000-00-00,0000-00-00
+junk_5,j_5,1.0,2.0,3.0,4.0
+junk_6,j_6,-2000-01-01,-2001-01-01,-10,year
