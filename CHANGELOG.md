@@ -3,6 +3,18 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0-pnc1] - Unreleased
+
+### Added
+
+- The ability to calculate age from an age number (ex: `10`) and a unit (ex: `year`). [PR #22](https://github.com/phac-nml/metadatatransformation/pull/22)
+- Basic reconciliation between a date of birth-based age calculation and a units-based age calculation if both are supplied. [PR #22](https://github.com/phac-nml/metadatatransformation/pull/22)
+- Additional error handling. [PR #22](https://github.com/phac-nml/metadatatransformation/pull/22)
+
+### Changed
+
+- Column names are now explicit and required. The mandatory metadata columns are now: `host_date_of_birth_DOB`, `calc_earliest_date`, `host_age`, and `host_age_unit`. These must be exactly matching (case sensitive). However, they must be provided using the `metadata_1` through `metadata_8` columns and have their names specified by `--metadata_1_header`, etc. (ex: `--metadata_1_header host_date_of_birth_DOB`) [PR #22](https://github.com/phac-nml/metadatatransformation/pull/22)
+
 ## [1.2.0] - 2025/08/15
 
 ### `Added`
