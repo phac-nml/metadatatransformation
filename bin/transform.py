@@ -207,7 +207,6 @@ def main():
         metadata_readable, metadata_irida = age(metadata, args.age_header)
 
         remove_all_NA_columns(metadata_irida)
-        print(metadata_readable["host_date_of_birth_DOB"])
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 

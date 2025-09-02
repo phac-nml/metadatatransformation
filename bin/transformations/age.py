@@ -10,8 +10,6 @@ from transformations.constants import (SAMPLE_HEADER, SAMPLE_NAME_HEADER, DATE_F
                                        COLUMNS_AXIS, SPECIAL_ENTRIES_REGEX, BLANK,
                                        AGE_HEADER)
 
-# TODO: PNC-specific metadata in nextflow
-
 # Age Headers:
 DATE_OF_BIRTH_HEADER = "host_date_of_birth_DOB"
 DATE_HEADER = "calc_earliest_date"
@@ -145,7 +143,7 @@ def consolidate_ages(age1, age2):
         # The other string will be blank ("").
         return pandas.Series([numpy.nan, False, str(age1[ERROR_MESSAGE]) + str(age2[ERROR_MESSAGE])])
 
-    # Are they the same?
+    # Are they close enough?
     if(abs(age1[VALUE] - age2[VALUE]) <= AGE_CONSOLIDATION_THRESHOLD):
         return pandas.Series([numpy.mean([age1[VALUE], age2[VALUE]]), True, ""])
 
