@@ -96,6 +96,8 @@ For simplicity, the the following assumptions are made when calculating ages:
 - ages cannot be less than 0
 - ages cannot be greater than 150
 
+Furthermore, the following values are ignored and treated as "years" when provided as an age unit: `Not Applicable`, `Missing`, `Not Collected`, `Not Provided`, `Restricted Access`, `(blank)`. For exampel, this means that an age number of 10 and an age unit of `Restricted Access` will report and age of 10 years old.
+
 ## Earliest Parameters
 
 The following parameters can be used to rename CSV-generated output columns as follows:
