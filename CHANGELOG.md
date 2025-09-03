@@ -3,7 +3,7 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.2.0-pnc1] - Unreleased
+## [1.2.0-pnc0] - Unreleased
 
 ### Added
 
@@ -63,3 +63,4 @@ Initial release of phac-nml/metadatatransformation.
 [1.1.0]: https://github.com/phac-nml/metadatatransformation/releases/tag/1.1.0
 [1.1.1]: https://github.com/phac-nml/metadatatransformation/releases/tag/1.1.1
 [1.2.0]: https://github.com/phac-nml/metadatatransformation/releases/tag/1.2.0
+[1.2.0-pnc0]: https://github.com/phac-nml/metadatatransformation/releases/tag/1.2.0-pnc0
