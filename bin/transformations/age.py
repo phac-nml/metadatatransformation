@@ -8,7 +8,7 @@ from datetime import datetime
 from transformations.constants import (SAMPLE_HEADER, SAMPLE_NAME_HEADER, DATE_FORMAT,
                                         VALID_HEADER_EXTENSION, ERROR_HEADER_EXTENSION,
                                         COLUMNS_AXIS, SPECIAL_ENTRIES_REGEX, BLANK,
-                                        AGE_HEADER)
+                                        AGE_HEADER, AGE_PNC_HEADER)
 
 # Age Headers:
 DATE_OF_BIRTH_HEADER = "host_date_of_birth_DOB"
@@ -149,7 +149,7 @@ def consolidate_ages(age1, age2):
 
     # Too different from each other:
     else:
-        return pandas.Series([numpy.nan, False, f"{AGE_HEADER} and {HOST_AGE_HEADER} are greater than {AGE_CONSOLIDATION_THRESHOLD} year(s) different"])
+        return pandas.Series([numpy.nan, False, f"{AGE_PNC_HEADER} and {HOST_AGE_HEADER} are greater than {AGE_CONSOLIDATION_THRESHOLD} year(s) different"])
 
 def calculate_age(row):
     age_dob = pandas.Series()
@@ -204,13 +204,13 @@ def calculate_age(row):
 
         # Negative:
         if age_value < 0:
-            result = pandas.Series([age_value, False, f"{AGE_HEADER} is negative"])
+            result = pandas.Series([age_value, False, f"{AGE_PNC_HEADER} is negative"])
         # Exactly zero:
         elif age_value == 0:
-            result = pandas.Series([age_value, False, f"{AGE_HEADER} cannot be exactly zero"])
+            result = pandas.Series([age_value, False, f"{AGE_PNC_HEADER} cannot be exactly zero"])
         # Too large:
         elif age_value > MAX_AGE:
-            result = pandas.Series([age_value, False, f"{AGE_HEADER} is too large"])
+            result = pandas.Series([age_value, False, f"{AGE_PNC_HEADER} is too large"])
 
     return result
 

@@ -12,7 +12,7 @@ nextflow_pipeline {
                 input = "$baseDir/tests/data/samplesheets/age/basic.csv"
                 outdir = "results"
 
-                transformation = "age"
+                transformation = "age_pnc"
                 age_header = "calc_host_age"
 
                 metadata_1_header = "host_date_of_birth_DOB"
@@ -203,7 +203,7 @@ nextflow_pipeline {
                 input = "$baseDir/tests/data/samplesheets/age/problems.csv"
                 outdir = "results"
 
-                transformation = "age"
+                transformation = "age_pnc"
                 age_header = "calc_host_age"
 
                 metadata_1_header = "host_date_of_birth_DOB"
@@ -371,7 +371,7 @@ nextflow_pipeline {
                 input = "$baseDir/tests/data/samplesheets/age/extra_columns.csv"
                 outdir = "results"
 
-                transformation = "age"
+                transformation = "age_pnc"
                 age_header = "calc_host_age"
 
                 metadata_1_header = "host_date_of_birth_DOB"
@@ -432,7 +432,7 @@ nextflow_pipeline {
                 input = "$baseDir/tests/data/samplesheets/age/success_failure_mix.csv"
                 outdir = "results"
 
-                transformation = "age"
+                transformation = "age_pnc"
                 age_header = "calc_host_age"
 
                 metadata_1_header = "host_date_of_birth_DOB"
@@ -493,7 +493,7 @@ nextflow_pipeline {
                 input = "$baseDir/tests/data/samplesheets/age/basic.csv"
                 outdir = "results"
 
-                transformation = "age"
+                transformation = "age_pnc"
                 age_header "calc host age"
 
                 metadata_1_header = "host_date_of_birth_DOB"
@@ -511,7 +511,7 @@ nextflow_pipeline {
             def transformation = path("$launchDir/results/transformation/transformation.csv")
             assert transformation.exists()
 
-            assert transformation.text.contains("sample,calc host age")
+            assert transformation.text.contains("sample,calc_host_age")
             assert transformation.text.contains("sample1,0.0027")
             assert transformation.text.contains("sample2,0.0055")
             assert transformation.text.contains("sample3,0.2493")
@@ -526,7 +526,7 @@ nextflow_pipeline {
             def results = path("$launchDir/results/transformation/results.csv")
             assert results.exists()
 
-            assert results.text.contains("sample,sample_name,host_date_of_birth_DOB,calc_earliest_date,host_age,host_age_unit,calc host age,calc host age_valid,calc host age_error")
+            assert results.text.contains("sample,sample_name,host_date_of_birth_DOB,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
             assert results.text.contains("sample1,1,2000-01-01,2000-01-02,,,0.0027,True,")
             assert results.text.contains("sample2,2,2000-01-01,2000-01-03,,,0.0055,True,")
             assert results.text.contains("sample3,3,2000-01-01,2000-04-01,,,0.2493,True,")
@@ -547,31 +547,31 @@ nextflow_pipeline {
             assert iridanext_metadata.size() == 29
 
             assert iridanext_metadata.containsKey("sample1")
-            assert iridanext_metadata.sample1."calc host age" == "0.0027"
+            assert iridanext_metadata.sample1."calc_host_age" == "0.0027"
 
             assert iridanext_metadata.containsKey("sample2")
-            assert iridanext_metadata.sample2."calc host age" == "0.0055"
+            assert iridanext_metadata.sample2."calc_host_age" == "0.0055"
 
             assert iridanext_metadata.containsKey("sample3")
-            assert iridanext_metadata.sample3."calc host age" == "0.2493"
+            assert iridanext_metadata.sample3."calc_host_age" == "0.2493"
 
             assert iridanext_metadata.containsKey("sample4")
-            assert iridanext_metadata.sample4."calc host age" == "1.0000"
+            assert iridanext_metadata.sample4."calc_host_age" == "1.0000"
 
             assert iridanext_metadata.containsKey("sample5")
-            assert iridanext_metadata.sample5."calc host age" == "1.2493"
+            assert iridanext_metadata.sample5."calc_host_age" == "1.2493"
 
             assert iridanext_metadata.containsKey("sample6")
-            assert iridanext_metadata.sample6."calc host age" == "2"
+            assert iridanext_metadata.sample6."calc_host_age" == "2"
 
             assert iridanext_metadata.containsKey("sample7")
-            assert iridanext_metadata.sample7."calc host age" == "2"
+            assert iridanext_metadata.sample7."calc_host_age" == "2"
 
             assert iridanext_metadata.containsKey("sample8")
-            assert iridanext_metadata.sample8."calc host age" == "24"
+            assert iridanext_metadata.sample8."calc_host_age" == "24"
 
             assert iridanext_metadata.containsKey("sample9")
-            assert iridanext_metadata.sample9."calc host age" == "49"
+            assert iridanext_metadata.sample9."calc_host_age" == "49"
         }
     }
 
@@ -584,7 +584,7 @@ nextflow_pipeline {
                 input = "$baseDir/tests/data/samplesheets/age/float_columns.csv"
                 outdir = "results"
 
-                transformation = "age"
+                transformation = "age_pnc"
                 age_header "calc_host_age"
 
                 metadata_1_header = "host_date_of_birth_DOB"
@@ -645,7 +645,7 @@ nextflow_pipeline {
                 input = "$baseDir/tests/data/samplesheets/age/specification.csv"
                 outdir = "results"
 
-                transformation = "age"
+                transformation = "age_pnc"
                 age_header = "calc_host_age"
 
                 metadata_1_header = "calc_earliest_date"

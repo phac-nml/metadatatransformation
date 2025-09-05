@@ -1,6 +1,6 @@
 # Default Column Headers:
 AGE_HEADER = "age"
-AGE_HEADER_PNC = "calc_host_age"
+AGE_PNC_HEADER = "calc_host_age"
 EARLIEST_HEADER = "earliest_date"
 EARLIEST_HEADER_PNC = "calc_earliest_date"
 POPULATE_HEADER = "populated"

@@ -10,7 +10,7 @@ from transformations.constants import (SPECIAL_ENTRIES, ROWS_AXIS, COLUMNS_AXIS,
                                         SPECIAL_ENTRIES_REGEX, DATE_FORMAT,
                                         VALID_HEADER_EXTENSION, ERROR_HEADER_EXTENSION,
                                         SAMPLE_HEADER, SAMPLE_NAME_HEADER,
-                                        AGE_HEADER, AGE_HEADER_PNC,
+                                        AGE_HEADER, AGE_PNC_HEADER,
                                         EARLIEST_HEADER, EARLIEST_HEADER_PNC,
                                         POPULATE_HEADER)
 
@@ -207,7 +207,7 @@ def main():
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
     elif (args.transformation == AGE_PNC):
-        metadata_readable, metadata_irida = age_pnc(metadata, AGE_HEADER_PNC)
+        metadata_readable, metadata_irida = age_pnc(metadata, AGE_PNC_HEADER)
 
         remove_all_NA_columns(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False)
