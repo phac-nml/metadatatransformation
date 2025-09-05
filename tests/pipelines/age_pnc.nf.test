@@ -9,7 +9,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/age_pnc/basic.csv"
                 outdir = "results"
 
                 transformation = "age_pnc"
@@ -200,7 +200,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age/problems.csv"
+                input = "$baseDir/tests/data/samplesheets/age_pnc/problems.csv"
                 outdir = "results"
 
                 transformation = "age_pnc"
@@ -368,7 +368,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age/extra_columns.csv"
+                input = "$baseDir/tests/data/samplesheets/age_pnc/extra_columns.csv"
                 outdir = "results"
 
                 transformation = "age_pnc"
@@ -429,7 +429,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age/success_failure_mix.csv"
+                input = "$baseDir/tests/data/samplesheets/age_pnc/success_failure_mix.csv"
                 outdir = "results"
 
                 transformation = "age_pnc"
@@ -490,7 +490,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/age_pnc/basic.csv"
                 outdir = "results"
 
                 transformation = "age_pnc"
@@ -581,7 +581,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age/float_columns.csv"
+                input = "$baseDir/tests/data/samplesheets/age_pnc/float_columns.csv"
                 outdir = "results"
 
                 transformation = "age_pnc"
@@ -642,7 +642,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age/specification.csv"
+                input = "$baseDir/tests/data/samplesheets/age_pnc/specification.csv"
                 outdir = "results"
 
                 transformation = "age_pnc"
