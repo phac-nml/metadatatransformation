@@ -220,7 +220,7 @@ def calculate_age(row):
     if pandas.isnull(row.iloc[DATE_1_INDEX]) or pandas.isnull(row.iloc[DATE_2_INDEX]):
         age = numpy.nan
         age_valid = False
-        age_error = "At least one of the dates is missing."
+        age_error = "At least one of the dates is missing"
 
         return pandas.Series([age, age_valid, age_error])
 

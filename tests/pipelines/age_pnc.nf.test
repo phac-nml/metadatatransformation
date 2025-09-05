@@ -1,11 +1,11 @@
 nextflow_pipeline {
 
-    name "Metadata Transformation: Age"
+    name "Metadata Transformation: Age PNC"
     script "main.nf"
 
     test("Basic") {
-        tag "pipeline_age"
-        tag "pipeline_age_basic"
+        tag "pipeline_age_pnc"
+        tag "pipeline_age_pnc_basic"
 
         when {
             params {
@@ -195,8 +195,8 @@ nextflow_pipeline {
     }
 
     test("Problems") {
-        tag "pipeline_age"
-        tag "pipeline_age_problems"
+        tag "pipeline_age_pnc"
+        tag "pipeline_age_pnc_problems"
 
         when {
             params {
@@ -363,8 +363,8 @@ nextflow_pipeline {
     }
 
     test("Extra columns") {
-        tag "pipeline_age"
-        tag "pipeline_age_extra_columns"
+        tag "pipeline_age_pnc"
+        tag "pipeline_age_pnc_extra_columns"
 
         when {
             params {
@@ -424,8 +424,8 @@ nextflow_pipeline {
     }
 
     test("Success and failure mix") {
-        tag "pipeline_age"
-        tag "pipeline_age_success_failure_mix"
+        tag "pipeline_age_pnc"
+        tag "pipeline_age_pnc_success_failure_mix"
 
         when {
             params {
@@ -485,8 +485,8 @@ nextflow_pipeline {
     }
 
     test("Spaces in headers") {
-        tag "pipeline_age"
-        tag "pipeline_age_spaces"
+        tag "pipeline_age_pnc"
+        tag "pipeline_age_pnc_spaces"
 
         when {
             params {
@@ -576,8 +576,8 @@ nextflow_pipeline {
     }
 
     test("Float columns") {
-        tag "pipeline_age"
-        tag "pipeline_age_float_columns"
+        tag "pipeline_age_pnc"
+        tag "pipeline_age_pnc_float_columns"
 
         when {
             params {
@@ -637,8 +637,8 @@ nextflow_pipeline {
     }
 
     test("Specification") {
-        tag "pipeline_age"
-        tag "pipeline_age_specification"
+        tag "pipeline_age_pnc"
+        tag "pipeline_age_pnc_specification"
 
         when {
             params {
