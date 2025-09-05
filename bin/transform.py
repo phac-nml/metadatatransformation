@@ -4,17 +4,20 @@ import argparse
 import pathlib
 import pandas
 
-from transformations.age import age
+from transformations.age import age, age_pnc
 
 from transformations.constants import (SPECIAL_ENTRIES, ROWS_AXIS, COLUMNS_AXIS,
                                         SPECIAL_ENTRIES_REGEX, DATE_FORMAT,
                                         VALID_HEADER_EXTENSION, ERROR_HEADER_EXTENSION,
                                         SAMPLE_HEADER, SAMPLE_NAME_HEADER,
-                                        AGE_HEADER, EARLIEST_HEADER, POPULATE_HEADER)
+                                        AGE_HEADER, AGE_HEADER_PNC,
+                                        EARLIEST_HEADER, EARLIEST_HEADER_PNC,
+                                        POPULATE_HEADER)
 
 # Transformations:
 LOCK = "lock"
 AGE = "age"
+AGE_PNC = "age_pnc"
 EARLIEST = "earliest"
 POPULATE = "populate"
 CATEGORIZE = "categorize"
@@ -53,7 +56,7 @@ def find_earliest_date(row):
 
     earliest = pandas.NA
     earliest_valid = False
-    earliest_error = "Unable to find the earliest age."
+    earliest_error = "Unable to find the earliest date."
 
     dates = []
 
@@ -182,7 +185,7 @@ def main():
 
     parser.add_argument("input", type=pathlib.Path,
                         help="The CSV-formatted input file to transform.")
-    parser.add_argument("transformation", choices=[LOCK, AGE, EARLIEST, POPULATE, CATEGORIZE],
+    parser.add_argument("transformation", choices=[LOCK, AGE, AGE_PNC, EARLIEST, POPULATE, CATEGORIZE],
                         help="The type of transformation to perform.")
     parser.add_argument("--age_header", default=AGE_HEADER, required=False,
                         help="The output column header for the calculated age.")
@@ -203,8 +206,8 @@ def main():
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
-    elif (args.transformation == AGE):
-        metadata_readable, metadata_irida = age(metadata, args.age_header)
+    elif (args.transformation == AGE_PNC):
+        metadata_readable, metadata_irida = age_pnc(metadata, AGE_HEADER_PNC)
 
         remove_all_NA_columns(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False)

@@ -214,7 +214,7 @@ def calculate_age(row):
 
     return result
 
-def age(metadata, age_header):
+def age_pnc(metadata, age_header):
     age_valid_header = age_header + VALID_HEADER_EXTENSION
     age_error_header = age_header + ERROR_HEADER_EXTENSION
 
@@ -229,3 +229,6 @@ def age(metadata, age_header):
     metadata_irida = metadata_readable[[SAMPLE_HEADER, age_header]].copy(deep=True)
 
     return metadata_readable, metadata_irida
+
+def age(metadata, age_header):
+    return
