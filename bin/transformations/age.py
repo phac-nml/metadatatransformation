@@ -216,14 +216,6 @@ def calculate_age_pnc(row):
     return result
 
 def calculate_age(row):
-    age = numpy.nan
-    # numpy.nan, not pandas.NA because numpy.nan is treated as a float.
-    # Otherwise, there's a risk of mixing age floats with pandas.NA and having
-    # the column be treated as an object column, which will prevent
-    # .to_csv(..., float_format=format_age) from working.
-    age_valid = False
-    age_error = "Unable to calculate age."
-
     # Is a date missing?
     if pandas.isnull(row.iloc[DATE_1_INDEX]) or pandas.isnull(row.iloc[DATE_2_INDEX]):
         age = numpy.nan
@@ -232,55 +224,16 @@ def calculate_age(row):
 
         return pandas.Series([age, age_valid, age_error])
 
-    date_1_string = row.iloc[DATE_1_INDEX]
-    date_2_string = row.iloc[DATE_2_INDEX]
+    date_1_string = str(row.iloc[DATE_1_INDEX])
+    date_2_string = str(row.iloc[DATE_2_INDEX])
 
-    # Are the dates in the correct type (string) and format?
-    try:
-        date_1 = datetime.strptime(date_1_string, DATE_FORMAT)
-        date_2 = datetime.strptime(date_2_string, DATE_FORMAT)
+    return calculate_age_between_dates(date_1_string, date_2_string)
 
-    except (TypeError, ValueError) as error:
-        age = numpy.nan
-        age_valid = False
-        age_error = "The date format does not match the expected format (YYYY-MM-DD)."
-
-        return pandas.Series([age, age_valid, age_error])
-
-    # Calculate the relative delta in calendar time:
-    relative_delta = relativedelta(date_2, date_1)
-
-    # Under age threshold, calculate as (days/days_in_year):
-    # Note: this is inaccurate, because how many days is a year?
-    if relative_delta.years < AGE_THRESHOLD:
-        time_delta = date_2 - date_1
-        age = time_delta.days / DAYS_IN_YEAR
-
-    # Age meets threshold, calculate as calendar years:
-    else:
-        age = relative_delta.years
-        age_valid = True
-
-    # Positive age:
-    if age >= 0:
-        age_valid = True
-        age_error = ""
-
-    # Negative age, dates reversed:
-    else:
-        age = numpy.nan
-        age_valid = False
-        age_error = "The dates are reversed."
-
-    result = pandas.Series([age, age_valid, age_error])
-
-    return result
-
-def process_age(metadata, age_header, headers, function):
+def process_age(metadata, age_header, metadata_headers, function):
     age_valid_header = age_header + VALID_HEADER_EXTENSION
     age_error_header = age_header + ERROR_HEADER_EXTENSION
 
-    metadata_readable = metadata[headers].copy(deep=True) # drop extra columns in new copy
+    metadata_readable = metadata[metadata_headers].copy(deep=True) # drop extra columns in new copy
     metadata_readable[[age_header, age_valid_header, age_error_header]] = metadata_readable.apply(function, axis=COLUMNS_AXIS)
 
     # Need to convert the age to a string.
@@ -296,5 +249,5 @@ def age_pnc(metadata, age_header):
     return process_age(metadata, age_header, PNC_AGE_HEADERS, calculate_age_pnc)
 
 def age(metadata, age_header):
-    headers = list(metadata)[:DATE_2_INDEX+1]
-    return process_age(metadata, age_header, headers, calculate_age) # TODO
+    metadata_headers = list(metadata)[:DATE_2_INDEX+1]
+    return process_age(metadata, age_header, metadata_headers, calculate_age)
