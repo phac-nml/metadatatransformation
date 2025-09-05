@@ -5,6 +5,11 @@ EARLIEST_HEADER = "earliest_date"
 EARLIEST_HEADER_PNC = "calc_earliest_date"
 POPULATE_HEADER = "populated"
 
+# Column indices:
+# Note: The relative position of these matters.
+DATE_1_INDEX = 2
+DATE_2_INDEX = 3
+
 # Headers:
 SAMPLE_HEADER = "sample"
 SAMPLE_NAME_HEADER = "sample_name"

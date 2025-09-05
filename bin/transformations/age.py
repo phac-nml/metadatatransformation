@@ -8,14 +8,15 @@ from datetime import datetime
 from transformations.constants import (SAMPLE_HEADER, SAMPLE_NAME_HEADER, DATE_FORMAT,
                                         VALID_HEADER_EXTENSION, ERROR_HEADER_EXTENSION,
                                         COLUMNS_AXIS, SPECIAL_ENTRIES_REGEX, BLANK,
-                                        AGE_HEADER, AGE_PNC_HEADER)
+                                        AGE_HEADER, AGE_PNC_HEADER,
+                                        DATE_1_INDEX, DATE_2_INDEX)
 
 # Age Headers:
 DATE_OF_BIRTH_HEADER = "host_date_of_birth_DOB"
 DATE_HEADER = "calc_earliest_date"
 HOST_AGE_HEADER = "host_age"
 HOST_AGE_UNIT_HEADER = "host_age_unit"
-AGE_HEADERS = [SAMPLE_HEADER, SAMPLE_NAME_HEADER, DATE_OF_BIRTH_HEADER, DATE_HEADER, HOST_AGE_HEADER, HOST_AGE_UNIT_HEADER]
+PNC_AGE_HEADERS = [SAMPLE_HEADER, SAMPLE_NAME_HEADER, DATE_OF_BIRTH_HEADER, DATE_HEADER, HOST_AGE_HEADER, HOST_AGE_UNIT_HEADER]
 
 AGE_CONSOLIDATION_THRESHOLD = 1 # Threshold for accepting differences in DOB-based and units-based ages (in years).
 AGE_THRESHOLD = 2 # Ages less than this will include a decimal component.
@@ -151,7 +152,7 @@ def consolidate_ages(age1, age2):
     else:
         return pandas.Series([numpy.nan, False, f"{AGE_PNC_HEADER} and {HOST_AGE_HEADER} are greater than {AGE_CONSOLIDATION_THRESHOLD} year(s) different"])
 
-def calculate_age(row):
+def calculate_age_pnc(row):
     age_dob = pandas.Series()
     age_units = pandas.Series()
 
@@ -214,12 +215,73 @@ def calculate_age(row):
 
     return result
 
-def age_pnc(metadata, age_header):
+def calculate_age(row):
+    age = numpy.nan
+    # numpy.nan, not pandas.NA because numpy.nan is treated as a float.
+    # Otherwise, there's a risk of mixing age floats with pandas.NA and having
+    # the column be treated as an object column, which will prevent
+    # .to_csv(..., float_format=format_age) from working.
+    age_valid = False
+    age_error = "Unable to calculate age."
+
+    # Is a date missing?
+    if pandas.isnull(row.iloc[DATE_1_INDEX]) or pandas.isnull(row.iloc[DATE_2_INDEX]):
+        age = numpy.nan
+        age_valid = False
+        age_error = "At least one of the dates is missing."
+
+        return pandas.Series([age, age_valid, age_error])
+
+    date_1_string = row.iloc[DATE_1_INDEX]
+    date_2_string = row.iloc[DATE_2_INDEX]
+
+    # Are the dates in the correct type (string) and format?
+    try:
+        date_1 = datetime.strptime(date_1_string, DATE_FORMAT)
+        date_2 = datetime.strptime(date_2_string, DATE_FORMAT)
+
+    except (TypeError, ValueError) as error:
+        age = numpy.nan
+        age_valid = False
+        age_error = "The date format does not match the expected format (YYYY-MM-DD)."
+
+        return pandas.Series([age, age_valid, age_error])
+
+    # Calculate the relative delta in calendar time:
+    relative_delta = relativedelta(date_2, date_1)
+
+    # Under age threshold, calculate as (days/days_in_year):
+    # Note: this is inaccurate, because how many days is a year?
+    if relative_delta.years < AGE_THRESHOLD:
+        time_delta = date_2 - date_1
+        age = time_delta.days / DAYS_IN_YEAR
+
+    # Age meets threshold, calculate as calendar years:
+    else:
+        age = relative_delta.years
+        age_valid = True
+
+    # Positive age:
+    if age >= 0:
+        age_valid = True
+        age_error = ""
+
+    # Negative age, dates reversed:
+    else:
+        age = numpy.nan
+        age_valid = False
+        age_error = "The dates are reversed."
+
+    result = pandas.Series([age, age_valid, age_error])
+
+    return result
+
+def process_age(metadata, age_header, headers, function):
     age_valid_header = age_header + VALID_HEADER_EXTENSION
     age_error_header = age_header + ERROR_HEADER_EXTENSION
 
-    metadata_readable = metadata[AGE_HEADERS].copy(deep=True) # drop extra columns in new copy
-    metadata_readable[[age_header, age_valid_header, age_error_header]] = metadata_readable.apply(calculate_age, axis=COLUMNS_AXIS)
+    metadata_readable = metadata[headers].copy(deep=True) # drop extra columns in new copy
+    metadata_readable[[age_header, age_valid_header, age_error_header]] = metadata_readable.apply(function, axis=COLUMNS_AXIS)
 
     # Need to convert the age to a string.
     # This can't be handled with a .to_csv's float_format option
@@ -230,5 +292,9 @@ def age_pnc(metadata, age_header):
 
     return metadata_readable, metadata_irida
 
+def age_pnc(metadata, age_header):
+    return process_age(metadata, age_header, PNC_AGE_HEADERS, calculate_age_pnc)
+
 def age(metadata, age_header):
-    return
+    headers = list(metadata)[:DATE_2_INDEX+1]
+    return process_age(metadata, age_header, headers, calculate_age) # TODO
