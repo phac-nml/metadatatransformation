@@ -286,7 +286,6 @@ nextflow_pipeline {
             assert transformation.text.contains("sample,age_at_collection")
             assert transformation.text.contains("sample1,1.0000")
             assert transformation.text.contains("sample2,24")
-            assert transformation.text.contains("sample3,")
 
             // Check Results (Human-Readable)
             def results = path("$launchDir/results/transformation/results.csv")
@@ -304,7 +303,7 @@ nextflow_pipeline {
 
             assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
 
-            assert iridanext_metadata.size() == 3
+            assert iridanext_metadata.size() == 2
 
             assert iridanext_metadata.containsKey("sample1")
             assert iridanext_metadata.sample1.age_at_collection == "1.0000"
@@ -312,8 +311,7 @@ nextflow_pipeline {
             assert iridanext_metadata.containsKey("sample2")
             assert iridanext_metadata.sample2.age_at_collection == "24"
 
-            assert iridanext_metadata.containsKey("sample3")
-            assert iridanext_metadata.sample3.age_at_collection.size() == 0
+            assert iridanext_metadata.containsKey("sample3") == false
         }
     }
 

@@ -210,6 +210,7 @@ def main():
         metadata_readable, metadata_irida = age(metadata, args.age_header)
 
         remove_all_NA_columns(metadata_irida)
+        remove_any_NA_rows(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
@@ -217,6 +218,7 @@ def main():
         metadata_readable, metadata_irida = age_pnc(metadata, AGE_PNC_HEADER)
 
         remove_all_NA_columns(metadata_irida)
+        remove_any_NA_rows(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 

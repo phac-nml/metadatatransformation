@@ -453,7 +453,6 @@ nextflow_pipeline {
             assert transformation.text.contains("sample,calc_host_age")
             assert transformation.text.contains("sample1,1.0000")
             assert transformation.text.contains("sample2,24")
-            assert transformation.text.contains("sample3,")
 
             // Check Results (Human-Readable)
             def results = path("$launchDir/results/transformation/results.csv")
@@ -471,7 +470,7 @@ nextflow_pipeline {
 
             assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
 
-            assert iridanext_metadata.size() == 3
+            assert iridanext_metadata.size() == 2
 
             assert iridanext_metadata.containsKey("sample1")
             assert iridanext_metadata.sample1.calc_host_age == "1.0000"
@@ -479,8 +478,7 @@ nextflow_pipeline {
             assert iridanext_metadata.containsKey("sample2")
             assert iridanext_metadata.sample2.calc_host_age == "24"
 
-            assert iridanext_metadata.containsKey("sample3")
-            assert iridanext_metadata.sample3.calc_host_age.size() == 0
+            assert iridanext_metadata.containsKey("sample3") == false
         }
     }
 
@@ -676,13 +674,7 @@ nextflow_pipeline {
             assert transformation.text.contains("sample10,0.0833")
             assert transformation.text.contains("sample11,0.2466")
             assert transformation.text.contains("sample12,10")
-            assert transformation.text.contains("sample13,")
-            assert transformation.text.contains("sample14,")
             assert transformation.text.contains("sample15,10")
-            assert transformation.text.contains("sample16,")
-            assert transformation.text.contains("sample17,")
-            assert transformation.text.contains("sample18,")
-            assert transformation.text.contains("sample19,")
             assert transformation.text.contains("sample20,10")
             assert transformation.text.contains("sample21,10")
             assert transformation.text.contains("sample22,10")
@@ -693,13 +685,8 @@ nextflow_pipeline {
             assert transformation.text.contains("sample27,500")
             assert transformation.text.contains("sample28,500")
             assert transformation.text.contains("sample29,150")
-            assert transformation.text.contains("sample30,")
-            assert transformation.text.contains("sample31,")
             assert transformation.text.contains("sample32,0.0000")
             assert transformation.text.contains("sample33,0.0962")
-            assert transformation.text.contains("sample34,")
-            assert transformation.text.contains("sample35,")
-            assert transformation.text.contains("sample36,")
 
             // Check Results (Human-Readable)
             def results = path("$launchDir/results/transformation/results.csv")
@@ -750,7 +737,7 @@ nextflow_pipeline {
 
             assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
 
-            assert iridanext_metadata.size() == 36
+            assert iridanext_metadata.size() == 25
 
             assert iridanext_metadata.containsKey("sample1")
             assert iridanext_metadata.sample1.calc_host_age == "0.0841"
@@ -788,26 +775,20 @@ nextflow_pipeline {
             assert iridanext_metadata.containsKey("sample12")
             assert iridanext_metadata.sample12.calc_host_age == "10"
 
-            assert iridanext_metadata.containsKey("sample13")
-            assert iridanext_metadata.sample13.calc_host_age == ""
+            assert iridanext_metadata.containsKey("sample13") == false
 
-            assert iridanext_metadata.containsKey("sample14")
-            assert iridanext_metadata.sample14.calc_host_age == ""
+            assert iridanext_metadata.containsKey("sample14") == false
 
             assert iridanext_metadata.containsKey("sample15")
             assert iridanext_metadata.sample15.calc_host_age == "10"
 
-            assert iridanext_metadata.containsKey("sample16")
-            assert iridanext_metadata.sample16.calc_host_age == ""
+            assert iridanext_metadata.containsKey("sample16") == false
 
-            assert iridanext_metadata.containsKey("sample17")
-            assert iridanext_metadata.sample17.calc_host_age == ""
+            assert iridanext_metadata.containsKey("sample17") == false
 
-            assert iridanext_metadata.containsKey("sample18")
-            assert iridanext_metadata.sample18.calc_host_age == ""
+            assert iridanext_metadata.containsKey("sample18") == false
 
-            assert iridanext_metadata.containsKey("sample19")
-            assert iridanext_metadata.sample19.calc_host_age == ""
+            assert iridanext_metadata.containsKey("sample19") == false
 
             assert iridanext_metadata.containsKey("sample20")
             assert iridanext_metadata.sample20.calc_host_age == "10"
@@ -839,11 +820,9 @@ nextflow_pipeline {
             assert iridanext_metadata.containsKey("sample29")
             assert iridanext_metadata.sample29.calc_host_age == "150"
 
-            assert iridanext_metadata.containsKey("sample30")
-            assert iridanext_metadata.sample30.calc_host_age == ""
+            assert iridanext_metadata.containsKey("sample30") == false
 
-            assert iridanext_metadata.containsKey("sample31")
-            assert iridanext_metadata.sample31.calc_host_age == ""
+            assert iridanext_metadata.containsKey("sample31") == false
 
             assert iridanext_metadata.containsKey("sample32")
             assert iridanext_metadata.sample32.calc_host_age == "0.0000"
@@ -851,14 +830,11 @@ nextflow_pipeline {
             assert iridanext_metadata.containsKey("sample33")
             assert iridanext_metadata.sample33.calc_host_age == "0.0962"
 
-            assert iridanext_metadata.containsKey("sample34")
-            assert iridanext_metadata.sample34.calc_host_age == ""
+            assert iridanext_metadata.containsKey("sample34") == false
 
-            assert iridanext_metadata.containsKey("sample35")
-            assert iridanext_metadata.sample35.calc_host_age == ""
+            assert iridanext_metadata.containsKey("sample35") == false
 
-            assert iridanext_metadata.containsKey("sample36")
-            assert iridanext_metadata.sample36.calc_host_age == ""
+            assert iridanext_metadata.containsKey("sample36") == false
         }
     }
 }
