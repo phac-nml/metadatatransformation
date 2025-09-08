@@ -27,7 +27,8 @@ You may specify the metadata transformation with the `--transformation` paramete
 | Transformation | Explanation                                                                                                                                                                          |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | lock           | Locks, or copies and locks, the metadata in IRIDA Next.                                                                                                                              |
-| age            | Calculates the age between either a date of birth and specified date, or from an age number (ex: 10) and an age unit (year). Ages under 2 years old are shown with 4 decimal places. |
+| age            | Calculates the age between the first and second metadata columns. Ages under 2 years old are calculated as (days/365) years old, showing 4 decimal places. |
+| age_pnc            | Calculates the age between either a date of birth and specified date, or from an age number (ex: 10) and an age unit (year). Ages under 2 years old are shown with 4 decimal places. |
 | earliest       | Reports the earliest date among the metadata columns.                                                                                                                                |
 | populate       | Populates an output column with a specific value.                                                                                                                                    |
 | categorize     | Categorizes data into Human, Animal, Food or Environmental source based on values in a specific set of fields                                                                        |
@@ -46,6 +47,29 @@ The following parameters can be used to rename CSV-generated output columns and 
 - `--metadata_8_header`: names the first metadata_8 column header
 
 ## Age Parameters
+
+The following parameters can be used to rename CSV-generated output columns and Irida Next fields as follows:
+
+- `--metadata_1_header`: names the date of birth column header
+- `--metadata_2_header`: names the current/target data column header
+- `--age_header`: names the calculated age column header and related output columns
+
+For example, the following code:
+
+```
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/age/success_failure_mix.csv --outdir results --transformation age --metadata_1_header "date_of_birth" --metadata_2_header "collection_date" --age_header "age_at_collection"
+```
+
+would generate the following `results.csv` file:
+
+```
+sample,sample_name,date_of_birth,collection_date,age_at_collection,age_at_collection_valid,age_at_collection_error
+sample1,ABC,2000-01-01,2000-12-31,1.0000,True,
+sample2,DEF,2000-02-29,2024-02-29,24,True,
+sample3,GHI,2000-05-05,1950-12-31,,False,The dates are reversed.
+```
+
+## Age PNC Parameters
 
 The metadata header parameters (`--metadata_1_header` through `--metadata_8_header`) are required for the transformation. In particular, at least four of the metadata headers must be renamed to the exactly the following:
 
