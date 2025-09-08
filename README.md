@@ -71,7 +71,7 @@ sample3,GHI,2000-05-05,1950-12-31,,False,The dates are reversed.
 
 ## Age PNC Parameters
 
-The metadata header parameters (`--metadata_1_header` through `--metadata_8_header`) are required for the transformation. In particular, at least four of the metadata headers must be renamed to the exactly the following:
+The metadata header parameters (`--metadata_1_header` through `--metadata_8_header`) are required for the transformation. In particular, at least four of the metadata headers must be renamed to be exactly the following:
 
 - `host_date_of_birth_DOB`
 - `calc_earliest_date`
@@ -120,7 +120,7 @@ For simplicity, the the following assumptions are made when calculating ages:
 - ages cannot be less than 0
 - ages cannot be greater than 150
 
-Furthermore, the following values are ignored and treated as "years" when provided as an age unit: `Not Applicable`, `Missing`, `Not Collected`, `Not Provided`, `Restricted Access`, `(blank)`. For example, this means that an age number of 10 and an age unit of `Restricted Access` will report and age of 10 years old.
+Furthermore, the following values are ignored and treated as "years" when provided as an age unit: `Not Applicable`, `Missing`, `Not Collected`, `Not Provided`, `Restricted Access`, `(blank)`. For example, this means that an age number of 10 and an age unit of `Restricted Access` will report an age of 10 years old.
 
 ## Earliest Parameters
 
