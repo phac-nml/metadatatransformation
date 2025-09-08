@@ -27,8 +27,8 @@ You may specify the metadata transformation with the `--transformation` paramete
 | Transformation | Explanation                                                                                                                                                                          |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | lock           | Locks, or copies and locks, the metadata in IRIDA Next.                                                                                                                              |
-| age            | Calculates the age between the first and second metadata columns. Ages under 2 years old are calculated as (days/365) years old, showing 4 decimal places. |
-| age_pnc            | Calculates the age between either a date of birth and specified date, or from an age number (ex: 10) and an age unit (year). Ages under 2 years old are shown with 4 decimal places. |
+| age            | Calculates the age between the first and second metadata columns. Ages under 2 years old are calculated as (days/365) years old, showing 4 decimal places.                           |
+| age_pnc        | Calculates the age between either a date of birth and specified date, or from an age number (ex: 10) and an age unit (year). Ages under 2 years old are shown with 4 decimal places. |
 | earliest       | Reports the earliest date among the metadata columns.                                                                                                                                |
 | populate       | Populates an output column with a specific value.                                                                                                                                    |
 | categorize     | Categorizes data into Human, Animal, Food or Environmental source based on values in a specific set of fields                                                                        |

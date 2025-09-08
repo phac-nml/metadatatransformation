@@ -71,6 +71,7 @@ You may wish to specify the `--metadata_1_header` through `--metadata_8_header` 
 ```bash
 nextflow run phac-nml/metadatatransformation -profile singularity -r main -latest --input assets/samplesheet.csv --outdir results --transformation lock --metadata_1_header country --metadata_2_header outbreak
 ```
+
 ### Age
 
 The calculate age transformation may be run as follows:
