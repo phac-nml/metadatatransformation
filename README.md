@@ -24,13 +24,14 @@ The main parameters are `--input` as defined above and `--output` for specifying
 
 You may specify the metadata transformation with the `--transformation` parameter. For example, `--transformation lock` will perform the lock transformation. The available transformations are as follows:
 
-| Transformation | Explanation                                                                                                                                                |
-| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| lock           | Locks, or copies and locks, the metadata in IRIDA Next.                                                                                                    |
-| age            | Calculates the age between the first and second metadata columns. Ages under 2 years old are calculated as (days/365) years old, showing 4 decimal places. |
-| earliest       | Reports the earliest date among the metadata columns.                                                                                                      |
-| populate       | Populates an output column with a specific value.                                                                                                          |
-| categorize     | Categorizes data into Human, Animal, Food or Environmental source based on values in a specific set of fields                                              |
+| Transformation | Explanation                                                                                                                                                                          |
+| -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| lock           | Locks, or copies and locks, the metadata in IRIDA Next.                                                                                                                              |
+| age            | Calculates the age between the first and second metadata columns. Ages under 2 years old are calculated as (days/365) years old, showing 4 decimal places.                           |
+| age_pnc        | Calculates the age between either a date of birth and specified date, or from an age number (ex: 10) and an age unit (year). Ages under 2 years old are shown with 4 decimal places. |
+| earliest       | Reports the earliest date among the metadata columns.                                                                                                                                |
+| populate       | Populates an output column with a specific value.                                                                                                                                    |
+| categorize     | Categorizes data into Human, Animal, Food or Environmental source based on values in a specific set of fields                                                                        |
 
 ## Lock Parameters
 
@@ -68,6 +69,59 @@ sample2,DEF,2000-02-29,2024-02-29,24,True,
 sample3,GHI,2000-05-05,1950-12-31,,False,The dates are reversed.
 ```
 
+## Age PNC Parameters
+
+The metadata header parameters (`--metadata_1_header` through `--metadata_8_header`) are required for the transformation. In particular, at least four of the metadata headers must be renamed to be exactly the following:
+
+- `host_date_of_birth_DOB`
+- `calc_earliest_date`
+- `host_age`
+- `host_age_unit`
+
+For example, if the 2nd metadata column corresponds to the date of birth, then it must be parameterized as follows: `--metadata_1_header host_date_of_birth_DOB`. If the 5th metadata column of the input corresponds to the age unit, then it must be parameterized as follows: `--metadata_5_header host_age_unit`. The order of the metadata columns in the input does not matter, as long as the names are assigned correctly as above.
+
+The age metadata column in the output can be renamed as follows, but this is not recommended as the expected age metadata column name is exactly `calc_host_age` (the default):
+
+- `--age_header`: names the calculated age column header and related output columns
+
+### Example
+
+The following code:
+
+```
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/age/basic.csv --outdir results --transformation age --age_header calc_host_age --metadata_1_header host_date_of_birth_DOB --metadata_2_header calc_earliest_date --metadata_3_header host_age --metadata_4_header host_age_unit
+```
+
+would generate the following `results.csv` file:
+
+```
+sample,sample_name,host_date_of_birth_DOB,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error
+sample1,1,2000-01-01,2000-01-02,,,0.0027,True,
+sample2,2,2000-01-01,2000-01-03,,,0.0055,True,
+sample3,3,2000-01-01,2000-04-01,,,0.2493,True,
+sample4,4,2000-01-01,2000-12-31,,,1.0000,True,
+sample5,5,2000-01-01,2001-04-01,,,1.2493,True,
+sample6,6,2000-01-01,2001-12-31,,,2,True,
+sample7,7,2000-01-01,2002-01-01,,,2,True,
+sample8,8,2000-02-29,2024-02-29,,,24,True,
+sample9,9,1950-12-31,2000-05-05,,,49,True,
+sample10,10,,,1.0,day,0.0027,True,
+sample11,11,,,2.0,days,0.0055,True,
+sample12,12,,,3.0,days,0.0082,True,
+```
+
+### Assumptions
+
+For simplicity, the the following assumptions are made when calculating ages:
+
+- 365 days in a year
+- 52 weeks in a year
+- 12 months in a year
+- ages cannot be less than 0
+- ages cannot be greater than 150
+
+Furthermore, the following values are ignored and treated as "years" when provided as an age unit: `Not Applicable`, `Missing`, `Not Collected`, `Not Provided`, `Restricted Access`, `(blank)`. For example, this means that an age number of 10 and an age unit of `Restricted Access` will report an age of 10 years old.
+
 ## Earliest Parameters
 
 The following parameters can be used to rename CSV-generated output columns as follows:
@@ -84,7 +138,7 @@ The following parameters can be used to rename CSV-generated output columns as f
 
 The above parameters will only affect the `results.csv` file and not the information returned to IRIDA Next. The earliest date column will be reported as `calc_earliest_date` in `results.csv`, `transformation.csv`, and the `iridanext.output.json` file, which is returned to IRIDA Next.
 
-The following special entries are ignored when calculating the earliest age (they are not considered malformed data): `Not Applicable`, `Missing`, `Not Collected`, `Not Provided`, `Restricted Access`, `(blank)`
+The following special entries are ignored when calculating the earliest date (they are not considered malformed data): `Not Applicable`, `Missing`, `Not Collected`, `Not Provided`, `Restricted Access`, `(blank)`
 
 ## Populate Parameters
 
