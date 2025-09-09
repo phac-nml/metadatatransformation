@@ -3,6 +3,14 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - Unreleased
+
+### Added
+
+- The age_pnc transformation: calculates age from an age number (ex: `10`) and a unit (ex: `year`) and/or a date of birth and date. The column names for this transformation are explicit and required. [PR #22](https://github.com/phac-nml/metadatatransformation/pull/22)
+- Basic reconciliation between a date of birth-based age calculation and a units-based age calculation if both are supplied. [PR #22](https://github.com/phac-nml/metadatatransformation/pull/22)
+- Additional error handling. [PR #22](https://github.com/phac-nml/metadatatransformation/pull/22)
+
 ## [1.2.0] - 2025/08/15
 
 ### `Added`
@@ -51,3 +59,4 @@ Initial release of phac-nml/metadatatransformation.
 [1.1.0]: https://github.com/phac-nml/metadatatransformation/releases/tag/1.1.0
 [1.1.1]: https://github.com/phac-nml/metadatatransformation/releases/tag/1.1.1
 [1.2.0]: https://github.com/phac-nml/metadatatransformation/releases/tag/1.2.0
+[1.3.0]: https://github.com/phac-nml/metadatatransformation/releases/tag/1.3.0

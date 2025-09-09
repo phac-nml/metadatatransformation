@@ -1,0 +1,28 @@
+{
+    "-profile test": {
+        "content": [
+            2,
+            null,
+            [
+                "iridanext.output.json",
+                "pipeline_info",
+                "transformation",
+                "transformation/results.csv",
+                "transformation/transformation.csv",
+                "write",
+                "write/results.csv"
+            ],
+            [
+                "iridanext.output.json:md5,f508c22fef537c14cb205620fb79896b",
+                "results.csv:md5,1ea83d809c3b00d135bb2784a3c9db17",
+                "transformation.csv:md5,7d2257af077a26a0a49d040aa68683a1",
+                "results.csv:md5,1ea83d809c3b00d135bb2784a3c9db17"
+            ]
+        ],
+        "meta": {
+            "nf-test": "0.9.2",
+            "nextflow": "24.10.4"
+        },
+        "timestamp": "2025-09-02T10:23:04.113619505"
+    }
+}

@@ -88,6 +88,37 @@ The following parameters can be used to rename CSV-generated output columns and 
 - `--metadata_2_header`: names the current/target data column header
 - `--age_header`: names the calculated age column header and related output columns
 
+### Age PNC
+
+The calculate age PNC transformation may be run as follows:
+
+```bash
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/age/basic.csv --outdir results --transformation age_pnc --age_header calc_host_age --metadata_1_header host_date_of_birth_DOB --metadata_2_header calc_earliest_date --metadata_3_header host_age --metadata_4_header host_age_unit
+```
+
+The metadata header parameters (`--metadata_1_header` through `--metadata_8_header`) are required for the transformation. In particular, at least four of the metadata headers must be renamed to the exactly the following:
+
+- `host_date_of_birth_DOB`
+- `calc_earliest_date`
+- `host_age`
+- `host_age_unit`
+
+For example, if the 2nd metadata column corresponds to the date of birth, then it must be parameterized as follows: `--metadata_1_header host_date_of_birth_DOB`. If the 5th metadata column of the input corresponds to the age unit, then it must be parameterized as follows: `--metadata_5_header host_age_unit`. The order of the metadata columns in the input does not matter, as long as the names are assigned correctly as above.
+
+The age metadata column in the output can be renamed as follows, but this is not recommended as the expected age metadata column name is exactly `calc_host_age` (the default):
+
+- `--age_header`: names the calculated age column header and related output columns
+
+For simplicity, the the following assumptions are made when calculating ages:
+
+- 365 days in a year
+- 52 weeks in a year
+- 12 months in a year
+- ages cannot be less than 0
+- ages cannot be greater than 150
+
+Furthermore, the following values are ignored and treated as "years" when provided as an age unit: `Not Applicable`, `Missing`, `Not Collected`, `Not Provided`, `Restricted Access`, `(blank)`. For example, this means that an age number of 10 and an age unit of `Restricted Access` will report an age of 10 years old.
+
 ### Earliest
 
 The earliest date transformation may be run as follows:

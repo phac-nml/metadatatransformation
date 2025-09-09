@@ -3,59 +3,32 @@
 import argparse
 import pathlib
 import pandas
-import numpy
-import math
-import re
 
-from dateutil.relativedelta import relativedelta
-from datetime import datetime
+from transformations.age import age, age_pnc
 
-# Column headers:
-SAMPLE_HEADER = "sample"
-SAMPLE_NAME_HEADER = "sample_name"
-AGE_HEADER = "age"
-EARLIEST_HEADER = "calc_earliest_date"
-POPULATE_HEADER = "populated"
-
-VALID_HEADER_EXTENSION = "_valid"
-ERROR_HEADER_EXTENSION = "_error"
-
-# Column indices:
-# Note: The relative position of these matters.
-DATE_1_INDEX = 2
-DATE_2_INDEX = 3
+from transformations.constants import (SPECIAL_ENTRIES, ROWS_AXIS, COLUMNS_AXIS,
+                                        SPECIAL_ENTRIES_REGEX, DATE_FORMAT,
+                                        VALID_HEADER_EXTENSION, ERROR_HEADER_EXTENSION,
+                                        SAMPLE_HEADER, SAMPLE_NAME_HEADER,
+                                        AGE_HEADER, AGE_PNC_HEADER,
+                                        EARLIEST_HEADER, EARLIEST_HEADER_PNC,
+                                        POPULATE_HEADER)
 
 # Transformations:
 LOCK = "lock"
 AGE = "age"
+AGE_PNC = "age_pnc"
 EARLIEST = "earliest"
 POPULATE = "populate"
 CATEGORIZE = "categorize"
 
-# Output Files:
-RESULTS_PATH = "results.csv"
-TRANSFORMATION_PATH = "transformation.csv"
-
-# Other:
-DATE_FORMAT = "%Y-%m-%d" # YYYY-MM-DD
-AGE_THRESHOLD = 2 # Ages less than this will include a decimal component.
-DAYS_IN_YEAR = 365.0
-ROWS_AXIS = 0 # i.e. axis=0 // axis="rows"
-COLUMNS_AXIS = 1 # i.e. axis=1 // axis="columns"
+# Default Values:
 POPULATE_VALUE = "NA"
 UNKNOWN_VALUE = "Unknown"
 
-# Special Entries
-NOT_APPLICABLE = "Not Applicable"
-MISSING = "Missing"
-NOT_COLLECTED = "Not Collected"
-NOT_PROVIDED = "Not Provided"
-RESTRICTED_ACCESS = "Restricted Access"
-BLANK = ""
-
-SPECIAL_ENTRIES = [NOT_APPLICABLE, MISSING, NOT_COLLECTED,
-                    NOT_PROVIDED, RESTRICTED_ACCESS, BLANK]
-SPECIAL_ENTRIES_REGEX = ['(?i)^{}$'.format(x) for x in SPECIAL_ENTRIES] # case insensitive
+# Output Files:
+RESULTS_PATH = "results.csv"
+TRANSFORMATION_PATH = "transformation.csv"
 
 def missing_val(x, empty_strs = SPECIAL_ENTRIES):
     return (pandas.isna(x) | (x in empty_strs + [None]))
@@ -79,9 +52,11 @@ def populate(metadata, populate_header, populate_value):
     return metadata_readable, metadata_irida
 
 def find_earliest_date(row):
+    DATE_1_INDEX = 2
+
     earliest = pandas.NA
     earliest_valid = False
-    earliest_error = "Unable to find the earliest age."
+    earliest_error = "Unable to find the earliest date."
 
     dates = []
 
@@ -203,86 +178,6 @@ def categorize(metadata):
 
     return metadata_readable, metadata_irida
 
-def format_age(age):
-    if age < AGE_THRESHOLD:
-        formatted_age = "{:.4f}".format(age)
-    else:
-        formatted_age = "{:.0f}".format(math.floor(age))
-
-    return formatted_age
-
-def calculate_age(row):
-    age = numpy.nan
-    # numpy.nan, not pandas.NA because numpy.nan is treated as a float.
-    # Otherwise, there's a risk of mixing age floats with pandas.NA and having
-    # the column be treated as an object column, which will prevent
-    # .to_csv(..., float_format=format_age) from working.
-    age_valid = False
-    age_error = "Unable to calculate age."
-
-    # Is a date missing?
-    if pandas.isnull(row.iloc[DATE_1_INDEX]) or pandas.isnull(row.iloc[DATE_2_INDEX]):
-        age = numpy.nan
-        age_valid = False
-        age_error = "At least one of the dates is missing."
-
-        return pandas.Series([age, age_valid, age_error])
-
-    date_1_string = row.iloc[DATE_1_INDEX]
-    date_2_string = row.iloc[DATE_2_INDEX]
-
-    # Are the dates in the correct type (string) and format?
-    try:
-        date_1 = datetime.strptime(date_1_string, DATE_FORMAT)
-        date_2 = datetime.strptime(date_2_string, DATE_FORMAT)
-
-    except (TypeError, ValueError) as error:
-        age = numpy.nan
-        age_valid = False
-        age_error = "The date format does not match the expected format (YYYY-MM-DD)."
-
-        return pandas.Series([age, age_valid, age_error])
-
-    # Calculate the relative delta in calendar time:
-    relative_delta = relativedelta(date_2, date_1)
-
-    # Under age threshold, calculate as (days/days_in_year):
-    # Note: this is inaccurate, because how many days is a year?
-    if relative_delta.years < AGE_THRESHOLD:
-        time_delta = date_2 - date_1
-        age = time_delta.days / DAYS_IN_YEAR
-
-    # Age meets threshold, calculate as calendar years:
-    else:
-        age = relative_delta.years
-        age_valid = True
-
-    # Positive age:
-    if age >= 0:
-        age_valid = True
-        age_error = ""
-
-    # Negative age, dates reversed:
-    else:
-        age = numpy.nan
-        age_valid = False
-        age_error = "The dates are reversed."
-
-    result = pandas.Series([age, age_valid, age_error])
-
-    return result
-
-def age(metadata, age_header):
-    age_valid_header = age_header + VALID_HEADER_EXTENSION
-    age_error_header = age_header + ERROR_HEADER_EXTENSION
-
-    metadata_readable = metadata.iloc[:, :DATE_2_INDEX+1].copy(deep=True) # drop extra columns in new copy
-    metadata_readable[[age_header, age_valid_header, age_error_header]] = metadata_readable.apply(calculate_age, axis=COLUMNS_AXIS)
-
-    metadata_irida = metadata_readable[[SAMPLE_HEADER, age_header]].copy(deep=True)
-
-    return metadata_readable, metadata_irida
-
 def main():
     parser = argparse.ArgumentParser(
         prog="Transform Metadata",
@@ -290,7 +185,7 @@ def main():
 
     parser.add_argument("input", type=pathlib.Path,
                         help="The CSV-formatted input file to transform.")
-    parser.add_argument("transformation", choices=[LOCK, AGE, EARLIEST, POPULATE, CATEGORIZE],
+    parser.add_argument("transformation", choices=[LOCK, AGE, AGE_PNC, EARLIEST, POPULATE, CATEGORIZE],
                         help="The type of transformation to perform.")
     parser.add_argument("--age_header", default=AGE_HEADER, required=False,
                         help="The output column header for the calculated age.")
@@ -315,8 +210,17 @@ def main():
         metadata_readable, metadata_irida = age(metadata, args.age_header)
 
         remove_all_NA_columns(metadata_irida)
-        metadata_readable.to_csv(RESULTS_PATH, index=False, float_format=format_age)
-        metadata_irida.to_csv(TRANSFORMATION_PATH, index=False, float_format=format_age)
+        remove_any_NA_rows(metadata_irida)
+        metadata_readable.to_csv(RESULTS_PATH, index=False)
+        metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
+
+    elif (args.transformation == AGE_PNC):
+        metadata_readable, metadata_irida = age_pnc(metadata, AGE_PNC_HEADER)
+
+        remove_all_NA_columns(metadata_irida)
+        remove_any_NA_rows(metadata_irida)
+        metadata_readable.to_csv(RESULTS_PATH, index=False)
+        metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
     elif (args.transformation == EARLIEST):
         metadata_readable, metadata_irida = earliest(metadata, args.earliest_header)
