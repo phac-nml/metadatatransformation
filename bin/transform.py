@@ -12,7 +12,7 @@ from transformations.constants import (SPECIAL_ENTRIES, ROWS_AXIS, COLUMNS_AXIS,
                                         SAMPLE_HEADER, SAMPLE_NAME_HEADER,
                                         AGE_HEADER, AGE_PNC_HEADER,
                                         EARLIEST_HEADER, EARLIEST_HEADER_PNC,
-                                        POPULATE_HEADER)
+                                        POPULATE_HEADER, PNC_DATE_HEADERS)
 
 # Transformations:
 LOCK = "lock"
@@ -21,6 +21,7 @@ AGE_PNC = "age_pnc"
 EARLIEST = "earliest"
 POPULATE = "populate"
 CATEGORIZE = "categorize"
+PNC = "pnc"
 
 # Default Values:
 POPULATE_VALUE = "NA"
@@ -52,8 +53,6 @@ def populate(metadata, populate_header, populate_value):
     return metadata_readable, metadata_irida
 
 def find_earliest_date(row):
-    DATE_1_INDEX = 2
-
     earliest = pandas.NA
     earliest_valid = False
     earliest_error = "Unable to find the earliest date."
@@ -63,7 +62,10 @@ def find_earliest_date(row):
     # Replace special entries (not in place):
     # We need everything to be a string (pandas.NA) and not another
     # type (numpy.nan, etc.).
-    replaced = row.iloc[DATE_1_INDEX:].fillna(value=pandas.NA, inplace=False)
+    replaced = row.fillna(value=pandas.NA, inplace=False)
+
+    # Drop "sample" and "sample_name" if they exist:
+    replaced = replaced.drop([SAMPLE_HEADER, SAMPLE_NAME_HEADER], errors="ignore")
 
     # We need to check for all NA at this point, because numpy
     # will fail to replace if everything is NA:
@@ -178,6 +180,24 @@ def categorize(metadata):
 
     return metadata_readable, metadata_irida
 
+def pnc(metadata):
+    metadata_categorize = metadata.copy(deep=True)
+    categorize_readable, categorize_irida = categorize(metadata_categorize)
+
+    metadata_earliest = metadata[[SAMPLE_HEADER] + PNC_DATE_HEADERS].copy(deep=True)
+    earliest_readable, earliest_irida = earliest(metadata_earliest, EARLIEST_HEADER_PNC)
+
+    metadata_age_pnc = metadata.copy(deep=True).merge(earliest_irida, how="inner", on=SAMPLE_HEADER)
+    age_pnc_readable, age_pnc_irida = age_pnc(metadata_age_pnc, AGE_PNC_HEADER)
+
+    metadata_readable = categorize_readable.merge(earliest_readable, how="inner", on=SAMPLE_HEADER)
+    metadata_readable = metadata_readable.merge(age_pnc_readable, how="inner", on=SAMPLE_HEADER)
+
+    metadata_irida = categorize_irida.merge(earliest_irida, how="inner", on=SAMPLE_HEADER)
+    metadata_irida = metadata_irida.merge(age_pnc_irida, how="inner", on=SAMPLE_HEADER)
+
+    return metadata_readable, metadata_irida
+
 def main():
     parser = argparse.ArgumentParser(
         prog="Transform Metadata",
@@ -185,7 +205,7 @@ def main():
 
     parser.add_argument("input", type=pathlib.Path,
                         help="The CSV-formatted input file to transform.")
-    parser.add_argument("transformation", choices=[LOCK, AGE, AGE_PNC, EARLIEST, POPULATE, CATEGORIZE],
+    parser.add_argument("transformation", choices=[LOCK, AGE, AGE_PNC, EARLIEST, POPULATE, CATEGORIZE, PNC],
                         help="The type of transformation to perform.")
     parser.add_argument("--age_header", default=AGE_HEADER, required=False,
                         help="The output column header for the calculated age.")
@@ -243,6 +263,14 @@ def main():
         if len(metadata_irida) > 0:
             remove_all_NA_columns(metadata_irida)
 
+        metadata_readable.to_csv(RESULTS_PATH, index=False)
+        metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
+
+    elif (args.transformation == PNC):
+        metadata_readable, metadata_irida = pnc(metadata)
+
+        remove_all_NA_columns(metadata_irida)
+        remove_any_NA_rows(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 

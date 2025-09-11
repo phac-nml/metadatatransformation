@@ -16,6 +16,9 @@ SAMPLE_NAME_HEADER = "sample_name"
 VALID_HEADER_EXTENSION = "_valid"
 ERROR_HEADER_EXTENSION = "_error"
 
+# PNC Date Headers:
+PNC_DATE_HEADERS = ["isolate_received_date", "isolation_date", "sample_collection_date", "sample_received_date_collaborator", "sample_received_date_nml", "sequencing_date"]
+
 # Other:
 DATE_FORMAT = "%Y-%m-%d" # YYYY-MM-DD
 ROWS_AXIS = 0 # i.e. axis=0 // axis="rows"
