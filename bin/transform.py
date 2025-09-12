@@ -190,6 +190,10 @@ def pnc(metadata):
     metadata_age_pnc = metadata.copy(deep=True).merge(earliest_irida, how="inner", on=SAMPLE_HEADER)
     age_pnc_readable, age_pnc_irida = age_pnc(metadata_age_pnc, AGE_PNC_HEADER)
 
+    # Drop duplicated column names if they exist:
+    # If we merge without doing this, then we get duplicate columns:
+    age_pnc_readable = age_pnc_readable.drop([SAMPLE_NAME_HEADER, EARLIEST_HEADER_PNC], axis=COLUMNS_AXIS, errors="ignore")
+
     metadata_readable = categorize_readable.merge(earliest_readable, how="inner", on=SAMPLE_HEADER)
     metadata_readable = metadata_readable.merge(age_pnc_readable, how="inner", on=SAMPLE_HEADER)
 
