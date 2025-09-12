@@ -5,14 +5,7 @@ import pathlib
 import pandas
 
 from transformations.age import age, age_pnc
-
-from transformations.constants import (SPECIAL_ENTRIES, ROWS_AXIS, COLUMNS_AXIS,
-                                        SPECIAL_ENTRIES_REGEX, DATE_FORMAT,
-                                        VALID_HEADER_EXTENSION, ERROR_HEADER_EXTENSION,
-                                        SAMPLE_HEADER, SAMPLE_NAME_HEADER,
-                                        AGE_HEADER, AGE_PNC_HEADER,
-                                        EARLIEST_HEADER, EARLIEST_HEADER_PNC,
-                                        POPULATE_HEADER, PNC_DATE_HEADERS)
+from transformations.constants import *
 
 # Transformations:
 LOCK = "lock"
@@ -128,25 +121,15 @@ def lock(metadata):
     return metadata_readable, metadata_irida
 
 def categorize(metadata):
-
     # Check for required headers (output error message and blank if missing)
-    required_headers = [
-        "host_scientific_name", "host_common_name", "food_product",
-        "environmental_site", "environmental_material"
-    ]
-    source_type_header = "calc_source_type"
-    source_type_valid_header = source_type_header + VALID_HEADER_EXTENSION
-    source_type_error_header = source_type_header + ERROR_HEADER_EXTENSION
-    results_headers = [source_type_header, source_type_valid_header, source_type_error_header]
-
     metadata_readable = metadata.copy(deep=True)
 
-    missing_required_headers = [col for col in required_headers if col not in metadata.columns]
-    included_required_headers = [col for col in required_headers if col in metadata.columns]
+    missing_required_headers = [col for col in CATEGORIZE_HEADERS if col not in metadata.columns]
+    included_required_headers = [col for col in CATEGORIZE_HEADERS if col in metadata.columns]
 
     if (len(missing_required_headers) > 0):
         metadata_irida = pandas.DataFrame({SAMPLE_HEADER:[]})
-        metadata_readable[results_headers] = pandas.Series([pandas.NA, False, "Missing required headers: " + str(missing_required_headers)])
+        metadata_readable[CATEGORIZE_RESULTS_HEADERS] = pandas.Series([pandas.NA, False, "Missing required headers: " + str(missing_required_headers)])
         metadata_readable = metadata_readable[[SAMPLE_HEADER, SAMPLE_NAME_HEADER] + included_required_headers + results_headers]
         return metadata_readable, metadata_irida
 
@@ -171,28 +154,27 @@ def categorize(metadata):
         else:
             return UNKNOWN_VALUE
 
-    metadata_readable[source_type_header] = metadata_readable.apply(categorize_row, axis = COLUMNS_AXIS)
-    metadata_readable[source_type_valid_header] = True
-    metadata_readable[source_type_error_header] = ""
+    metadata_readable[CATEGORIZE_SOURCE_TYPE_HEADER] = metadata_readable.apply(categorize_row, axis = COLUMNS_AXIS)
+    metadata_readable[CATEGORIZE_VALID_HEADER] = True
+    metadata_readable[CATEGORIZE_ERROR_HEADER] = ""
 
-    metadata_readable = metadata_readable[[SAMPLE_HEADER, SAMPLE_NAME_HEADER] + included_required_headers + results_headers]
-    metadata_irida = metadata_readable[[SAMPLE_HEADER, source_type_header]].copy(deep=True)
+    metadata_readable = metadata_readable[[SAMPLE_HEADER, SAMPLE_NAME_HEADER] + included_required_headers + CATEGORIZE_RESULTS_HEADERS]
+    metadata_irida = metadata_readable[[SAMPLE_HEADER, CATEGORIZE_SOURCE_TYPE_HEADER]].copy(deep=True)
 
     return metadata_readable, metadata_irida
 
 def pnc(metadata):
     metadata_categorize = metadata.copy(deep=True)
     categorize_readable, categorize_irida = categorize(metadata_categorize)
+    categorize_readable = categorize_readable[CATEGORIZE_COMBINED_RESULTS_HEADERS]
 
-    metadata_earliest = metadata[[SAMPLE_HEADER] + PNC_DATE_HEADERS].copy(deep=True)
+    metadata_earliest = metadata[[SAMPLE_HEADER] + PNC_EARLIEST_DATE_HEADERS].copy(deep=True)
     earliest_readable, earliest_irida = earliest(metadata_earliest, EARLIEST_HEADER_PNC)
+    earliest_readable = earliest_readable[PNC_EARLIEST_DATE_COMBINED_HEADERS]
 
     metadata_age_pnc = metadata.copy(deep=True).merge(earliest_irida, how="inner", on=SAMPLE_HEADER)
     age_pnc_readable, age_pnc_irida = age_pnc(metadata_age_pnc, AGE_PNC_HEADER)
-
-    # Drop duplicated column names if they exist:
-    # If we merge without doing this, then we get duplicate columns:
-    age_pnc_readable = age_pnc_readable.drop([SAMPLE_NAME_HEADER, EARLIEST_HEADER_PNC], axis=COLUMNS_AXIS, errors="ignore")
+    age_pnc_readable = age_pnc_readable[PNC_AGE_COMBINED_RESULTS_HEADERS]
 
     metadata_readable = categorize_readable.merge(earliest_readable, how="inner", on=SAMPLE_HEADER)
     metadata_readable = metadata_readable.merge(age_pnc_readable, how="inner", on=SAMPLE_HEADER)

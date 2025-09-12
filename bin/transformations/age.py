@@ -8,15 +8,9 @@ from datetime import datetime
 from transformations.constants import (SAMPLE_HEADER, SAMPLE_NAME_HEADER, DATE_FORMAT,
                                         VALID_HEADER_EXTENSION, ERROR_HEADER_EXTENSION,
                                         COLUMNS_AXIS, SPECIAL_ENTRIES_REGEX, BLANK,
-                                        AGE_HEADER, AGE_PNC_HEADER,
-                                        DATE_1_INDEX, DATE_2_INDEX)
-
-# Age Headers:
-DATE_OF_BIRTH_HEADER = "host_date_of_birth_DOB"
-DATE_HEADER = "calc_earliest_date"
-HOST_AGE_HEADER = "host_age"
-HOST_AGE_UNIT_HEADER = "host_age_unit"
-PNC_AGE_HEADERS = [SAMPLE_HEADER, SAMPLE_NAME_HEADER, DATE_OF_BIRTH_HEADER, DATE_HEADER, HOST_AGE_HEADER, HOST_AGE_UNIT_HEADER]
+                                        AGE_HEADER, AGE_PNC_HEADER, DATE_1_INDEX, DATE_2_INDEX,
+                                        DATE_OF_BIRTH_HEADER, DATE_HEADER, HOST_AGE_HEADER,
+                                        HOST_AGE_UNIT_HEADER, PNC_AGE_HEADERS)
 
 AGE_CONSOLIDATION_THRESHOLD = 1 # Threshold for accepting differences in DOB-based and units-based ages (in years).
 AGE_THRESHOLD = 2 # Ages less than this will include a decimal component.
