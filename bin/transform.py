@@ -32,6 +32,12 @@ def remove_any_NA_rows(metadata):
     # then remove the whole row.
     metadata.dropna(axis=ROWS_AXIS, how="any", inplace=True)
 
+def remove_all_NA_rows(metadata):
+    # If all entries in the row are NA,
+    # then remove the whole row.
+    # Need to ignore "sample" column.
+    metadata.dropna(axis=ROWS_AXIS, how="all", inplace=True, subset=metadata.columns.difference([SAMPLE_HEADER]))
+
 def remove_all_NA_columns(metadata):
     # If all entries in the column are NA,
     # then remove the whole column.
@@ -164,15 +170,14 @@ def categorize(metadata):
     return metadata_readable, metadata_irida
 
 def pnc(metadata):
-    metadata_categorize = metadata.copy(deep=True)
-    categorize_readable, categorize_irida = categorize(metadata_categorize)
+    categorize_readable, categorize_irida = categorize(metadata)
     categorize_readable = categorize_readable[CATEGORIZE_COMBINED_RESULTS_HEADERS]
 
-    metadata_earliest = metadata[[SAMPLE_HEADER] + PNC_EARLIEST_DATE_HEADERS].copy(deep=True)
+    metadata_earliest = metadata[[SAMPLE_HEADER] + PNC_EARLIEST_DATE_HEADERS]
     earliest_readable, earliest_irida = earliest(metadata_earliest, EARLIEST_HEADER_PNC)
     earliest_readable = earliest_readable[PNC_EARLIEST_DATE_COMBINED_HEADERS]
 
-    metadata_age_pnc = metadata.copy(deep=True).merge(earliest_irida, how="inner", on=SAMPLE_HEADER)
+    metadata_age_pnc = metadata.merge(earliest_irida, how="inner", on=SAMPLE_HEADER)
     age_pnc_readable, age_pnc_irida = age_pnc(metadata_age_pnc, AGE_PNC_HEADER)
     age_pnc_readable = age_pnc_readable[PNC_AGE_COMBINED_RESULTS_HEADERS]
 
@@ -256,7 +261,7 @@ def main():
         metadata_readable, metadata_irida = pnc(metadata)
 
         remove_all_NA_columns(metadata_irida)
-        remove_any_NA_rows(metadata_irida)
+        remove_all_NA_rows(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
