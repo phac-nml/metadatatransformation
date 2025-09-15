@@ -8,9 +8,9 @@ This pipeline transforms metadata from IRIDA Next.
 
 The input to the pipeline is a sample sheet (passed as `--input samplesheet.csv`) that looks like:
 
-| sample  | sample_name | metadata_1 | metadata_2 | metadata_3 | metadata_4 | metadata_5 | metadata_6 | metadata_7 | metadata_8 |
-| ------- | ----------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- |
-| Sample1 | SampleA     | meta_1     | meta_2     | meta_3     | meta_4     | meta_5     | meta_6     | meta_7     | meta_8     |
+| sample  | sample_name | metadata_1 | metadata_2 | metadata_3 | metadata_4 | metadata_5 | metadata_6 | metadata_7 | metadata_8 | metadata_9 | metadata_10 | metadata_11 | metadata_12 | metadata_13 | metadata_14 | metadata_15 | metadata_16 |
+| ------- | ----------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- |
+| Sample1 | SampleA     | meta_1     | meta_2     | meta_3     | meta_4     | meta_5     | meta_6     | meta_7     | meta_8     | meta_9     | meta_10     | meta_11     | meta_12     | meta_13     | meta_14     | meta_15     | meta_16     |
 
 The amount and meaning of the metadata columns may be different for each metadata transformation.
 
@@ -37,14 +37,22 @@ You may specify the metadata transformation with the `--transformation` paramete
 
 The following parameters can be used to rename CSV-generated output columns and Irida Next fields as follows:
 
-- `--metadata_1_header`: names the first metadata_1 column header
-- `--metadata_2_header`: names the first metadata_2 column header
-- `--metadata_3_header`: names the first metadata_3 column header
-- `--metadata_4_header`: names the first metadata_4 column header
-- `--metadata_5_header`: names the first metadata_5 column header
-- `--metadata_6_header`: names the first metadata_6 column header
-- `--metadata_7_header`: names the first metadata_7 column header
-- `--metadata_8_header`: names the first metadata_8 column header
+- `--metadata_1_header`: names the metadata_1 column header
+- `--metadata_2_header`: names the metadata_2 column header
+- `--metadata_3_header`: names the metadata_3 column header
+- `--metadata_4_header`: names the metadata_4 column header
+- `--metadata_5_header`: names the metadata_5 column header
+- `--metadata_6_header`: names the metadata_6 column header
+- `--metadata_7_header`: names the metadata_7 column header
+- `--metadata_8_header`: names the metadata_8 column header
+- `--metadata_9_header`: names the metadata_9 column header
+- `--metadata_10_header`: names the metadata_10 column header
+- `--metadata_11_header`: names the metadata_11 column header
+- `--metadata_12_header`: names the metadata_12 column header
+- `--metadata_13_header`: names the metadata_13 column header
+- `--metadata_14_header`: names the metadata_14 column header
+- `--metadata_15_header`: names the metadata_15 column header
+- `--metadata_16_header`: names the metadata_16 column header
 
 ## Age Parameters
 
@@ -71,7 +79,7 @@ sample3,GHI,2000-05-05,1950-12-31,,False,The dates are reversed.
 
 ## Age PNC Parameters
 
-The metadata header parameters (`--metadata_1_header` through `--metadata_8_header`) are required for the transformation. In particular, at least four of the metadata headers must be renamed to be exactly the following:
+The metadata header parameters (`--metadata_1_header` through `--metadata_16_header`) are required for the transformation. In particular, at least four of the metadata headers must be renamed to be exactly the following:
 
 - `host_date_of_birth_DOB`
 - `calc_earliest_date`
@@ -126,14 +134,22 @@ Furthermore, the following values are ignored and treated as "years" when provid
 
 The following parameters can be used to rename CSV-generated output columns as follows:
 
-- `--metadata_1_header`: names the first metadata_1 column header
-- `--metadata_2_header`: names the first metadata_2 column header
-- `--metadata_3_header`: names the first metadata_3 column header
-- `--metadata_4_header`: names the first metadata_4 column header
-- `--metadata_5_header`: names the first metadata_5 column header
-- `--metadata_6_header`: names the first metadata_6 column header
-- `--metadata_7_header`: names the first metadata_7 column header
-- `--metadata_8_header`: names the first metadata_8 column header
+- `--metadata_1_header`: names the metadata_1 column header
+- `--metadata_2_header`: names the metadata_2 column header
+- `--metadata_3_header`: names the metadata_3 column header
+- `--metadata_4_header`: names the metadata_4 column header
+- `--metadata_5_header`: names the metadata_5 column header
+- `--metadata_6_header`: names the metadata_6 column header
+- `--metadata_7_header`: names the metadata_7 column header
+- `--metadata_8_header`: names the metadata_8 column header
+- `--metadata_9_header`: names the metadata_9 column header
+- `--metadata_10_header`: names the metadata_10 column header
+- `--metadata_11_header`: names the metadata_11 column header
+- `--metadata_12_header`: names the metadata_12 column header
+- `--metadata_13_header`: names the metadata_13 column header
+- `--metadata_14_header`: names the metadata_14 column header
+- `--metadata_15_header`: names the metadata_15 column header
+- `--metadata_16_header`: names the metadata_16 column header
 - `--earliest_header`: names the earliest date column header and related output columns
 
 The above parameters will only affect the `results.csv` file and not the information returned to IRIDA Next. The earliest date column will be reported as `calc_earliest_date` in `results.csv`, `transformation.csv`, and the `iridanext.output.json` file, which is returned to IRIDA Next.

@@ -14,7 +14,7 @@ You will need to create a sample sheet with information about the samples you wo
 
 ### Full samplesheet
 
-The input samplesheet must contain the following columns: `sample`, and `metadata_1` through `metadata_8`. The IDs within a samplesheet should be unique. You may optionally provide a `sample_name` column, which will replace the Irida Next IDs in the `sample` column if available. All other columns will be ignored.
+The input samplesheet must contain the following columns: `sample`, and `metadata_1` through `metadata_16`. The IDs within a samplesheet should be unique. You may optionally provide a `sample_name` column, which will replace the Irida Next IDs in the `sample` column if available. All other columns will be ignored.
 
 A final samplesheet file contain the `sample_name` column may look something like the one below.
 
@@ -29,7 +29,7 @@ sample3,"GHI",3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | `sample`                 | Sample ID. Samples should be unique within a samplesheet. Likely Irida Next IDs.                                                           |
 | `sample_name`            | Sample name. Likely user-provided IDs that should be unique, but are not required to be unique. Will be used over `sample` when available. |
-| `metadata_1..metadata_8` | Metadata that will be used in the metadata transformations.                                                                                |
+| `metadata_1..16` | Metadata that will be used in the metadata transformations.                                                                                |
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
 
@@ -66,7 +66,7 @@ The lock transformation may be run as follows:
 nextflow run phac-nml/metadatatransformation -profile singularity -r main -latest --input assets/samplesheet.csv --outdir results --transformation lock
 ```
 
-You may wish to specify the `--metadata_1_header` through `--metadata_8_header` parameters to ensure the metadata is named as desired:
+You may wish to specify the `--metadata_1_header` through `--metadata_16_header` parameters to ensure the metadata is named as desired:
 
 ```bash
 nextflow run phac-nml/metadatatransformation -profile singularity -r main -latest --input assets/samplesheet.csv --outdir results --transformation lock --metadata_1_header country --metadata_2_header outbreak
@@ -96,7 +96,7 @@ The calculate age PNC transformation may be run as follows:
 nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/age/basic.csv --outdir results --transformation age_pnc --age_header calc_host_age --metadata_1_header host_date_of_birth_DOB --metadata_2_header calc_earliest_date --metadata_3_header host_age --metadata_4_header host_age_unit
 ```
 
-The metadata header parameters (`--metadata_1_header` through `--metadata_8_header`) are required for the transformation. In particular, at least four of the metadata headers must be renamed to the exactly the following:
+The metadata header parameters (`--metadata_1_header` through `--metadata_16_header`) are required for the transformation. In particular, at least four of the metadata headers must be renamed to the exactly the following:
 
 - `host_date_of_birth_DOB`
 - `calc_earliest_date`
@@ -127,9 +127,9 @@ The earliest date transformation may be run as follows:
 nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/earliest/basic.csv --outdir results --transformation earliest
 ```
 
-For this transformation, the `metadata_1` column through `metadata_8` column of the sample sheet are understood as containing a date or being empty. The transformation will determine the earliest date among these metadata columns.
+For this transformation, the `metadata_1` column through `metadata_16` column of the sample sheet are understood as containing a date or being empty. The transformation will determine the earliest date among these metadata columns.
 
-You may wish to specify the `--metadata_1_header` through `--metadata_8_header` parameters to provide appropriate column names in the `results.csv` file, but these headers do not affect results returned to IRIDA Next.
+You may wish to specify the `--metadata_1_header` through `--metadata_16_header` parameters to provide appropriate column names in the `results.csv` file, but these headers do not affect results returned to IRIDA Next.
 
 If at least one metadata column contains non-empty data that does not conform to the expected "YYYY-MM-DD" date format, then the sample will report an error and no date will be reported for the sample (even if one other valid date appears among the invalid metadata for that sample). However, the following special entries are ignored when calculating the earliest age (they are not considered malformed data): `Not Applicable`, `Missing`, `Not Collected`, `Not Provided`, `Restricted Access`, `(blank)`
 
@@ -141,7 +141,7 @@ The populate transformation may be run as follows:
 nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/populate/basic.csv --outdir results --transformation populate --populate_header "new_header" --populate_value "new_value"
 ```
 
-For this transformation, all input metadata (`metadata_1` through `metadata_8`) will be ignored. However, the transformation will write or overwrite the input metadata as specified by `--populate_header`. The value specified by `--populate_value` will be written for every sample under the column specified by `--populate_header`.
+For this transformation, all input metadata (`metadata_1` through `metadata_16`) will be ignored. However, the transformation will write or overwrite the input metadata as specified by `--populate_header`. The value specified by `--populate_value` will be written for every sample under the column specified by `--populate_header`.
 
 For example, when running the transformation with the following sample sheet:
 

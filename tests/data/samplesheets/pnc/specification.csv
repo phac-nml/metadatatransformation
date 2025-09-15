@@ -1,4 +1,4 @@
-sample,sample_name,isolate_received_date,isolation_date,sample_collection_date,sample_received_date_collaborator,sample_received_date_nml,sequencing_date,host_age,host_age_unit,host_date_of_birth_DOB,host_scientific_name,host_common_name,food_product,environmental_material,environmental_site
+sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8,metadata_9,metadata_10,metadata_11,metadata_12,metadata_13,metadata_14
 sample1,1,2025-03-01,2025-02-15,2025-02-01,,2025-03-02,2025-03-15,1,month,2025-01-01,Homo sapiens (Human),Human NCBITaxon:9606,Not Applicable,Not Applicable,Not Applicable
 sample2,2,2025-05-01,2025-04-16,2025-04-11,2025-04-12,2025-05-01,2025-05-16,90,day,2025-04-01,Homo sapiens (Human),Human NCBITaxon:9606,Missing,Missing,Missing
 sample3,3,2025-08-20,2025-08-22,2025-08-11,2025-08-13,2025-08-29,2025-08-29,40,year,1985-08-10,Homo sapiens (Human),Human NCBITaxon:9606,Not Collected,Not Collected,Not Collected
