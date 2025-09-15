@@ -173,6 +173,13 @@ def pnc(metadata):
     # The PNC transformation requires many exactly-matching
     # metadata column headers:
     required_headers = [SAMPLE_HEADER] + PNC_EARLIEST_DATE_HEADERS + CATEGORIZE_HEADERS + PNC_AGE_HEADERS
+
+    # The PNC_AGE_DATE_HEADER is normally required for the
+    # Age PNC transformation, but is calculated during the
+    # chained PNC transformation during the earliest date step.
+    if(PNC_AGE_DATE_HEADER in required_headers):
+        required_headers.remove(PNC_AGE_DATE_HEADER)
+
     missing_headers = [col for col in required_headers if col not in metadata.columns]
 
     if len(missing_headers) > 0:
