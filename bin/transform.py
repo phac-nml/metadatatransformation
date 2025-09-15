@@ -170,17 +170,34 @@ def categorize(metadata):
     return metadata_readable, metadata_irida
 
 def pnc(metadata):
+    # The PNC transformation requires many exactly-matching
+    # metadata column headers:
+    required_headers = [SAMPLE_HEADER] + PNC_EARLIEST_DATE_HEADERS + CATEGORIZE_HEADERS + PNC_AGE_HEADERS
+    missing_headers = [col for col in required_headers if col not in metadata.columns]
+
+    if len(missing_headers) > 0:
+        metadata_irida = pandas.DataFrame({SAMPLE_HEADER:[]})
+        metadata_readable = metadata.copy(deep=True)
+        metadata_readable[CATEGORIZE_RESULTS_HEADERS] = pandas.Series([pandas.NA, False, "Missing headers: " + str(missing_headers)])
+        metadata_readable[PNC_EARLIEST_RESULTS_HEADERS] = pandas.Series([pandas.NA, False, "Missing headers: " + str(missing_headers)])
+        metadata_readable[PNC_AGE_RESULTS_HEADERS] = pandas.Series([pandas.NA, False, "Missing headers: " + str(missing_headers)])
+        return metadata_readable, metadata_irida
+
+    # Categorize
     categorize_readable, categorize_irida = categorize(metadata)
     categorize_readable = categorize_readable[CATEGORIZE_COMBINED_RESULTS_HEADERS]
 
+    # Earliest
     metadata_earliest = metadata[[SAMPLE_HEADER] + PNC_EARLIEST_DATE_HEADERS]
     earliest_readable, earliest_irida = earliest(metadata_earliest, EARLIEST_HEADER_PNC)
-    earliest_readable = earliest_readable[PNC_EARLIEST_DATE_COMBINED_HEADERS]
+    earliest_readable = earliest_readable[PNC_EARLIEST_DATE_COMBINED_RESULTS_HEADERS]
 
+    # Age PNC
     metadata_age_pnc = metadata.merge(earliest_irida, how="inner", on=SAMPLE_HEADER)
     age_pnc_readable, age_pnc_irida = age_pnc(metadata_age_pnc, AGE_PNC_HEADER)
     age_pnc_readable = age_pnc_readable[PNC_AGE_COMBINED_RESULTS_HEADERS]
 
+    # Merge
     metadata_readable = categorize_readable.merge(earliest_readable, how="inner", on=SAMPLE_HEADER)
     metadata_readable = metadata_readable.merge(age_pnc_readable, how="inner", on=SAMPLE_HEADER)
 
