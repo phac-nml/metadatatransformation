@@ -199,13 +199,13 @@ def calculate_age_pnc(row):
 
         # Negative:
         if age_value < 0:
-            result = pandas.Series([age_value, False, f"{AGE_PNC_HEADER} is negative"])
+            result = pandas.Series([numpy.nan, False, f"{AGE_PNC_HEADER} is negative"])
         # Exactly zero:
         elif age_value == 0:
-            result = pandas.Series([age_value, False, f"{AGE_PNC_HEADER} cannot be exactly zero"])
+            result = pandas.Series([numpy.nan, False, f"{AGE_PNC_HEADER} cannot be exactly zero"])
         # Too large:
         elif age_value > MAX_AGE:
-            result = pandas.Series([age_value, False, f"{AGE_PNC_HEADER} is too large"])
+            result = pandas.Series([numpy.nan, False, f"{AGE_PNC_HEADER} is too large"])
 
     return result
 

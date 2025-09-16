@@ -681,11 +681,7 @@ nextflow_pipeline {
             assert transformation.text.contains("sample23,10")
             assert transformation.text.contains("sample24,10")
             assert transformation.text.contains("sample25,10")
-            assert transformation.text.contains("sample26,-1.0000")
-            assert transformation.text.contains("sample27,500")
-            assert transformation.text.contains("sample28,500")
             assert transformation.text.contains("sample29,150")
-            assert transformation.text.contains("sample32,0.0000")
             assert transformation.text.contains("sample33,0.0962")
 
             // Check Results (Human-Readable)
@@ -718,13 +714,13 @@ nextflow_pipeline {
             assert results.text.contains("sample23,23,,,10,Not Provided,10,True,")
             assert results.text.contains("sample24,24,,,10,Restricted Access,10,True,")
             assert results.text.contains("sample25,25,,,10,,10,True,")
-            assert results.text.contains("sample26,26,,2020-01-12,-1,,-1.0000,False,calc_host_age is negative")
-            assert results.text.contains("sample27,27,,1998-06-15,500,year,500,False,calc_host_age is too large")
-            assert results.text.contains("sample28,28,,1900-01-01,500,,500,False,calc_host_age is too large")
+            assert results.text.contains("sample26,26,,2020-01-12,-1,,,False,calc_host_age is negative")
+            assert results.text.contains("sample27,27,,1998-06-15,500,year,,False,calc_host_age is too large")
+            assert results.text.contains("sample28,28,,1900-01-01,500,,,False,calc_host_age is too large")
             assert results.text.contains("sample29,29,,,150,year,150,True,")
             assert results.text.contains("sample30,30,,,fledgling,year,,False,host_age (fledgling) could not be converted to a number")
             assert results.text.contains("sample31,31,,2019-12-22,1/2,,,False,host_age (1/2) could not be converted to a number")
-            assert results.text.contains("sample32,32,,2017-06-14,0,,0.0000,False,calc_host_age cannot be exactly zero")
+            assert results.text.contains("sample32,32,,2017-06-14,0,,,False,calc_host_age cannot be exactly zero")
             assert results.text.contains("sample33,33,,2019-07-12,5,week,0.0962,True,")
             assert results.text.contains("sample34,34,,2018-01-08,toddler,,,False,host_age (toddler) could not be converted to a number")
             assert results.text.contains("sample35,35,2015-06-30,2015-06-30,40,year,,False,calc_host_age and host_age are greater than 1 year(s) different")
@@ -737,7 +733,7 @@ nextflow_pipeline {
 
             assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
 
-            assert iridanext_metadata.size() == 25
+            assert iridanext_metadata.size() == 21
 
             assert iridanext_metadata.containsKey("sample1")
             assert iridanext_metadata.sample1.calc_host_age == "0.0841"
@@ -808,14 +804,11 @@ nextflow_pipeline {
             assert iridanext_metadata.containsKey("sample25")
             assert iridanext_metadata.sample25.calc_host_age == "10"
 
-            assert iridanext_metadata.containsKey("sample26")
-            assert iridanext_metadata.sample26.calc_host_age == "-1.0000"
+            assert iridanext_metadata.containsKey("sample26") == false
 
-            assert iridanext_metadata.containsKey("sample27")
-            assert iridanext_metadata.sample27.calc_host_age == "500"
+            assert iridanext_metadata.containsKey("sample27") == false
 
-            assert iridanext_metadata.containsKey("sample28")
-            assert iridanext_metadata.sample28.calc_host_age == "500"
+            assert iridanext_metadata.containsKey("sample28") == false
 
             assert iridanext_metadata.containsKey("sample29")
             assert iridanext_metadata.sample29.calc_host_age == "150"
@@ -824,8 +817,7 @@ nextflow_pipeline {
 
             assert iridanext_metadata.containsKey("sample31") == false
 
-            assert iridanext_metadata.containsKey("sample32")
-            assert iridanext_metadata.sample32.calc_host_age == "0.0000"
+            assert iridanext_metadata.containsKey("sample32") == false
 
             assert iridanext_metadata.containsKey("sample33")
             assert iridanext_metadata.sample33.calc_host_age == "0.0962"
