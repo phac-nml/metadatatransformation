@@ -121,6 +121,79 @@ nextflow_pipeline {
 
             assert results.text.contains("sample,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type,calc_source_type_valid,calc_source_type_error,isolate_received_date,isolation_date,sample_collection_date,sample_received_date_collaborator,sample_received_date_nml,sequencing_date,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error,host_date_of_birth_DOB,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
             assert results.text.contains("sample1,Homo sapiens (Human),Human NCBITaxon:9606,Not Applicable,Not Applicable,Not Applicable,Human,True,,2025-03-01,2025-02-15,2025-02-01,,2025-03-02,2025-03-15,2025-02-01,True,,2025-01-01,1,month,0.0841,True,")
+            assert results.text.contains("sample2,Homo sapiens (Human),Human NCBITaxon:9606,Missing,Missing,Missing,Human,True,,2025-05-01,2025-04-16,2025-04-11,2025-04-12,2025-05-01,2025-05-16,2025-04-11,True,,2025-04-01,90,day,0.1370,True,")
+            assert results.text.contains("sample3,Homo sapiens (Human),Human NCBITaxon:9606,Not Collected,Not Collected,Not Collected,Human,True,,2025-08-20,2025-08-22,2025-08-11,2025-08-13,2025-08-29,2025-08-29,2025-08-11,True,,1985-08-10,40,year,40,True,")
+            assert results.text.contains("sample4,Homo sapiens (Human),Human NCBITaxon:9606,Not Provided,Not Provided,Not Provided,Human,True,,2025-03-01,2025-02-15,2025-02-01,,2025-03-02,2025-03-15,2025-02-01,True,,,1,month,0.0833,True,")
+            assert results.text.contains("sample5,Homo sapiens (Human),Human NCBITaxon:9606,Restricted Access,Restricted Access,Restricted Access,Human,True,,2025-05-01,2025-04-16,2025-04-11,2025-04-12,2025-05-01,2025-05-16,2025-04-11,True,,,90,day,0.2466,True,")
+            assert results.text.contains("sample6,Homo sapiens (Human),Human NCBITaxon:9606,Not Applicable,Not Collected,Missing,Human,True,,2025-08-20,2025-08-22,2025-08-11,2025-08-13,2025-08-29,2025-08-29,2025-08-11,True,,,40,year,40,True,")
+            assert results.text.contains("sample7,Homo sapiens (Human),Human NCBITaxon:9606,Not Provided,,Restricted Access,Human,True,,2025-03-01,2025-02-15,2025-02-01,,2025-03-02,2025-03-15,2025-02-01,True,,Not Applicable,1,month,0.0833,True,")
+            assert results.text.contains("sample8,Homo sapiens (Human),Not Applicable,,,,Human,True,,2025-05-01,2025-04-16,2025-04-11,2025-04-12,2025-05-01,2025-05-16,2025-04-11,True,,Missing,90,day,0.2466,True,")
+            assert results.text.contains("sample9,Homo sapiens (Human),Missing,,,,Human,True,,Not Provided,2025-08-22,2025-08-11,2025-08-13,Not Provided,2025-08-29,2025-08-11,True,,Not Collected,40,year,40,True,")
+            assert results.text.contains("sample10,Homo sapiens (Human),Not Collected,,,,Human,True,,2025-03-01,2025-02-15,2025-02-01,,2025-03-02,2025-03-15,2025-02-01,True,,Not Provided,1,month,0.0833,True,")
+            assert results.text.contains("sample11,Homo sapiens (Human),Not Provided,,,,Human,True,,2025-05-01,Not Provided,2025-04-11,Restricted Access,2025-05-01,Missing,2025-04-11,True,,Restricted Access,90,day,0.2466,True,")
+            assert results.text.contains("sample12,Homo sapiens (Human),Restricted Access,,,,Human,True,,,,,,,,,False,No data was found.,,10,,10,True,")
+            assert results.text.contains("sample13,Homo sapiens (Human),,,,,Human,True,,,,,,,,,False,No data was found.,,10,cycles,,False,invalid host_age_unit (cycles)")
+            assert results.text.contains("sample14,Not Applicable,Human NCBITaxon:9606,,,,Human,True,,,,,,,,,False,No data was found.,,10,units,,False,invalid host_age_unit (units)")
+            assert results.text.contains("sample15,Missing,Human NCBITaxon:9606,,,,Human,True,,,,,,,,,False,No data was found.,,10,Restricted Access,10,True,")
+            assert results.text.contains("sample16,Not Collected,Human NCBITaxon:9606,,,,Human,True,,,,,,,,,False,No data was found.,2025-01-01,10,,,False,host_date_of_birth_DOB provided but calc_earliest_date is missing")
+            assert results.text.contains("sample17,Not Provided,Human NCBITaxon:9606,,,,Human,True,,,,,,,,,False,No data was found.,2025-01-01,10,cycles,,False,host_date_of_birth_DOB provided but calc_earliest_date is missing")
+            assert results.text.contains("sample18,Restricted Access,Human NCBITaxon:9606,,,,Human,True,,,,,,,,,False,No data was found.,2025-01-01,10,units,,False,host_date_of_birth_DOB provided but calc_earliest_date is missing")
+            assert results.text.contains("sample19,,Human NCBITaxon:9606,,,,Human,True,,,,,,,,,False,No data was found.,2025-01-01,10,bananas,,False,host_date_of_birth_DOB provided but calc_earliest_date is missing")
+            assert results.text.contains("sample20,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,,Not Applicable,Missing,Not Collected,Not Provided,Restricted Access,,False,No dates were found.,,10,Not Applicable,10,True,")
+            assert results.text.contains("sample21,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2025,Jan-25,2025-05-01,,,,,False,At least one of the dates are incorrectly formatted.,,10,Missing,10,True,")
+            assert results.text.contains("sample22,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2025-Jan,,Not Applicable,Not Applicable,,,,False,At least one of the dates are incorrectly formatted.,,10,Not Collected,10,True,")
+            assert results.text.contains("sample23,Homo sapiens (Human),Human NCBITaxon:9606,,Not Applicable,,Human,True,,1800-01-01,1800-01-01,1800-01-01,2025-05-01,2025-05-01,2025-05-01,1800-01-01,True,,,10,Not Provided,10,True,")
+            assert results.text.contains("sample24,Homo sapiens (Human),Human NCBITaxon:9606,,,Not Applicable,Human,True,,2035-01-01,2035-01-01,2035-01-01,2025-05-01,2035-01-01,2035-01-01,2025-05-01,True,,,10,Restricted Access,10,True,")
+            assert results.text.contains("sample25,Homo sapiens (Human),Human NCBITaxon:9606,Not Applicable,,,Human,True,,1800-01-01,2035-01-01,,2025-05-01,,,1800-01-01,True,,,10,,10,True,")
+            assert results.text.contains("sample26,Gallus gallus,Human NCBITaxon:9606,,,,Host Conflict,True,,2020-01-12,2020-01-13,2020-01-14,2020-01-15,2020-01-16,2020-01-17,2020-01-12,True,,,-1,,,False,calc_host_age is negative")
+            assert results.text.contains("sample27,Homo sapiens (Human),Chicken,,,,Host Conflict,True,,1998-06-15,2025-01-01,1998-12-12,2001-03-17,2025-01-01,2025-01-01,1998-06-15,True,,,500,year,,False,calc_host_age is too large")
+            assert results.text.contains("sample28,Homo,Hum,,,,Animal,True,,1900-01-01,1900-01-01,1900-01-01,2000-07-19,2025-03-08,2025-06-06,1900-01-01,True,,,500,,,False,calc_host_age is too large")
+            assert results.text.contains("sample29,Gallus gallus,Chicken,Not Applicable,Not Applicable,Not Applicable,Animal,True,,1899-12-31,1899-12-31,1899-12-31,2000-07-19,2025-03-08,2025-06-06,1899-12-31,True,,,150,year,150,True,")
+            assert results.text.contains("sample30,Gallus gallus,Not Applicable,Missing,Missing,Missing,Animal,True,,,,,,,,,False,No data was found.,,fledgling,year,,False,host_age (fledgling) could not be converted to a number")
+            assert results.text.contains("sample31,Gallus gallus,Missing,Not Collected,Not Collected,Not Collected,Animal,True,,2020-01-01,2020-04-07,2019-12-23,2020-04-19,2019-12-22,2020-04-18,2019-12-22,True,,,1/2,,,False,host_age (1/2) could not be converted to a number")
+            assert results.text.contains("sample32,Gallus gallus,Not Collected,Not Provided,Not Provided,Not Provided,Animal,True,,2017-06-28,2017-06-14,2017-07-17,2017-07-11,2017-08-15,2017-08-09,2017-06-14,True,,,0,,,False,calc_host_age cannot be exactly zero")
+            assert results.text.contains("sample33,Gallus gallus,Not Provided,Restricted Access,Restricted Access,Restricted Access,Animal,True,,2019-10-06,2019-07-12,2019-10-03,2019-08-10,2019-09-16,2019-08-17,2019-07-12,True,,,5,week,0.0962,True,")
+            assert results.text.contains("sample34,Gallus gallus,Restricted Access,Not Applicable,Not Collected,Missing,Animal,True,,2018-01-23,2018-01-08,2018-01-31,2018-02-05,2018-02-06,2018-01-27,2018-01-08,True,,,toddler,,,False,host_age (toddler) could not be converted to a number")
+            assert results.text.contains("sample35,Gallus gallus,,Not Provided,,Restricted Access,Animal,True,,2015-08-03,2015-08-30,2015-07-11,2015-08-11,2015-06-30,2015-07-20,2015-06-30,True,,2015-06-30,40,year,,False,calc_host_age and host_age are greater than 1 year(s) different")
+            assert results.text.contains("sample36,Not Applicable,Chicken,,,,Animal,True,,2013-07-21,2013-08-27,2013-07-06,2013-08-16,2013-06-19,2013-09-11,2013-06-19,True,,2010-06-19,1,month,,False,calc_host_age and host_age are greater than 1 year(s) different")
+            assert results.text.contains("sample37,Missing,Chicken,,,,Animal,True,,2011-04-19,2011-07-27,2011-04-02,2011-08-24,2011-03-20,2011-09-10,2011-03-20,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample38,Not Collected,Chicken,,,,Animal,True,,2008-08-11,2008-07-01,2008-09-09,2008-07-29,2008-10-08,2008-07-12,2008-07-01,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample39,Not Provided,Chicken,,,,Animal,True,,2008-10-10,2008-11-11,2008-10-04,2008-10-13,2008-09-19,2008-09-27,2008-09-19,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample40,Restricted Access,Chicken,,,,Animal,True,,2008-05-22,2008-06-27,2008-06-01,2008-06-07,2008-06-16,2008-06-28,2008-05-22,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample41,,Chicken,,,,Animal,True,,2005-08-26,2005-09-03,2005-08-12,2005-08-31,2005-08-18,2005-08-03,2005-08-03,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample42,,Chicken,,,,Animal,True,,2006-05-14,2006-08-05,2006-06-05,2006-08-10,2006-06-11,2006-08-02,2006-05-14,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample43,Not Applicable,,Drumstick,,,Food,True,,2006-09-12,2006-11-16,2006-09-09,2006-12-02,2006-09-06,2006-11-27,2006-09-06,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample44,Missing,,Leg,,,Food,True,,2006-03-30,2006-06-09,2006-04-27,2006-06-16,2006-04-06,2006-06-05,2006-03-30,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample45,Not Collected,,RTE Meal,,,Food,True,,2005-11-18,2006-01-07,2005-11-29,2006-01-23,2005-12-19,2006-02-09,2005-11-18,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample46,Not Provided,,Breast,,,Food,True,,2006-01-11,2005-10-30,2005-12-23,2005-09-30,2005-12-29,2005-09-25,2005-09-25,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample47,Restricted Access,,Thigh,,,Food,True,,2005-06-21,2005-05-23,2005-07-01,2005-04-27,2005-07-29,2005-05-26,2005-04-27,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample48,Not Applicable,,Apple,,,Food,True,,2006-02-25,2006-04-09,2006-03-09,2006-04-18,2006-03-31,2006-04-06,2006-02-25,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample49,Not Provided,,Drumstick,,,Food,True,,2007-09-08,2007-07-14,2007-09-12,2007-07-13,2007-09-09,2007-06-29,2007-06-29,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample50,,,Leg,,,Food,True,,2006-12-28,2007-01-11,2006-12-29,2006-12-24,2006-12-01,2006-11-24,2006-11-24,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample51,,Not Applicable,RTE Meal,,,Food,True,,2006-07-02,2006-06-27,2006-06-24,2006-06-03,2006-06-05,2006-05-22,2006-05-22,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample52,,Missing,Breast,,,Food,True,,2007-12-24,2007-10-12,2007-11-26,2007-09-26,2007-11-14,2007-10-18,2007-09-26,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample53,,Not Collected,Thigh,,,Food,True,,2008-04-12,2008-07-01,2008-04-13,2008-07-28,2008-04-08,2008-07-05,2008-04-08,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample54,,Not Provided,Apple,,,Food,True,,2006-11-19,2006-08-17,2006-11-17,2006-08-16,2006-12-02,2006-08-29,2006-08-16,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample55,,Restricted Access,Drumstick,,,Food,True,,2008-01-29,2007-10-29,2008-02-12,2007-10-12,2008-02-07,2007-11-11,2007-10-12,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample56,,Not Applicable,Leg,,,Food,True,,2007-04-05,2007-01-06,2007-04-30,2007-01-17,2007-04-19,2007-02-16,2007-01-06,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample57,,Not Provided,RTE Meal,,,Food,True,,2005-10-09,2005-12-27,2005-10-31,2005-12-12,2005-10-12,2005-12-18,2005-10-09,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample58,Not Applicable,,,Not Applicable,Bedding,Environmental,True,,2006-11-01,2007-01-02,2006-11-16,2006-12-31,2006-11-17,2006-12-21,2006-11-01,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample59,Missing,,,Missing,Matt,Environmental,True,,2006-09-11,2006-10-09,2006-09-06,2006-10-13,2006-08-16,2006-10-14,2006-08-16,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample60,Not Collected,,,Not Collected,Steel,Environmental,True,,2006-04-29,2006-03-13,2006-05-21,2006-03-22,2006-05-14,2006-02-26,2006-02-26,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample61,Not Provided,,,Not Provided,Thigh,Environmental,True,,2004-10-29,2004-12-20,2004-10-08,2004-12-15,2004-09-13,2004-11-18,2004-09-13,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample62,Restricted Access,,,Restricted Accesss,Breast,Environmental,True,,2004-12-30,2004-11-10,2004-12-16,2004-11-15,2005-01-08,2004-11-17,2004-11-10,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample63,Not Applicable,,,Not Collected,Bedding,Environmental,True,,2002-12-23,2003-03-14,2003-01-11,2003-03-21,2003-01-19,2003-04-08,2002-12-23,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample64,Not Provided,,,,Matt,Environmental,True,,2001-05-18,2001-06-18,2001-06-06,2001-06-30,2001-05-14,2001-06-18,2001-05-14,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample65,,,,Hospital,Not Applicable,Environmental,True,,2003-10-01,2003-07-21,2003-09-01,2003-07-31,2003-09-15,2003-07-22,2003-07-21,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample66,,Not Applicable,,Farm,Missing,Environmental,True,,2005-01-25,2004-10-31,2005-01-05,2004-11-28,2005-01-11,2004-12-23,2004-10-31,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample67,,Missing,,Barn,Not Collected,Environmental,True,,2005-06-07,2005-03-26,2005-06-14,2005-04-13,2005-06-02,2005-05-08,2005-03-26,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample68,,Not Collected,,Water,Not Provided,Environmental,True,,2003-08-12,2003-09-26,2003-09-01,2003-10-17,2003-09-21,2003-09-20,2003-08-12,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample69,,Not Provided,,Sediment,Restricted Access,Environmental,True,,2004-01-29,2003-12-10,2004-01-18,2003-11-14,2004-01-04,2003-10-24,2003-10-24,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample70,,Restricted Access,,Factory,Not Collected,Environmental,True,,2002-11-17,2002-10-01,2002-12-11,2002-09-24,2002-11-12,2002-09-07,2002-09-07,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample71,,Not Applicable,,Site 12,,Environmental,True,,2004-02-03,2003-12-05,2004-02-29,2003-11-07,2004-03-15,2003-11-09,2003-11-07,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample72,,Not Provided,,,,Unknown,True,,2002-08-19,2002-07-20,2002-07-27,2002-06-29,2002-07-19,2002-06-10,2002-06-10,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample73,Homo sapiens (Human),Human NCBITaxon:9606,Not Applicable,Hospital,Bedding,Human,True,,2001-05-21,2001-04-17,2001-05-03,2001-03-21,2001-04-05,2001-04-15,2001-03-21,True,,,,,,False,Insufficient data to calculate an age")
+            assert results.text.contains("sample74,Homo sapiens (Human),Human NCBITaxon:9606,Leg,,,Human,True,,2001-01-26,2001-03-20,2001-02-19,2001-03-11,2001-01-27,2001-03-15,2001-01-26,True,,,,,,False,Insufficient data to calculate an age")
 
             // Check IRIDA Next JSON Output
             def iridanext_json = path("$launchDir/results/iridanext.output.json").json
@@ -135,6 +208,371 @@ nextflow_pipeline {
             assert iridanext_metadata.sample1.calc_source_type == "Human"
             assert iridanext_metadata.sample1.calc_earliest_date == "2025-02-01"
             assert iridanext_metadata.sample1.calc_host_age == "0.0841"
+
+            assert iridanext_metadata.containsKey("sample2")
+            assert iridanext_metadata.sample2.calc_source_type == "Human"
+            assert iridanext_metadata.sample2.calc_earliest_date == "2025-04-11"
+            assert iridanext_metadata.sample2.calc_host_age == "0.1370"
+
+            assert iridanext_metadata.containsKey("sample3")
+            assert iridanext_metadata.sample3.calc_source_type == "Human"
+            assert iridanext_metadata.sample3.calc_earliest_date == "2025-08-11"
+            assert iridanext_metadata.sample3.calc_host_age == "40"
+
+            assert iridanext_metadata.containsKey("sample4")
+            assert iridanext_metadata.sample4.calc_source_type == "Human"
+            assert iridanext_metadata.sample4.calc_earliest_date == "2025-02-01"
+            assert iridanext_metadata.sample4.calc_host_age == "0.0833"
+
+            assert iridanext_metadata.containsKey("sample5")
+            assert iridanext_metadata.sample5.calc_source_type == "Human"
+            assert iridanext_metadata.sample5.calc_earliest_date == "2025-04-11"
+            assert iridanext_metadata.sample5.calc_host_age == "0.2466"
+
+            assert iridanext_metadata.containsKey("sample6")
+            assert iridanext_metadata.sample6.calc_source_type == "Human"
+            assert iridanext_metadata.sample6.calc_earliest_date == "2025-08-11"
+            assert iridanext_metadata.sample6.calc_host_age == "40"
+
+            assert iridanext_metadata.containsKey("sample7")
+            assert iridanext_metadata.sample7.calc_source_type == "Human"
+            assert iridanext_metadata.sample7.calc_earliest_date == "2025-02-01"
+            assert iridanext_metadata.sample7.calc_host_age == "0.0833"
+
+            assert iridanext_metadata.containsKey("sample8")
+            assert iridanext_metadata.sample8.calc_source_type == "Human"
+            assert iridanext_metadata.sample8.calc_earliest_date == "2025-04-11"
+            assert iridanext_metadata.sample8.calc_host_age == "0.2466"
+
+            assert iridanext_metadata.containsKey("sample9")
+            assert iridanext_metadata.sample9.calc_source_type == "Human"
+            assert iridanext_metadata.sample9.calc_earliest_date == "2025-08-11"
+            assert iridanext_metadata.sample9.calc_host_age == "40"
+
+            assert iridanext_metadata.containsKey("sample10")
+            assert iridanext_metadata.sample10.calc_source_type == "Human"
+            assert iridanext_metadata.sample10.calc_earliest_date == "2025-02-01"
+            assert iridanext_metadata.sample10.calc_host_age == "0.0833"
+
+            assert iridanext_metadata.containsKey("sample11")
+            assert iridanext_metadata.sample11.calc_source_type == "Human"
+            assert iridanext_metadata.sample11.calc_earliest_date == "2025-04-11"
+            assert iridanext_metadata.sample11.calc_host_age == "0.2466"
+
+            assert iridanext_metadata.containsKey("sample12")
+            assert iridanext_metadata.sample12.calc_source_type == "Human"
+            assert iridanext_metadata.sample12.calc_earliest_date == ""
+            assert iridanext_metadata.sample12.calc_host_age == "10"
+
+            assert iridanext_metadata.containsKey("sample13")
+            assert iridanext_metadata.sample13.calc_source_type == "Human"
+            assert iridanext_metadata.sample13.calc_earliest_date == ""
+            assert iridanext_metadata.sample13.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample14")
+            assert iridanext_metadata.sample14.calc_source_type == "Human"
+            assert iridanext_metadata.sample14.calc_earliest_date == ""
+            assert iridanext_metadata.sample14.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample15")
+            assert iridanext_metadata.sample15.calc_source_type == "Human"
+            assert iridanext_metadata.sample15.calc_earliest_date == ""
+            assert iridanext_metadata.sample15.calc_host_age == "10"
+
+            assert iridanext_metadata.containsKey("sample16")
+            assert iridanext_metadata.sample16.calc_source_type == "Human"
+            assert iridanext_metadata.sample16.calc_earliest_date == ""
+            assert iridanext_metadata.sample16.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample17")
+            assert iridanext_metadata.sample17.calc_source_type == "Human"
+            assert iridanext_metadata.sample17.calc_earliest_date == ""
+            assert iridanext_metadata.sample17.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample18")
+            assert iridanext_metadata.sample18.calc_source_type == "Human"
+            assert iridanext_metadata.sample18.calc_earliest_date == ""
+            assert iridanext_metadata.sample18.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample19")
+            assert iridanext_metadata.sample19.calc_source_type == "Human"
+            assert iridanext_metadata.sample19.calc_earliest_date == ""
+            assert iridanext_metadata.sample19.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample20")
+            assert iridanext_metadata.sample20.calc_source_type == "Human"
+            assert iridanext_metadata.sample20.calc_earliest_date == ""
+            assert iridanext_metadata.sample20.calc_host_age == "10"
+
+            assert iridanext_metadata.containsKey("sample21")
+            assert iridanext_metadata.sample21.calc_source_type == "Human"
+            assert iridanext_metadata.sample21.calc_earliest_date == ""
+            assert iridanext_metadata.sample21.calc_host_age == "10"
+
+            assert iridanext_metadata.containsKey("sample22")
+            assert iridanext_metadata.sample22.calc_source_type == "Human"
+            assert iridanext_metadata.sample22.calc_earliest_date == ""
+            assert iridanext_metadata.sample22.calc_host_age == "10"
+
+            assert iridanext_metadata.containsKey("sample23")
+            assert iridanext_metadata.sample23.calc_source_type == "Human"
+            assert iridanext_metadata.sample23.calc_earliest_date == "1800-01-01"
+            assert iridanext_metadata.sample23.calc_host_age == "10"
+
+            assert iridanext_metadata.containsKey("sample24")
+            assert iridanext_metadata.sample24.calc_source_type == "Human"
+            assert iridanext_metadata.sample24.calc_earliest_date == "2025-05-01"
+            assert iridanext_metadata.sample24.calc_host_age == "10"
+
+            assert iridanext_metadata.containsKey("sample25")
+            assert iridanext_metadata.sample25.calc_source_type == "Human"
+            assert iridanext_metadata.sample25.calc_earliest_date == "1800-01-01"
+            assert iridanext_metadata.sample25.calc_host_age == "10"
+
+            assert iridanext_metadata.containsKey("sample26")
+            assert iridanext_metadata.sample26.calc_source_type == "Host Conflict"
+            assert iridanext_metadata.sample26.calc_earliest_date == "2020-01-12"
+            assert iridanext_metadata.sample26.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample27")
+            assert iridanext_metadata.sample27.calc_source_type == "Host Conflict"
+            assert iridanext_metadata.sample27.calc_earliest_date == "1998-06-15"
+            assert iridanext_metadata.sample27.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample28")
+            assert iridanext_metadata.sample28.calc_source_type == "Animal"
+            assert iridanext_metadata.sample28.calc_earliest_date == "1900-01-01"
+            assert iridanext_metadata.sample28.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample29")
+            assert iridanext_metadata.sample29.calc_source_type == "Animal"
+            assert iridanext_metadata.sample29.calc_earliest_date == "1899-12-31"
+            assert iridanext_metadata.sample29.calc_host_age == "150"
+
+            assert iridanext_metadata.containsKey("sample30")
+            assert iridanext_metadata.sample30.calc_source_type == "Animal"
+            assert iridanext_metadata.sample30.calc_earliest_date == ""
+            assert iridanext_metadata.sample30.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample31")
+            assert iridanext_metadata.sample31.calc_source_type == "Animal"
+            assert iridanext_metadata.sample31.calc_earliest_date == "2019-12-22"
+            assert iridanext_metadata.sample31.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample32")
+            assert iridanext_metadata.sample32.calc_source_type == "Animal"
+            assert iridanext_metadata.sample32.calc_earliest_date == "2017-06-14"
+            assert iridanext_metadata.sample32.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample33")
+            assert iridanext_metadata.sample33.calc_source_type == "Animal"
+            assert iridanext_metadata.sample33.calc_earliest_date == "2019-07-12"
+            assert iridanext_metadata.sample33.calc_host_age == "0.0962"
+
+            assert iridanext_metadata.containsKey("sample34")
+            assert iridanext_metadata.sample34.calc_source_type == "Animal"
+            assert iridanext_metadata.sample34.calc_earliest_date == "2018-01-08"
+            assert iridanext_metadata.sample34.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample35")
+            assert iridanext_metadata.sample35.calc_source_type == "Animal"
+            assert iridanext_metadata.sample35.calc_earliest_date == "2015-06-30"
+            assert iridanext_metadata.sample35.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample36")
+            assert iridanext_metadata.sample36.calc_source_type == "Animal"
+            assert iridanext_metadata.sample36.calc_earliest_date == "2013-06-19"
+            assert iridanext_metadata.sample36.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample37")
+            assert iridanext_metadata.sample37.calc_source_type == "Animal"
+            assert iridanext_metadata.sample37.calc_earliest_date == "2011-03-20"
+            assert iridanext_metadata.sample37.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample38")
+            assert iridanext_metadata.sample38.calc_source_type == "Animal"
+            assert iridanext_metadata.sample38.calc_earliest_date == "2008-07-01"
+            assert iridanext_metadata.sample38.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample39")
+            assert iridanext_metadata.sample39.calc_source_type == "Animal"
+            assert iridanext_metadata.sample39.calc_earliest_date == "2008-09-19"
+            assert iridanext_metadata.sample39.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample40")
+            assert iridanext_metadata.sample40.calc_source_type == "Animal"
+            assert iridanext_metadata.sample40.calc_earliest_date == "2008-05-22"
+            assert iridanext_metadata.sample40.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample41")
+            assert iridanext_metadata.sample41.calc_source_type == "Animal"
+            assert iridanext_metadata.sample41.calc_earliest_date == "2005-08-03"
+            assert iridanext_metadata.sample41.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample42")
+            assert iridanext_metadata.sample42.calc_source_type == "Animal"
+            assert iridanext_metadata.sample42.calc_earliest_date == "2006-05-14"
+            assert iridanext_metadata.sample42.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample43")
+            assert iridanext_metadata.sample43.calc_source_type == "Food"
+            assert iridanext_metadata.sample43.calc_earliest_date == "2006-09-06"
+            assert iridanext_metadata.sample43.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample44")
+            assert iridanext_metadata.sample44.calc_source_type == "Food"
+            assert iridanext_metadata.sample44.calc_earliest_date == "2006-03-30"
+            assert iridanext_metadata.sample44.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample45")
+            assert iridanext_metadata.sample45.calc_source_type == "Food"
+            assert iridanext_metadata.sample45.calc_earliest_date == "2005-11-18"
+            assert iridanext_metadata.sample45.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample46")
+            assert iridanext_metadata.sample46.calc_source_type == "Food"
+            assert iridanext_metadata.sample46.calc_earliest_date == "2005-09-25"
+            assert iridanext_metadata.sample46.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample47")
+            assert iridanext_metadata.sample47.calc_source_type == "Food"
+            assert iridanext_metadata.sample47.calc_earliest_date == "2005-04-27"
+            assert iridanext_metadata.sample47.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample48")
+            assert iridanext_metadata.sample48.calc_source_type == "Food"
+            assert iridanext_metadata.sample48.calc_earliest_date == "2006-02-25"
+            assert iridanext_metadata.sample48.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample49")
+            assert iridanext_metadata.sample49.calc_source_type == "Food"
+            assert iridanext_metadata.sample49.calc_earliest_date == "2007-06-29"
+            assert iridanext_metadata.sample49.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample50")
+            assert iridanext_metadata.sample50.calc_source_type == "Food"
+            assert iridanext_metadata.sample50.calc_earliest_date == "2006-11-24"
+            assert iridanext_metadata.sample50.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample51")
+            assert iridanext_metadata.sample51.calc_source_type == "Food"
+            assert iridanext_metadata.sample51.calc_earliest_date == "2006-05-22"
+            assert iridanext_metadata.sample51.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample52")
+            assert iridanext_metadata.sample52.calc_source_type == "Food"
+            assert iridanext_metadata.sample52.calc_earliest_date == "2007-09-26"
+            assert iridanext_metadata.sample52.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample53")
+            assert iridanext_metadata.sample53.calc_source_type == "Food"
+            assert iridanext_metadata.sample53.calc_earliest_date == "2008-04-08"
+            assert iridanext_metadata.sample53.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample54")
+            assert iridanext_metadata.sample54.calc_source_type == "Food"
+            assert iridanext_metadata.sample54.calc_earliest_date == "2006-08-16"
+            assert iridanext_metadata.sample54.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample55")
+            assert iridanext_metadata.sample55.calc_source_type == "Food"
+            assert iridanext_metadata.sample55.calc_earliest_date == "2007-10-12"
+            assert iridanext_metadata.sample55.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample56")
+            assert iridanext_metadata.sample56.calc_source_type == "Food"
+            assert iridanext_metadata.sample56.calc_earliest_date == "2007-01-06"
+            assert iridanext_metadata.sample56.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample57")
+            assert iridanext_metadata.sample57.calc_source_type == "Food"
+            assert iridanext_metadata.sample57.calc_earliest_date == "2005-10-09"
+            assert iridanext_metadata.sample57.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample58")
+            assert iridanext_metadata.sample58.calc_source_type == "Environmental"
+            assert iridanext_metadata.sample58.calc_earliest_date == "2006-11-01"
+            assert iridanext_metadata.sample58.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample59")
+            assert iridanext_metadata.sample59.calc_source_type == "Environmental"
+            assert iridanext_metadata.sample59.calc_earliest_date == "2006-08-16"
+            assert iridanext_metadata.sample59.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample60")
+            assert iridanext_metadata.sample60.calc_source_type == "Environmental"
+            assert iridanext_metadata.sample60.calc_earliest_date == "2006-02-26"
+            assert iridanext_metadata.sample60.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample61")
+            assert iridanext_metadata.sample61.calc_source_type == "Environmental"
+            assert iridanext_metadata.sample61.calc_earliest_date == "2004-09-13"
+            assert iridanext_metadata.sample61.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample62")
+            assert iridanext_metadata.sample62.calc_source_type == "Environmental"
+            assert iridanext_metadata.sample62.calc_earliest_date == "2004-11-10"
+            assert iridanext_metadata.sample62.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample63")
+            assert iridanext_metadata.sample63.calc_source_type == "Environmental"
+            assert iridanext_metadata.sample63.calc_earliest_date == "2002-12-23"
+            assert iridanext_metadata.sample63.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample64")
+            assert iridanext_metadata.sample64.calc_source_type == "Environmental"
+            assert iridanext_metadata.sample64.calc_earliest_date == "2001-05-14"
+            assert iridanext_metadata.sample64.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample65")
+            assert iridanext_metadata.sample65.calc_source_type == "Environmental"
+            assert iridanext_metadata.sample65.calc_earliest_date == "2003-07-21"
+            assert iridanext_metadata.sample65.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample66")
+            assert iridanext_metadata.sample66.calc_source_type == "Environmental"
+            assert iridanext_metadata.sample66.calc_earliest_date == "2004-10-31"
+            assert iridanext_metadata.sample66.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample67")
+            assert iridanext_metadata.sample67.calc_source_type == "Environmental"
+            assert iridanext_metadata.sample67.calc_earliest_date == "2005-03-26"
+            assert iridanext_metadata.sample67.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample68")
+            assert iridanext_metadata.sample68.calc_source_type == "Environmental"
+            assert iridanext_metadata.sample68.calc_earliest_date == "2003-08-12"
+            assert iridanext_metadata.sample68.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample69")
+            assert iridanext_metadata.sample69.calc_source_type == "Environmental"
+            assert iridanext_metadata.sample69.calc_earliest_date == "2003-10-24"
+            assert iridanext_metadata.sample69.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample70")
+            assert iridanext_metadata.sample70.calc_source_type == "Environmental"
+            assert iridanext_metadata.sample70.calc_earliest_date == "2002-09-07"
+            assert iridanext_metadata.sample70.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample71")
+            assert iridanext_metadata.sample71.calc_source_type == "Environmental"
+            assert iridanext_metadata.sample71.calc_earliest_date == "2003-11-07"
+            assert iridanext_metadata.sample71.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample72")
+            assert iridanext_metadata.sample72.calc_source_type == "Unknown"
+            assert iridanext_metadata.sample72.calc_earliest_date == "2002-06-10"
+            assert iridanext_metadata.sample72.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample73")
+            assert iridanext_metadata.sample73.calc_source_type == "Human"
+            assert iridanext_metadata.sample73.calc_earliest_date == "2001-03-21"
+            assert iridanext_metadata.sample73.calc_host_age == ""
+
+            assert iridanext_metadata.containsKey("sample74")
+            assert iridanext_metadata.sample74.calc_source_type == "Human"
+            assert iridanext_metadata.sample74.calc_earliest_date == "2001-01-26"
+            assert iridanext_metadata.sample74.calc_host_age == ""
         }
     }
 }
