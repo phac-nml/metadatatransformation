@@ -59,6 +59,7 @@ def calculate_earliest_date(row):
     dates = []
 
     # Replace special entries (not in place):
+
     # We need everything to be a string (pandas.NA) and not another
     # type (numpy.nan, etc.).
     replaced = row.fillna(value=pandas.NA, inplace=False)
@@ -129,7 +130,7 @@ def find_earliest_date_pnc(row):
             return pandas.Series([earliest, earliest_valid, earliest_error])
 
         # The NML sample received date is too old:
-        elif(len(dates[dates < MIN_SAMPLE_RECEIVED_DATE_NML]) > 0):
+        elif(PNC_EARLIEST_DATE_SAMPLE_RECEIVED_DATE_NML in dates and dates[PNC_EARLIEST_DATE_SAMPLE_RECEIVED_DATE_NML] < MIN_SAMPLE_RECEIVED_DATE_NML):
             earliest = pandas.NA
             earliest_valid = False
             earliest_error = "The NML sample received date is too old."
@@ -137,7 +138,7 @@ def find_earliest_date_pnc(row):
             return pandas.Series([earliest, earliest_valid, earliest_error])
 
         # The sequencing date is too old:
-        elif(len(dates[dates < MIN_SEQUENCING_DATE]) > 0):
+        elif(PNC_EARLIEST_DATE_SEQUENCING_DATE in dates and dates[PNC_EARLIEST_DATE_SEQUENCING_DATE] < MIN_SEQUENCING_DATE):
             earliest = pandas.NA
             earliest_valid = False
             earliest_error = "The sequencing date is too old."
