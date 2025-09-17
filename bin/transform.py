@@ -227,9 +227,9 @@ def pnc(metadata):
     if len(missing_headers) > 0:
         metadata_irida = pandas.DataFrame({SAMPLE_HEADER:[]})
         metadata_readable = metadata.copy(deep=True)
-        metadata_readable[CATEGORIZE_RESULTS_HEADERS] = pandas.Series([pandas.NA, False, "Missing headers: " + str(missing_headers)])
-        metadata_readable[PNC_EARLIEST_RESULTS_HEADERS] = pandas.Series([pandas.NA, False, "Missing headers: " + str(missing_headers)])
-        metadata_readable[PNC_AGE_RESULTS_HEADERS] = pandas.Series([pandas.NA, False, "Missing headers: " + str(missing_headers)])
+        metadata_readable[CATEGORIZE_RESULTS_HEADERS] = pandas.Series([pandas.NA, False, "Missing headers: " + "; ".join(missing_headers)])
+        metadata_readable[PNC_EARLIEST_RESULTS_HEADERS] = pandas.Series([pandas.NA, False, "Missing headers: " + "; ".join(missing_headers)])
+        metadata_readable[PNC_AGE_RESULTS_HEADERS] = pandas.Series([pandas.NA, False, "Missing headers: " + "; ".join(missing_headers)])
         return metadata_readable, metadata_irida
 
     # Categorize
