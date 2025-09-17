@@ -25,10 +25,10 @@ sample2,"DEF",2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8
 sample3,"GHI",3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8
 ```
 
-| Column                   | Description                                                                                                                                |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `sample`                 | Sample ID. Samples should be unique within a samplesheet. Likely Irida Next IDs.                                                           |
-| `sample_name`            | Sample name. Likely user-provided IDs that should be unique, but are not required to be unique. Will be used over `sample` when available. |
+| Column           | Description                                                                                                                                |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| `sample`         | Sample ID. Samples should be unique within a samplesheet. Likely Irida Next IDs.                                                           |
+| `sample_name`    | Sample name. Likely user-provided IDs that should be unique, but are not required to be unique. Will be used over `sample` when available. |
 | `metadata_1..16` | Metadata that will be used in the metadata transformations.                                                                                |
 
 An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
