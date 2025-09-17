@@ -3,6 +3,68 @@ nextflow_pipeline {
     name "Metadata Transformation: PNC"
     script "main.nf"
 
+    test("Basic") {
+        tag "pipeline_pnc"
+        tag "pipeline_pnc_basic"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/pnc/basic.csv"
+                outdir = "results"
+
+                transformation = "pnc"
+
+                metadata_1_header = "isolate_received_date"
+                metadata_2_header = "isolation_date"
+                metadata_3_header = "sample_collection_date"
+                metadata_4_header = "sample_received_date_collaborator"
+                metadata_5_header = "sample_received_date_nml"
+                metadata_6_header = "sequencing_date"
+                metadata_7_header = "host_age"
+                metadata_8_header = "host_age_unit"
+                metadata_9_header = "host_date_of_birth_DOB"
+                metadata_10_header = "host_scientific_name"
+                metadata_11_header = "host_common_name"
+                metadata_12_header = "food_product"
+                metadata_13_header = "environmental_material"
+                metadata_14_header = "environmental_site"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.contains("sample,calc_source_type,calc_earliest_date,calc_host_age")
+            assert transformation.text.contains("sample1,Human,2020-01-01,10")
+
+            // Check Results (Human-Readable)
+            def results = path("$launchDir/results/transformation/results.csv")
+            assert results.exists()
+
+            assert results.text.contains("sample,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type,calc_source_type_valid,calc_source_type_error,isolate_received_date,isolation_date,sample_collection_date,sample_received_date_collaborator,sample_received_date_nml,sequencing_date,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error,host_date_of_birth_DOB,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
+            assert results.text.contains("sample1,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,2020-01-06,2020-01-01,True,,2010-01-01,10,year,10,True,")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            //assert iridanext_metadata.size() == 1
+
+            assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1.calc_source_type == "Human"
+            assert iridanext_metadata.sample1.calc_earliest_date == "2020-01-01"
+            assert iridanext_metadata.sample1.calc_host_age == "10"
+        }
+    }
+
     test("Specification") {
         tag "pipeline_pnc"
         tag "pipeline_pnc_specification"
