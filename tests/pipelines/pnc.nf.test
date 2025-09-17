@@ -128,8 +128,8 @@ nextflow_pipeline {
             assert transformation.text.contains("sample24,Human,2025-05-01,10")
             assert transformation.text.contains("sample25,Human,,10")
             assert transformation.text.contains("sample26,Host Conflict,2020-01-12,")
-            assert transformation.text.contains("sample27,Host Conflict,,")
-            assert transformation.text.contains("sample28,Animal,,")
+            assert transformation.text.contains("sample27,Host Conflict,1998-06-15,")
+            assert transformation.text.contains("sample28,Animal,1900-01-01,")
             assert transformation.text.contains("sample29,Animal,,")
             assert transformation.text.contains("sample30,Animal,,")
             assert transformation.text.contains("sample31,Animal,2019-12-22,")
@@ -208,8 +208,8 @@ nextflow_pipeline {
             assert results.text.contains("sample24,Homo sapiens (Human),Human NCBITaxon:9606,,,Not Applicable,Human,True,,2035-01-01,2035-01-01,2035-01-01,2025-05-01,2035-01-01,2035-01-01,2025-05-01,True,,,10,Restricted Access,10,True,")
             assert results.text.contains("sample25,Homo sapiens (Human),Human NCBITaxon:9606,Not Applicable,,,Human,True,,1800-01-01,2035-01-01,,2025-05-01,,,,False,At least one of the dates is too old.,,10,,10,True,")
             assert results.text.contains("sample26,Gallus gallus,Human NCBITaxon:9606,,,,Host Conflict,True,,2020-01-12,2020-01-13,2020-01-14,2020-01-15,2020-01-16,2020-01-17,2020-01-12,True,,,-1,,,False,calc_host_age is negative")
-            assert results.text.contains("sample27,Homo sapiens (Human),Chicken,,,,Host Conflict,True,,1998-06-15,2025-01-01,1998-12-12,2001-03-17,2025-01-01,2025-01-01,,False,The sequencing date is too old.,,500,year,,False,calc_host_age is too large")
-            assert results.text.contains("sample28,Homo,Hum,,,,Animal,True,,1900-01-01,1900-01-01,1900-01-01,2000-07-19,2025-03-08,2025-06-06,,False,The NML sample received date is too old.,,500,,,False,calc_host_age is too large")
+            assert results.text.contains("sample27,Homo sapiens (Human),Chicken,,,,Host Conflict,True,,1998-06-15,2025-01-01,1998-12-12,2001-03-17,2025-01-01,2025-01-01,1998-06-15,True,,,500,year,,False,calc_host_age is too large")
+            assert results.text.contains("sample28,Homo,Hum,,,,Animal,True,,1900-01-01,1900-01-01,1900-01-01,2000-07-19,2025-03-08,2025-06-06,1900-01-01,True,,,500,,,False,calc_host_age is too large")
             assert results.text.contains("sample29,Gallus gallus,Chicken,Not Applicable,Not Applicable,Not Applicable,Animal,True,,1899-12-31,1899-12-31,1899-12-31,2000-07-19,2025-03-08,2025-06-06,,False,At least one of the dates is too old.,,150,year,150,True,")
             assert results.text.contains("sample30,Gallus gallus,Not Applicable,Missing,Missing,Missing,Animal,True,,,,,,,,,False,No data was found.,,fledgling,year,,False,host_age (fledgling) could not be converted to a number")
             assert results.text.contains("sample31,Gallus gallus,Missing,Not Collected,Not Collected,Not Collected,Animal,True,,2020-01-01,2020-04-07,2019-12-23,2020-04-19,2019-12-22,2020-04-18,2019-12-22,True,,,1/2,,,False,host_age (1/2) could not be converted to a number")
@@ -398,12 +398,12 @@ nextflow_pipeline {
 
             assert iridanext_metadata.containsKey("sample27")
             assert iridanext_metadata.sample27.calc_source_type == "Host Conflict"
-            assert iridanext_metadata.sample27.calc_earliest_date == ""
+            assert iridanext_metadata.sample27.calc_earliest_date == "1998-06-15"
             assert iridanext_metadata.sample27.calc_host_age == ""
 
             assert iridanext_metadata.containsKey("sample28")
             assert iridanext_metadata.sample28.calc_source_type == "Animal"
-            assert iridanext_metadata.sample28.calc_earliest_date == ""
+            assert iridanext_metadata.sample28.calc_earliest_date == "1900-01-01"
             assert iridanext_metadata.sample28.calc_host_age == ""
 
             assert iridanext_metadata.containsKey("sample29")
