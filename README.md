@@ -126,7 +126,7 @@ For simplicity, the the following assumptions are made when calculating ages:
 - 365 days in a year
 - 52 weeks in a year
 - 12 months in a year
-- ages cannot be less than 0
+- ages cannot be less than or equal to 0
 - ages cannot be greater than 150
 
 Furthermore, the following values are ignored and treated as "years" when provided as an age unit: `Not Applicable`, `Missing`, `Not Collected`, `Not Provided`, `Restricted Access`, `(blank)`. For example, this means that an age number of 10 and an age unit of `Restricted Access` will report an age of 10 years old.
@@ -262,14 +262,14 @@ params {
 
 ### Assumptions
 
-Generally, the assumptions for the `pnc` transformation are the same as the `categorize`, `earliest`, and `age_pnc` transformation. However, they are repeated here for completeness:
+Generally, the assumptions for the `pnc` transformation are the same as the `categorize`, `earliest`, and `age_pnc` transformations. However, they are repeated here for completeness:
 
 The the following assumptions are made when calculating ages:
 
 - 365 days in a year
 - 52 weeks in a year
 - 12 months in a year
-- ages cannot be less than 0
+- ages cannot be less than or equal to 0
 - ages cannot be greater than 150
 
 The following values are ignored and treated as "years" when provided as an age unit: `Not Applicable`, `Missing`, `Not Collected`, `Not Provided`, `Restricted Access`, `(blank)`. For example, this means that an age number of 10 and an age unit of `Restricted Access` will report an age of 10 years old.

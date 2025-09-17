@@ -114,7 +114,7 @@ For simplicity, the the following assumptions are made when calculating ages:
 - 365 days in a year
 - 52 weeks in a year
 - 12 months in a year
-- ages cannot be less than 0
+- ages cannot be less than or equal to 0
 - ages cannot be greater than 150
 
 Furthermore, the following values are ignored and treated as "years" when provided as an age unit: `Not Applicable`, `Missing`, `Not Collected`, `Not Provided`, `Restricted Access`, `(blank)`. For example, this means that an age number of 10 and an age unit of `Restricted Access` will report an age of 10 years old.
@@ -241,6 +241,75 @@ sample12,Food
 ```
 
 **NOTE** This is expecting specific metadata fields (host_scientific_name, host_common_name, food_product, environmental_site and environmental_material). It will error out if they're not provided.
+
+### PNC
+
+The PNC transformation may be run as follows:
+
+```bash
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/pnc/basic.csv --outdir results --transformation pnc -c pnc.config
+```
+
+Where the `pnc.config` file is as follows:
+
+```
+params {
+    metadata_1_header = "isolate_received_date"
+    metadata_2_header = "isolation_date"
+    metadata_3_header = "sample_collection_date"
+    metadata_4_header = "sample_received_date_collaborator"
+    metadata_5_header = "sample_received_date_nml"
+    metadata_6_header = "sequencing_date"
+    metadata_7_header = "host_age"
+    metadata_8_header = "host_age_unit"
+    metadata_9_header = "host_date_of_birth_DOB"
+    metadata_10_header = "host_scientific_name"
+    metadata_11_header = "host_common_name"
+    metadata_12_header = "food_product"
+    metadata_13_header = "environmental_material"
+    metadata_14_header = "environmental_site"
+}
+```
+
+The metadata header parameters (`--metadata_1_header` through `--metadata_16_header`) are required for the transformation. In particular, fourteen of the metadata headers must be renamed as appropriate to be exactly the following:
+
+- `isolate_received_date`
+- `isolation_date`
+- `sample_collection_date`
+- `sample_received_date_collaborator`
+- `sample_received_date_nml`
+- `sequencing_date`
+- `host_age`
+- `host_age_unit`
+- `host_date_of_birth_DOB`
+- `host_scientific_name`
+- `host_common_name`
+- `food_product`
+- `environmental_material`
+- `environmental_site`
+
+For example, if the 2nd metadata column of the sample sheet corresponds to the isolation date, then it must be parameterized as follows: `--metadata_2_header isolation_date`. If the 5th metadata column of the input corresponds to the sample received date for the NML, then it must be parameterized as follows: `--metadata_5_header sample_received_date_nml`. The order of the metadata columns in the input does not matter, as long as the names are assigned correctly as above. If any of the columns are missing, an error will be reported in the `transformation/results.csv` file.
+
+Generally, the assumptions and requirements for the `pnc` transformation are similar to the `categorize`, `earliest`, and `age_pnc` transformations. However, they are repeated here for completeness:
+
+The the following assumptions are made when calculating ages:
+
+- 365 days in a year
+- 52 weeks in a year
+- 12 months in a year
+- ages cannot be less than or equal to 0
+- ages cannot be greater than 150
+
+The following values are ignored and treated as "years" when provided as an age unit: `Not Applicable`, `Missing`, `Not Collected`, `Not Provided`, `Restricted Access`, `(blank)`. For example, this means that an age number of 10 and an age unit of `Restricted Access` will report an age of 10 years old.
+
+The supported range of calendar dates is: [`1677-09-22`, `2262-04-10`]. The following date fields have additional requirements:
+
+- `isolate_received_date`: after 1900-01-01
+- `isolation_date`: after 1900-01-01
+- `sample_collection_date`: after 1900-01-01
+- `sample_received_date_collaborator`: after 1900-01-01
+- `sample_received_date_nml`: after 1995-01-01
+- `sequencing_date`: after 2007-01-01
 
 ### Reproducibility
 
