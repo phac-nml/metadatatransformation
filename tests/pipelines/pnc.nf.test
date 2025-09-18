@@ -983,8 +983,6 @@ nextflow_pipeline {
 
             assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
 
-            //assert iridanext_metadata.size() == 1
-
             assert iridanext_metadata.containsKey("sample1")
             assert iridanext_metadata.sample1.calc_source_type == "Human"
             assert iridanext_metadata.sample1.calc_earliest_date == "2020-01-01"
