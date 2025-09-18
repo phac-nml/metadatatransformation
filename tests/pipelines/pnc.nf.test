@@ -39,12 +39,16 @@ nextflow_pipeline {
             def transformation = path("$launchDir/results/transformation/transformation.csv")
             assert transformation.exists()
 
+            assert transformation.text.readLines().size() == 2
+
             assert transformation.text.contains("sample,calc_source_type,calc_earliest_date,calc_host_age")
             assert transformation.text.contains("sample1,Human,2020-01-01,10")
 
             // Check Results (Human-Readable)
             def results = path("$launchDir/results/transformation/results.csv")
             assert results.exists()
+
+            assert results.text.readLines().size() == 2
 
             assert results.text.contains("sample,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type,calc_source_type_valid,calc_source_type_error,isolate_received_date,isolation_date,sample_collection_date,sample_received_date_collaborator,sample_received_date_nml,sequencing_date,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error,host_date_of_birth_DOB,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
             assert results.text.contains("sample1,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,2020-01-06,2020-01-01,True,,2010-01-01,10,year,10,True,")
@@ -100,6 +104,8 @@ nextflow_pipeline {
             // Check Transformation (Machine-Readable)
             def transformation = path("$launchDir/results/transformation/transformation.csv")
             assert transformation.exists()
+
+            assert transformation.text.readLines().size() == 75
 
             assert transformation.text.contains("sample,calc_source_type,calc_earliest_date,calc_host_age")
             assert transformation.text.contains("sample1,Human,2025-02-01,0.0841")
@@ -180,6 +186,8 @@ nextflow_pipeline {
             // Check Results (Human-Readable)
             def results = path("$launchDir/results/transformation/results.csv")
             assert results.exists()
+
+            assert results.text.readLines().size() == 75
 
             assert results.text.contains("sample,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type,calc_source_type_valid,calc_source_type_error,isolate_received_date,isolation_date,sample_collection_date,sample_received_date_collaborator,sample_received_date_nml,sequencing_date,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error,host_date_of_birth_DOB,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
             assert results.text.contains("sample1,Homo sapiens (Human),Human NCBITaxon:9606,Not Applicable,Not Applicable,Not Applicable,Human,True,,2025-03-01,2025-02-15,2025-02-01,,2025-03-02,2025-03-15,2025-02-01,True,,2025-01-01,1,month,0.0841,True,")
@@ -674,6 +682,8 @@ nextflow_pipeline {
             def transformation = path("$launchDir/results/transformation/transformation.csv")
             assert transformation.exists()
 
+            assert transformation.text.readLines().size() == 24
+
             assert transformation.text.contains("sample,calc_source_type,calc_earliest_date,calc_host_age")
             assert transformation.text.contains("sample1,Unknown,,")
             assert transformation.text.contains("sample2,Human,2020-01-01,10")
@@ -702,6 +712,8 @@ nextflow_pipeline {
             // Check Results (Human-Readable)
             def results = path("$launchDir/results/transformation/results.csv")
             assert results.exists()
+
+            assert results.text.readLines().size() == 24
 
             assert results.text.contains("sample,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type,calc_source_type_valid,calc_source_type_error,isolate_received_date,isolation_date,sample_collection_date,sample_received_date_collaborator,sample_received_date_nml,sequencing_date,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error,host_date_of_birth_DOB,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
             assert results.text.contains("sample1,,,,,,Unknown,True,,,,,,,,,False,No data was found.,,,,,False,Insufficient data to calculate an age")
@@ -890,11 +902,15 @@ nextflow_pipeline {
             def transformation = path("$launchDir/results/transformation/transformation.csv")
             assert transformation.exists()
 
+            assert transformation.text.readLines().size() == 1
+
             assert transformation.text.contains("sample,calc_source_type,calc_earliest_date,calc_host_age") == false
 
             // Check Results (Human-Readable)
             def results = path("$launchDir/results/transformation/results.csv")
             assert results.exists()
+
+            assert results.text.readLines().size() == 2
 
             // NOTE: metadata_15 and metadata_16 show up in the results here
             // but not in other results, because we want to check for column
@@ -946,12 +962,16 @@ nextflow_pipeline {
             def transformation = path("$launchDir/results/transformation/transformation.csv")
             assert transformation.exists()
 
+            assert transformation.text.readLines().size() == 2
+
             assert transformation.text.contains("sample,calc_source_type,calc_earliest_date,calc_host_age")
             assert transformation.text.contains("sample1,Human,2020-01-01,10")
 
             // Check Results (Human-Readable)
             def results = path("$launchDir/results/transformation/results.csv")
             assert results.exists()
+
+            assert results.text.readLines().size() == 2
 
             assert results.text.contains("sample,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type,calc_source_type_valid,calc_source_type_error,isolate_received_date,isolation_date,sample_collection_date,sample_received_date_collaborator,sample_received_date_nml,sequencing_date,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error,host_date_of_birth_DOB,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
             assert results.text.contains("sample1,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,2020-01-06,2020-01-01,True,,2010-01-01,10,year,10,True,")
