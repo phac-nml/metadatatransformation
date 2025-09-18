@@ -8,15 +8,9 @@ from datetime import datetime
 from transformations.constants import (SAMPLE_HEADER, SAMPLE_NAME_HEADER, DATE_FORMAT,
                                         VALID_HEADER_EXTENSION, ERROR_HEADER_EXTENSION,
                                         COLUMNS_AXIS, SPECIAL_ENTRIES_REGEX, BLANK,
-                                        AGE_HEADER, AGE_PNC_HEADER,
-                                        DATE_1_INDEX, DATE_2_INDEX)
-
-# Age Headers:
-DATE_OF_BIRTH_HEADER = "host_date_of_birth_DOB"
-DATE_HEADER = "calc_earliest_date"
-HOST_AGE_HEADER = "host_age"
-HOST_AGE_UNIT_HEADER = "host_age_unit"
-PNC_AGE_HEADERS = [SAMPLE_HEADER, SAMPLE_NAME_HEADER, DATE_OF_BIRTH_HEADER, DATE_HEADER, HOST_AGE_HEADER, HOST_AGE_UNIT_HEADER]
+                                        AGE_HEADER, AGE_PNC_HEADER, DATE_1_INDEX, DATE_2_INDEX,
+                                        PNC_AGE_DATE_OF_BIRTH_HEADER, PNC_AGE_DATE_HEADER, PNC_AGE_HOST_AGE_HEADER,
+                                        PNC_AGE_HOST_AGE_UNIT_HEADER, PNC_AGE_HEADERS)
 
 AGE_CONSOLIDATION_THRESHOLD = 1 # Threshold for accepting differences in DOB-based and units-based ages (in years).
 AGE_THRESHOLD = 2 # Ages less than this will include a decimal component.
@@ -112,7 +106,7 @@ def calculate_age_by_units(age_string, age_unit_string):
     try:
         age_number = float(age_string)
     except ValueError:
-        return pandas.Series([numpy.nan, False, f"{HOST_AGE_HEADER} ({age_string}) could not be converted to a number"])
+        return pandas.Series([numpy.nan, False, f"{PNC_AGE_HOST_AGE_HEADER} ({age_string}) could not be converted to a number"])
 
     # Ensure that age_unit_string is a string:
     age_unit_string = str(age_unit_string)
@@ -131,7 +125,7 @@ def calculate_age_by_units(age_string, age_unit_string):
         age_in_years = age_number
         age = pandas.Series([age_in_years, True, ""])
     else:
-        age = pandas.Series([numpy.nan, False, f"invalid {HOST_AGE_UNIT_HEADER} ({age_unit_string})"])
+        age = pandas.Series([numpy.nan, False, f"invalid {PNC_AGE_HOST_AGE_UNIT_HEADER} ({age_unit_string})"])
 
     return age
 
@@ -150,7 +144,7 @@ def consolidate_ages(age1, age2):
 
     # Too different from each other:
     else:
-        return pandas.Series([numpy.nan, False, f"{AGE_PNC_HEADER} and {HOST_AGE_HEADER} are greater than {AGE_CONSOLIDATION_THRESHOLD} year(s) different"])
+        return pandas.Series([numpy.nan, False, f"{AGE_PNC_HEADER} and {PNC_AGE_HOST_AGE_HEADER} are greater than {AGE_CONSOLIDATION_THRESHOLD} year(s) different"])
 
 def calculate_age_pnc(row):
     age_dob = pandas.Series()
@@ -163,25 +157,25 @@ def calculate_age_pnc(row):
     # to be interpretted as "years". At this point,
     # special entries have already been replaced with null,
     # so they'll be treated the same as blanks.
-    if (pandas.isnull(row[HOST_AGE_UNIT_HEADER])
-        or row[HOST_AGE_UNIT_HEADER] == BLANK):
-        row[HOST_AGE_UNIT_HEADER] = YEAR_UNITS[0]
+    if (pandas.isnull(row[PNC_AGE_HOST_AGE_UNIT_HEADER])
+        or row[PNC_AGE_HOST_AGE_UNIT_HEADER] == BLANK):
+        row[PNC_AGE_HOST_AGE_UNIT_HEADER] = YEAR_UNITS[0]
 
     # If there's a date of birth but no earliest date,
     # then throw an error:
-    if not pandas.isnull(row[DATE_OF_BIRTH_HEADER]) and pandas.isnull(row[DATE_HEADER]):
-        return pandas.Series([numpy.nan, False, f"{DATE_OF_BIRTH_HEADER} provided but {DATE_HEADER} is missing"])
+    if not pandas.isnull(row[PNC_AGE_DATE_OF_BIRTH_HEADER]) and pandas.isnull(row[PNC_AGE_DATE_HEADER]):
+        return pandas.Series([numpy.nan, False, f"{PNC_AGE_DATE_OF_BIRTH_HEADER} provided but {PNC_AGE_DATE_HEADER} is missing"])
 
     # Calculate the date based on the date of birth and date:
-    if not pandas.isnull(row[DATE_OF_BIRTH_HEADER]) and not pandas.isnull(row[DATE_HEADER]):
-        dob_string = row[DATE_OF_BIRTH_HEADER]
-        date_string = row[DATE_HEADER]
+    if not pandas.isnull(row[PNC_AGE_DATE_OF_BIRTH_HEADER]) and not pandas.isnull(row[PNC_AGE_DATE_HEADER]):
+        dob_string = row[PNC_AGE_DATE_OF_BIRTH_HEADER]
+        date_string = row[PNC_AGE_DATE_HEADER]
         age_dob = calculate_age_between_dates(dob_string, date_string)
 
     # Calculate the date based on the host age and host age units:
-    if not pandas.isnull(row[HOST_AGE_HEADER]) and not pandas.isnull(row[HOST_AGE_UNIT_HEADER]):
-        age_string = row[HOST_AGE_HEADER]
-        age_unit_string = row[HOST_AGE_UNIT_HEADER]
+    if not pandas.isnull(row[PNC_AGE_HOST_AGE_HEADER]) and not pandas.isnull(row[PNC_AGE_HOST_AGE_UNIT_HEADER]):
+        age_string = row[PNC_AGE_HOST_AGE_HEADER]
+        age_unit_string = row[PNC_AGE_HOST_AGE_UNIT_HEADER]
         age_units = calculate_age_by_units(age_string, age_unit_string)
 
     # Only a date of birth-based age was calculated:
@@ -205,13 +199,13 @@ def calculate_age_pnc(row):
 
         # Negative:
         if age_value < 0:
-            result = pandas.Series([age_value, False, f"{AGE_PNC_HEADER} is negative"])
+            result = pandas.Series([numpy.nan, False, f"{AGE_PNC_HEADER} is negative"])
         # Exactly zero:
         elif age_value == 0:
-            result = pandas.Series([age_value, False, f"{AGE_PNC_HEADER} cannot be exactly zero"])
+            result = pandas.Series([numpy.nan, False, f"{AGE_PNC_HEADER} cannot be exactly zero"])
         # Too large:
         elif age_value > MAX_AGE:
-            result = pandas.Series([age_value, False, f"{AGE_PNC_HEADER} is too large"])
+            result = pandas.Series([numpy.nan, False, f"{AGE_PNC_HEADER} is too large"])
 
     return result
 

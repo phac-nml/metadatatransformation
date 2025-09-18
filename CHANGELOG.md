@@ -7,9 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- The pnc transformation: leverages the categorize, earliest, and age transformations in sequence. The column names for this transformation are explicit and required. [PR #24](https://github.com/phac-nml/metadatatransformation/pull/24)
 - The age_pnc transformation: calculates age from an age number (ex: `10`) and a unit (ex: `year`) and/or a date of birth and date. The column names for this transformation are explicit and required. [PR #22](https://github.com/phac-nml/metadatatransformation/pull/22)
 - Basic reconciliation between a date of birth-based age calculation and a units-based age calculation if both are supplied. [PR #22](https://github.com/phac-nml/metadatatransformation/pull/22)
 - Additional error handling. [PR #22](https://github.com/phac-nml/metadatatransformation/pull/22)
+
+### Changed
+
+- 16 columns of metadata are now accepted by all transformations. [PR #24](https://github.com/phac-nml/metadatatransformation/pull/24)
 
 ## [1.2.0] - 2025/08/15
 

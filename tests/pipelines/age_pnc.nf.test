@@ -30,6 +30,8 @@ nextflow_pipeline {
             def transformation = path("$launchDir/results/transformation/transformation.csv")
             assert transformation.exists()
 
+            assert transformation.text.readLines().size() == 30
+
             assert transformation.text.contains("sample,calc_host_age")
             assert transformation.text.contains("sample1,0.0027")
             assert transformation.text.contains("sample2,0.0055")
@@ -64,6 +66,8 @@ nextflow_pipeline {
             // Check Results (Human-Readable)
             def results = path("$launchDir/results/transformation/results.csv")
             assert results.exists()
+
+            assert results.text.readLines().size() == 30
 
             assert results.text.contains("sample,sample_name,host_date_of_birth_DOB,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
             assert results.text.contains("sample1,1,2000-01-01,2000-01-02,,,0.0027,True,")
@@ -221,6 +225,8 @@ nextflow_pipeline {
             def transformation = path("$launchDir/results/transformation/transformation.csv")
             assert transformation.exists()
 
+            assert transformation.text.readLines().size() == 25
+
             // Age column is removed because it's empty for all samples.
             assert transformation.text.contains("sample")
             assert transformation.text.contains("reverse_dates_under_2")
@@ -251,6 +257,8 @@ nextflow_pipeline {
             // Check Results (Human-Readable)
             def results = path("$launchDir/results/transformation/results.csv")
             assert results.exists()
+
+            assert results.text.readLines().size() == 25
 
             assert results.text.contains("sample,sample_name,host_date_of_birth_DOB,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
             assert results.text.contains("reverse_dates_under_2,rd_1,2001-01-01,2000-01-01,,,,False,The dates are reversed")
@@ -389,6 +397,8 @@ nextflow_pipeline {
             def transformation = path("$launchDir/results/transformation/transformation.csv")
             assert transformation.exists()
 
+            assert transformation.text.readLines().size() == 4
+
             assert transformation.text.contains("sample,calc_host_age")
             assert transformation.text.contains("sample1,1.0000")
             assert transformation.text.contains("sample2,24")
@@ -397,6 +407,8 @@ nextflow_pipeline {
             // Check Results (Human-Readable)
             def results = path("$launchDir/results/transformation/results.csv")
             assert results.exists()
+
+            assert results.text.readLines().size() == 4
 
             assert results.text.contains("sample,sample_name,host_date_of_birth_DOB,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
             assert results.text.contains("sample1,ABC,2000-01-01,2000-12-31,,,1.0000,True,")
@@ -450,6 +462,8 @@ nextflow_pipeline {
             def transformation = path("$launchDir/results/transformation/transformation.csv")
             assert transformation.exists()
 
+            assert transformation.text.readLines().size() == 3
+
             assert transformation.text.contains("sample,calc_host_age")
             assert transformation.text.contains("sample1,1.0000")
             assert transformation.text.contains("sample2,24")
@@ -457,6 +471,8 @@ nextflow_pipeline {
             // Check Results (Human-Readable)
             def results = path("$launchDir/results/transformation/results.csv")
             assert results.exists()
+
+            assert results.text.readLines().size() == 4
 
             assert results.text.contains("sample,sample_name,host_date_of_birth_DOB,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
             assert results.text.contains("sample1,ABC,2000-01-01,2000-12-31,,,1.0000,True,")
@@ -509,6 +525,8 @@ nextflow_pipeline {
             def transformation = path("$launchDir/results/transformation/transformation.csv")
             assert transformation.exists()
 
+            assert transformation.text.readLines().size() == 30
+
             assert transformation.text.contains("sample,calc_host_age")
             assert transformation.text.contains("sample1,0.0027")
             assert transformation.text.contains("sample2,0.0055")
@@ -519,10 +537,32 @@ nextflow_pipeline {
             assert transformation.text.contains("sample7,2")
             assert transformation.text.contains("sample8,24")
             assert transformation.text.contains("sample9,49")
+            assert transformation.text.contains("sample10,0.0027")
+            assert transformation.text.contains("sample11,0.0055")
+            assert transformation.text.contains("sample12,0.0082")
+            assert transformation.text.contains("sample13,1.0000")
+            assert transformation.text.contains("sample14,1.9973")
+            assert transformation.text.contains("sample15,2")
+            assert transformation.text.contains("sample16,2")
+            assert transformation.text.contains("sample17,0.0192")
+            assert transformation.text.contains("sample18,0.0385")
+            assert transformation.text.contains("sample19,1.0000")
+            assert transformation.text.contains("sample20,2")
+            assert transformation.text.contains("sample21,0.0833")
+            assert transformation.text.contains("sample22,0.1667")
+            assert transformation.text.contains("sample23,1.0000")
+            assert transformation.text.contains("sample24,2")
+            assert transformation.text.contains("sample25,1.0000")
+            assert transformation.text.contains("sample26,2")
+            assert transformation.text.contains("sample27,3")
+            assert transformation.text.contains("sample28,0.0014")
+            assert transformation.text.contains("sample29,1.0014")
 
             // Check Results (Human-Readable)
             def results = path("$launchDir/results/transformation/results.csv")
             assert results.exists()
+
+            assert results.text.readLines().size() == 30
 
             assert results.text.contains("sample,sample_name,host_date_of_birth_DOB,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
             assert results.text.contains("sample1,1,2000-01-01,2000-01-02,,,0.0027,True,")
@@ -534,6 +574,26 @@ nextflow_pipeline {
             assert results.text.contains("sample7,7,2000-01-01,2002-01-01,,,2,True,")
             assert results.text.contains("sample8,8,2000-02-29,2024-02-29,,,24,True,")
             assert results.text.contains("sample9,9,1950-12-31,2000-05-05,,,49,True,")
+            assert results.text.contains("sample10,10,,,1.0,day,0.0027,True,")
+            assert results.text.contains("sample11,11,,,2.0,days,0.0055,True,")
+            assert results.text.contains("sample12,12,,,3.0,days,0.0082,True,")
+            assert results.text.contains("sample13,13,,,365.0,days,1.0000,True,")
+            assert results.text.contains("sample14,14,,,729.0,days,1.9973,True,")
+            assert results.text.contains("sample15,15,,,730.0,days,2,True,")
+            assert results.text.contains("sample16,16,,,731.0,days,2,True,")
+            assert results.text.contains("sample17,17,,,1.0,week,0.0192,True,")
+            assert results.text.contains("sample18,18,,,2.0,weeks,0.0385,True,")
+            assert results.text.contains("sample19,19,,,52.0,weeks,1.0000,True,")
+            assert results.text.contains("sample20,20,,,104.0,weeks,2,True,")
+            assert results.text.contains("sample21,21,,,1.0,month,0.0833,True,")
+            assert results.text.contains("sample22,22,,,2.0,months,0.1667,True,")
+            assert results.text.contains("sample23,23,,,12.0,months,1.0000,True,")
+            assert results.text.contains("sample24,24,,,24.0,months,2,True,")
+            assert results.text.contains("sample25,25,,,1.0,year,1.0000,True,")
+            assert results.text.contains("sample26,26,,,2.0,years,2,True,")
+            assert results.text.contains("sample27,27,,,3.0,years,3,True,")
+            assert results.text.contains("sample28,28,2000-01-02,2000-01-02,1.0,day,0.0014,True,")
+            assert results.text.contains("sample29,29,2000-01-01,2000-12-31,366.0,day,1.0014,True,")
 
             // Check IRIDA Next JSON Output
             def iridanext_json = path("$launchDir/results/iridanext.output.json").json
@@ -600,6 +660,8 @@ nextflow_pipeline {
             def transformation = path("$launchDir/results/transformation/transformation.csv")
             assert transformation.exists()
 
+            assert transformation.text.readLines().size() == 4
+
             assert transformation.text.contains("sample")
             assert transformation.text.contains("sample1")
             assert transformation.text.contains("sample2")
@@ -608,6 +670,8 @@ nextflow_pipeline {
             // Check Results (Human-Readable)
             def results = path("$launchDir/results/transformation/results.csv")
             assert results.exists()
+
+            assert results.text.readLines().size() == 4
 
             assert results.text.contains("sample,sample_name,host_date_of_birth_DOB,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
             assert results.text.contains("sample1,ABC,1.1,1.2,1.3,1.4,,False,The date format does not match the expected format (YYYY-MM-DD); invalid host_age_unit (1.4)")
@@ -661,6 +725,8 @@ nextflow_pipeline {
             def transformation = path("$launchDir/results/transformation/transformation.csv")
             assert transformation.exists()
 
+            assert transformation.text.readLines().size() == 22
+
             assert transformation.text.contains("sample,calc_host_age")
             assert transformation.text.contains("sample1,0.0841")
             assert transformation.text.contains("sample2,0.1370")
@@ -681,16 +747,14 @@ nextflow_pipeline {
             assert transformation.text.contains("sample23,10")
             assert transformation.text.contains("sample24,10")
             assert transformation.text.contains("sample25,10")
-            assert transformation.text.contains("sample26,-1.0000")
-            assert transformation.text.contains("sample27,500")
-            assert transformation.text.contains("sample28,500")
             assert transformation.text.contains("sample29,150")
-            assert transformation.text.contains("sample32,0.0000")
             assert transformation.text.contains("sample33,0.0962")
 
             // Check Results (Human-Readable)
             def results = path("$launchDir/results/transformation/results.csv")
             assert results.exists()
+
+            assert results.text.readLines().size() == 37
 
             assert results.text.contains("sample,sample_name,host_date_of_birth_DOB,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
             assert results.text.contains("sample1,1,2025-01-01,2025-02-01,1,month,0.0841,True,")
@@ -718,13 +782,13 @@ nextflow_pipeline {
             assert results.text.contains("sample23,23,,,10,Not Provided,10,True,")
             assert results.text.contains("sample24,24,,,10,Restricted Access,10,True,")
             assert results.text.contains("sample25,25,,,10,,10,True,")
-            assert results.text.contains("sample26,26,,2020-01-12,-1,,-1.0000,False,calc_host_age is negative")
-            assert results.text.contains("sample27,27,,1998-06-15,500,year,500,False,calc_host_age is too large")
-            assert results.text.contains("sample28,28,,1900-01-01,500,,500,False,calc_host_age is too large")
+            assert results.text.contains("sample26,26,,2020-01-12,-1,,,False,calc_host_age is negative")
+            assert results.text.contains("sample27,27,,1998-06-15,500,year,,False,calc_host_age is too large")
+            assert results.text.contains("sample28,28,,1900-01-01,500,,,False,calc_host_age is too large")
             assert results.text.contains("sample29,29,,,150,year,150,True,")
             assert results.text.contains("sample30,30,,,fledgling,year,,False,host_age (fledgling) could not be converted to a number")
             assert results.text.contains("sample31,31,,2019-12-22,1/2,,,False,host_age (1/2) could not be converted to a number")
-            assert results.text.contains("sample32,32,,2017-06-14,0,,0.0000,False,calc_host_age cannot be exactly zero")
+            assert results.text.contains("sample32,32,,2017-06-14,0,,,False,calc_host_age cannot be exactly zero")
             assert results.text.contains("sample33,33,,2019-07-12,5,week,0.0962,True,")
             assert results.text.contains("sample34,34,,2018-01-08,toddler,,,False,host_age (toddler) could not be converted to a number")
             assert results.text.contains("sample35,35,2015-06-30,2015-06-30,40,year,,False,calc_host_age and host_age are greater than 1 year(s) different")
@@ -737,7 +801,7 @@ nextflow_pipeline {
 
             assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
 
-            assert iridanext_metadata.size() == 25
+            assert iridanext_metadata.size() == 21
 
             assert iridanext_metadata.containsKey("sample1")
             assert iridanext_metadata.sample1.calc_host_age == "0.0841"
@@ -808,14 +872,11 @@ nextflow_pipeline {
             assert iridanext_metadata.containsKey("sample25")
             assert iridanext_metadata.sample25.calc_host_age == "10"
 
-            assert iridanext_metadata.containsKey("sample26")
-            assert iridanext_metadata.sample26.calc_host_age == "-1.0000"
+            assert iridanext_metadata.containsKey("sample26") == false
 
-            assert iridanext_metadata.containsKey("sample27")
-            assert iridanext_metadata.sample27.calc_host_age == "500"
+            assert iridanext_metadata.containsKey("sample27") == false
 
-            assert iridanext_metadata.containsKey("sample28")
-            assert iridanext_metadata.sample28.calc_host_age == "500"
+            assert iridanext_metadata.containsKey("sample28") == false
 
             assert iridanext_metadata.containsKey("sample29")
             assert iridanext_metadata.sample29.calc_host_age == "150"
@@ -824,8 +885,7 @@ nextflow_pipeline {
 
             assert iridanext_metadata.containsKey("sample31") == false
 
-            assert iridanext_metadata.containsKey("sample32")
-            assert iridanext_metadata.sample32.calc_host_age == "0.0000"
+            assert iridanext_metadata.containsKey("sample32") == false
 
             assert iridanext_metadata.containsKey("sample33")
             assert iridanext_metadata.sample33.calc_host_age == "0.0962"

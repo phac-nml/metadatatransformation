@@ -86,18 +86,24 @@ workflow METADATATRANSFORMATION {
             params.metadata_1_header, params.metadata_2_header,
             params.metadata_3_header, params.metadata_4_header,
             params.metadata_5_header, params.metadata_6_header,
-            params.metadata_7_header, params.metadata_8_header)
+            params.metadata_7_header, params.metadata_8_header,
+            params.metadata_9_header, params.metadata_10_header,
+            params.metadata_11_header, params.metadata_12_header,
+            params.metadata_13_header, params.metadata_14_header,
+            params.metadata_15_header, params.metadata_16_header)
         )
 
     metadata_rows = input.map{
         def meta = it[0]
         tuple(meta.irida_id, meta.id,
         meta.metadata_1, meta.metadata_2, meta.metadata_3, meta.metadata_4,
-        meta.metadata_5, meta.metadata_6, meta.metadata_7, meta.metadata_8)
+        meta.metadata_5, meta.metadata_6, meta.metadata_7, meta.metadata_8,
+        meta.metadata_9, meta.metadata_10, meta.metadata_11, meta.metadata_12,
+        meta.metadata_13, meta.metadata_14, meta.metadata_15, meta.metadata_16)
     }.toList()
 
     // TRANSFORM METADATA
-    valid_transformations = ['lock', 'age', 'age_pnc', 'earliest', 'populate', 'categorize']
+    valid_transformations = ['lock', 'age', 'age_pnc', 'earliest', 'populate', 'categorize', 'pnc']
 
     if(valid_transformations.contains(params.transformation)) {
         write_metadata = WRITE_METADATA (metadata_headers, metadata_rows)
