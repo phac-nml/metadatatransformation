@@ -302,7 +302,7 @@ The the following assumptions are made when calculating ages:
 
 The following values are ignored and treated as "years" when provided as an age unit: `Not Applicable`, `Missing`, `Not Collected`, `Not Provided`, `Restricted Access`, `(blank)`. For example, this means that an age number of 10 and an age unit of `Restricted Access` will report an age of 10 years old.
 
-The supported range of calendar dates is: [`1677-09-22`, `2262-04-10`]. The following date fields have additional requirements:
+The supported range of calendar dates is [`1677-09-22`, `2262-04-10`], which is related to the default [timestamp limitations of pandas](https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#timestamp-limitations). The following date fields have additional requirements:
 
 - `isolate_received_date`: after 1900-01-01
 - `isolation_date`: after 1900-01-01
