@@ -8,9 +8,9 @@ This pipeline transforms metadata from IRIDA Next.
 
 The input to the pipeline is a sample sheet (passed as `--input samplesheet.csv`) that looks like:
 
-| sample  | sample_name | metadata_1 | metadata_2 | metadata_3 | metadata_4 | metadata_5 | metadata_6 | metadata_7 | metadata_8 |
-| ------- | ----------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- |
-| Sample1 | SampleA     | meta_1     | meta_2     | meta_3     | meta_4     | meta_5     | meta_6     | meta_7     | meta_8     |
+| sample  | sample_name | metadata_1 | metadata_2 | metadata_3 | metadata_4 | metadata_5 | metadata_6 | metadata_7 | metadata_8 | metadata_9 | metadata_10 | metadata_11 | metadata_12 | metadata_13 | metadata_14 | metadata_15 | metadata_16 |
+| ------- | ----------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |
+| Sample1 | SampleA     | meta_1     | meta_2     | meta_3     | meta_4     | meta_5     | meta_6     | meta_7     | meta_8     | meta_9     | meta_10     | meta_11     | meta_12     | meta_13     | meta_14     | meta_15     | meta_16     |
 
 The amount and meaning of the metadata columns may be different for each metadata transformation.
 
@@ -32,19 +32,28 @@ You may specify the metadata transformation with the `--transformation` paramete
 | earliest       | Reports the earliest date among the metadata columns.                                                                                                                                |
 | populate       | Populates an output column with a specific value.                                                                                                                                    |
 | categorize     | Categorizes data into Human, Animal, Food or Environmental source based on values in a specific set of fields                                                                        |
+| pnc            | Performs the categorize, earliest, and age_pnc transformations in sequence with PNC-specific considerations.                                                                         |
 
 ## Lock Parameters
 
 The following parameters can be used to rename CSV-generated output columns and Irida Next fields as follows:
 
-- `--metadata_1_header`: names the first metadata_1 column header
-- `--metadata_2_header`: names the first metadata_2 column header
-- `--metadata_3_header`: names the first metadata_3 column header
-- `--metadata_4_header`: names the first metadata_4 column header
-- `--metadata_5_header`: names the first metadata_5 column header
-- `--metadata_6_header`: names the first metadata_6 column header
-- `--metadata_7_header`: names the first metadata_7 column header
-- `--metadata_8_header`: names the first metadata_8 column header
+- `--metadata_1_header`: names the metadata_1 column header
+- `--metadata_2_header`: names the metadata_2 column header
+- `--metadata_3_header`: names the metadata_3 column header
+- `--metadata_4_header`: names the metadata_4 column header
+- `--metadata_5_header`: names the metadata_5 column header
+- `--metadata_6_header`: names the metadata_6 column header
+- `--metadata_7_header`: names the metadata_7 column header
+- `--metadata_8_header`: names the metadata_8 column header
+- `--metadata_9_header`: names the metadata_9 column header
+- `--metadata_10_header`: names the metadata_10 column header
+- `--metadata_11_header`: names the metadata_11 column header
+- `--metadata_12_header`: names the metadata_12 column header
+- `--metadata_13_header`: names the metadata_13 column header
+- `--metadata_14_header`: names the metadata_14 column header
+- `--metadata_15_header`: names the metadata_15 column header
+- `--metadata_16_header`: names the metadata_16 column header
 
 ## Age Parameters
 
@@ -71,14 +80,14 @@ sample3,GHI,2000-05-05,1950-12-31,,False,The dates are reversed.
 
 ## Age PNC Parameters
 
-The metadata header parameters (`--metadata_1_header` through `--metadata_8_header`) are required for the transformation. In particular, at least four of the metadata headers must be renamed to be exactly the following:
+The metadata header parameters (`--metadata_1_header` through `--metadata_16_header`) are required for the transformation. In particular, at least four of the metadata headers must be renamed to be exactly the following:
 
 - `host_date_of_birth_DOB`
 - `calc_earliest_date`
 - `host_age`
 - `host_age_unit`
 
-For example, if the 2nd metadata column corresponds to the date of birth, then it must be parameterized as follows: `--metadata_1_header host_date_of_birth_DOB`. If the 5th metadata column of the input corresponds to the age unit, then it must be parameterized as follows: `--metadata_5_header host_age_unit`. The order of the metadata columns in the input does not matter, as long as the names are assigned correctly as above.
+For example, if the 2nd metadata column corresponds to the date of birth, then it must be parameterized as follows: `--metadata_2_header host_date_of_birth_DOB`. If the 5th metadata column of the input corresponds to the age unit, then it must be parameterized as follows: `--metadata_5_header host_age_unit`. The order of the metadata columns in the input does not matter, as long as the names are assigned correctly as above.
 
 The age metadata column in the output can be renamed as follows, but this is not recommended as the expected age metadata column name is exactly `calc_host_age` (the default):
 
@@ -117,7 +126,7 @@ For simplicity, the the following assumptions are made when calculating ages:
 - 365 days in a year
 - 52 weeks in a year
 - 12 months in a year
-- ages cannot be less than 0
+- ages cannot be less than or equal to 0
 - ages cannot be greater than 150
 
 Furthermore, the following values are ignored and treated as "years" when provided as an age unit: `Not Applicable`, `Missing`, `Not Collected`, `Not Provided`, `Restricted Access`, `(blank)`. For example, this means that an age number of 10 and an age unit of `Restricted Access` will report an age of 10 years old.
@@ -126,19 +135,31 @@ Furthermore, the following values are ignored and treated as "years" when provid
 
 The following parameters can be used to rename CSV-generated output columns as follows:
 
-- `--metadata_1_header`: names the first metadata_1 column header
-- `--metadata_2_header`: names the first metadata_2 column header
-- `--metadata_3_header`: names the first metadata_3 column header
-- `--metadata_4_header`: names the first metadata_4 column header
-- `--metadata_5_header`: names the first metadata_5 column header
-- `--metadata_6_header`: names the first metadata_6 column header
-- `--metadata_7_header`: names the first metadata_7 column header
-- `--metadata_8_header`: names the first metadata_8 column header
+- `--metadata_1_header`: names the metadata_1 column header
+- `--metadata_2_header`: names the metadata_2 column header
+- `--metadata_3_header`: names the metadata_3 column header
+- `--metadata_4_header`: names the metadata_4 column header
+- `--metadata_5_header`: names the metadata_5 column header
+- `--metadata_6_header`: names the metadata_6 column header
+- `--metadata_7_header`: names the metadata_7 column header
+- `--metadata_8_header`: names the metadata_8 column header
+- `--metadata_9_header`: names the metadata_9 column header
+- `--metadata_10_header`: names the metadata_10 column header
+- `--metadata_11_header`: names the metadata_11 column header
+- `--metadata_12_header`: names the metadata_12 column header
+- `--metadata_13_header`: names the metadata_13 column header
+- `--metadata_14_header`: names the metadata_14 column header
+- `--metadata_15_header`: names the metadata_15 column header
+- `--metadata_16_header`: names the metadata_16 column header
 - `--earliest_header`: names the earliest date column header and related output columns
 
 The above parameters will only affect the `results.csv` file and not the information returned to IRIDA Next. The earliest date column will be reported as `calc_earliest_date` in `results.csv`, `transformation.csv`, and the `iridanext.output.json` file, which is returned to IRIDA Next.
 
+### Assumptions
+
 The following special entries are ignored when calculating the earliest date (they are not considered malformed data): `Not Applicable`, `Missing`, `Not Collected`, `Not Provided`, `Restricted Access`, `(blank)`
+
+The supported range of calendar dates is [`1677-09-22`, `2262-04-10`], which is related to the default [timestamp limitations of pandas](https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#timestamp-limitations).
 
 ## Populate Parameters
 
@@ -181,6 +202,86 @@ sample10,"K",,dog,eggs,,,Animal
 sample11,"L",,,eggs,farm,,Food
 sample12,"M",,,eggs,,wastewater,Food
 ```
+
+## PNC Parameters
+
+The metadata header parameters (`--metadata_1_header` through `--metadata_16_header`) are required for the transformation. In particular, fourteen of the metadata headers must be renamed as appropriate to be exactly the following:
+
+- `isolate_received_date`
+- `isolation_date`
+- `sample_collection_date`
+- `sample_received_date_collaborator`
+- `sample_received_date_nml`
+- `sequencing_date`
+- `host_age`
+- `host_age_unit`
+- `host_date_of_birth_DOB`
+- `host_scientific_name`
+- `host_common_name`
+- `food_product`
+- `environmental_material`
+- `environmental_site`
+
+For example, if the 2nd metadata column of the sample sheet corresponds to the isolation date, then it must be parameterized as follows: `--metadata_2_header isolation_date`. If the 5th metadata column of the input corresponds to the sample received date for the NML, then it must be parameterized as follows: `--metadata_5_header sample_received_date_nml`. The order of the metadata columns in the input does not matter, as long as the names are assigned correctly as above. If any of the columns are missing, an error will be reported in the `transformation/results.csv` file.
+
+### Example
+
+The following code:
+
+```
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/pnc/basic.csv --outdir results --transformation pnc -c pnc.config
+```
+
+would generate the following `results.csv` file:
+
+```
+sample,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type,calc_source_type_valid,calc_source_type_error,isolate_received_date,isolation_date,sample_collection_date,sample_received_date_collaborator,sample_received_date_nml,sequencing_date,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error,host_date_of_birth_DOB,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error
+sample1,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,2020-01-06,2020-01-01,True,,2010-01-01,10,year,10,True,
+```
+
+Where the `pnc.config` file is as follows:
+
+```
+params {
+    metadata_1_header = "isolate_received_date"
+    metadata_2_header = "isolation_date"
+    metadata_3_header = "sample_collection_date"
+    metadata_4_header = "sample_received_date_collaborator"
+    metadata_5_header = "sample_received_date_nml"
+    metadata_6_header = "sequencing_date"
+    metadata_7_header = "host_age"
+    metadata_8_header = "host_age_unit"
+    metadata_9_header = "host_date_of_birth_DOB"
+    metadata_10_header = "host_scientific_name"
+    metadata_11_header = "host_common_name"
+    metadata_12_header = "food_product"
+    metadata_13_header = "environmental_material"
+    metadata_14_header = "environmental_site"
+}
+```
+
+### Assumptions
+
+Generally, the assumptions for the `pnc` transformation are the same as the `categorize`, `earliest`, and `age_pnc` transformations. However, they are repeated here for completeness:
+
+The the following assumptions are made when calculating ages:
+
+- 365 days in a year
+- 52 weeks in a year
+- 12 months in a year
+- ages cannot be less than or equal to 0
+- ages cannot be greater than 150
+
+The following values are ignored and treated as "years" when provided as an age unit: `Not Applicable`, `Missing`, `Not Collected`, `Not Provided`, `Restricted Access`, `(blank)`. For example, this means that an age number of 10 and an age unit of `Restricted Access` will report an age of 10 years old.
+
+The supported range of calendar dates is [`1677-09-22`, `2262-04-10`], which is related to the default [timestamp limitations of pandas](https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html#timestamp-limitations). The following date fields have additional requirements:
+
+- `isolate_received_date`: after 1900-01-01
+- `isolation_date`: after 1900-01-01
+- `sample_collection_date`: after 1900-01-01
+- `sample_received_date_collaborator`: after 1900-01-01
+- `sample_received_date_nml`: after 1995-01-01
+- `sequencing_date`: after 2007-01-01
 
 ## Other Parameters
 

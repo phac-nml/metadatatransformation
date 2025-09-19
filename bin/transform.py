@@ -5,14 +5,7 @@ import pathlib
 import pandas
 
 from transformations.age import age, age_pnc
-
-from transformations.constants import (SPECIAL_ENTRIES, ROWS_AXIS, COLUMNS_AXIS,
-                                        SPECIAL_ENTRIES_REGEX, DATE_FORMAT,
-                                        VALID_HEADER_EXTENSION, ERROR_HEADER_EXTENSION,
-                                        SAMPLE_HEADER, SAMPLE_NAME_HEADER,
-                                        AGE_HEADER, AGE_PNC_HEADER,
-                                        EARLIEST_HEADER, EARLIEST_HEADER_PNC,
-                                        POPULATE_HEADER)
+from transformations.constants import *
 
 # Transformations:
 LOCK = "lock"
@@ -21,6 +14,7 @@ AGE_PNC = "age_pnc"
 EARLIEST = "earliest"
 POPULATE = "populate"
 CATEGORIZE = "categorize"
+PNC = "pnc"
 
 # Default Values:
 POPULATE_VALUE = "NA"
@@ -38,6 +32,12 @@ def remove_any_NA_rows(metadata):
     # then remove the whole row.
     metadata.dropna(axis=ROWS_AXIS, how="any", inplace=True)
 
+def remove_all_NA_rows(metadata):
+    # If all entries in the row are NA,
+    # then remove the whole row.
+    # Need to ignore "sample" column.
+    metadata.dropna(axis=ROWS_AXIS, how="all", inplace=True, subset=metadata.columns.difference([SAMPLE_HEADER]))
+
 def remove_all_NA_columns(metadata):
     # If all entries in the column are NA,
     # then remove the whole column.
@@ -51,9 +51,7 @@ def populate(metadata, populate_header, populate_value):
 
     return metadata_readable, metadata_irida
 
-def find_earliest_date(row):
-    DATE_1_INDEX = 2
-
+def calculate_earliest_date(row):
     earliest = pandas.NA
     earliest_valid = False
     earliest_error = "Unable to find the earliest date."
@@ -61,9 +59,13 @@ def find_earliest_date(row):
     dates = []
 
     # Replace special entries (not in place):
+
     # We need everything to be a string (pandas.NA) and not another
     # type (numpy.nan, etc.).
-    replaced = row.iloc[DATE_1_INDEX:].fillna(value=pandas.NA, inplace=False)
+    replaced = row.fillna(value=pandas.NA, inplace=False)
+
+    # Drop "sample" and "sample_name" if they exist:
+    replaced = replaced.drop([SAMPLE_HEADER, SAMPLE_NAME_HEADER], errors="ignore")
 
     # We need to check for all NA at this point, because numpy
     # will fail to replace if everything is NA:
@@ -72,7 +74,8 @@ def find_earliest_date(row):
         earliest_valid = False
         earliest_error = "No data was found."
 
-        return pandas.Series([earliest, earliest_valid, earliest_error])
+        result = pandas.Series([earliest, earliest_valid, earliest_error]), dates
+        return result
 
     # Not everything is NA. Replace special entries:
     replaced = replaced.replace(to_replace=SPECIAL_ENTRIES_REGEX, value=pandas.NA, inplace=False, regex=True)
@@ -86,7 +89,8 @@ def find_earliest_date(row):
         earliest_valid = False
         earliest_error = "No dates were found."
 
-        return pandas.Series([earliest, earliest_valid, earliest_error])
+        result = pandas.Series([earliest, earliest_valid, earliest_error]), dates
+        return result
 
     try:
         dates = pandas.to_datetime(replaced, format="%Y-%m-%d", errors="raise")
@@ -97,7 +101,8 @@ def find_earliest_date(row):
         earliest_valid = False
         earliest_error = "At least one of the dates are incorrectly formatted."
 
-        return pandas.Series([earliest, earliest_valid, earliest_error])
+        result = pandas.Series([earliest, earliest_valid, earliest_error]), dates
+        return result
 
     # At least one valid date was found:
     if len(dates) > 0:
@@ -105,15 +110,53 @@ def find_earliest_date(row):
         earliest_valid = True
         earliest_error = ""
 
-    result = pandas.Series([earliest, earliest_valid, earliest_error])
+    result = pandas.Series([earliest, earliest_valid, earliest_error]), dates
     return result
 
-def earliest(metadata, earliest_header):
+def find_earliest_date_pnc(row):
+    MIN_DATE = pandas.to_datetime("1900-01-01")
+    MIN_SAMPLE_RECEIVED_DATE_NML = pandas.to_datetime("1995-01-01")
+    MIN_SEQUENCING_DATE = pandas.to_datetime("2007-01-01")
+
+    earliest, dates = calculate_earliest_date(row)
+
+    if(len(dates) > 0):
+        # Any of the dates are too old (the oldest date check):
+        if(len(dates[dates < MIN_DATE]) > 0):
+            earliest = pandas.NA
+            earliest_valid = False
+            earliest_error = "At least one of the dates is too old."
+
+            return pandas.Series([earliest, earliest_valid, earliest_error])
+
+        # The NML sample received date is too old:
+        elif(PNC_EARLIEST_DATE_SAMPLE_RECEIVED_DATE_NML in dates and dates[PNC_EARLIEST_DATE_SAMPLE_RECEIVED_DATE_NML] < MIN_SAMPLE_RECEIVED_DATE_NML):
+            earliest = pandas.NA
+            earliest_valid = False
+            earliest_error = "The NML sample received date is too old."
+
+            return pandas.Series([earliest, earliest_valid, earliest_error])
+
+        # The sequencing date is too old:
+        elif(PNC_EARLIEST_DATE_SEQUENCING_DATE in dates and dates[PNC_EARLIEST_DATE_SEQUENCING_DATE] < MIN_SEQUENCING_DATE):
+            earliest = pandas.NA
+            earliest_valid = False
+            earliest_error = "The sequencing date is too old."
+
+            return pandas.Series([earliest, earliest_valid, earliest_error])
+
+    return earliest
+
+def find_earliest_date(row):
+    earliest, dates = calculate_earliest_date(row)
+    return earliest
+
+def earliest(metadata, earliest_header, function):
     earliest_valid_header = earliest_header + VALID_HEADER_EXTENSION
     earliest_error_header = earliest_header + ERROR_HEADER_EXTENSION
 
     metadata_readable = metadata.copy(deep=True)
-    metadata_readable[[earliest_header, earliest_valid_header, earliest_error_header]] = metadata_readable.apply(find_earliest_date, axis=COLUMNS_AXIS)
+    metadata_readable[[earliest_header, earliest_valid_header, earliest_error_header]] = metadata_readable.apply(function, axis=COLUMNS_AXIS)
 
     metadata_irida = metadata_readable[[SAMPLE_HEADER, earliest_header]].copy(deep=True)
 
@@ -126,26 +169,16 @@ def lock(metadata):
     return metadata_readable, metadata_irida
 
 def categorize(metadata):
-
     # Check for required headers (output error message and blank if missing)
-    required_headers = [
-        "host_scientific_name", "host_common_name", "food_product",
-        "environmental_site", "environmental_material"
-    ]
-    source_type_header = "calc_source_type"
-    source_type_valid_header = source_type_header + VALID_HEADER_EXTENSION
-    source_type_error_header = source_type_header + ERROR_HEADER_EXTENSION
-    results_headers = [source_type_header, source_type_valid_header, source_type_error_header]
-
     metadata_readable = metadata.copy(deep=True)
 
-    missing_required_headers = [col for col in required_headers if col not in metadata.columns]
-    included_required_headers = [col for col in required_headers if col in metadata.columns]
+    missing_required_headers = [col for col in CATEGORIZE_HEADERS if col not in metadata.columns]
+    included_required_headers = [col for col in CATEGORIZE_HEADERS if col in metadata.columns]
 
     if (len(missing_required_headers) > 0):
         metadata_irida = pandas.DataFrame({SAMPLE_HEADER:[]})
-        metadata_readable[results_headers] = pandas.Series([pandas.NA, False, "Missing required headers: " + str(missing_required_headers)])
-        metadata_readable = metadata_readable[[SAMPLE_HEADER, SAMPLE_NAME_HEADER] + included_required_headers + results_headers]
+        metadata_readable[CATEGORIZE_RESULTS_HEADERS] = pandas.Series([pandas.NA, False, "Missing required headers: " + str(missing_required_headers)])
+        metadata_readable = metadata_readable[[SAMPLE_HEADER, SAMPLE_NAME_HEADER] + included_required_headers + CATEGORIZE_RESULTS_HEADERS]
         return metadata_readable, metadata_irida
 
     # Helper fun for row-wise categorization
@@ -169,12 +202,56 @@ def categorize(metadata):
         else:
             return UNKNOWN_VALUE
 
-    metadata_readable[source_type_header] = metadata_readable.apply(categorize_row, axis = COLUMNS_AXIS)
-    metadata_readable[source_type_valid_header] = True
-    metadata_readable[source_type_error_header] = ""
+    metadata_readable[CATEGORIZE_SOURCE_TYPE_HEADER] = metadata_readable.apply(categorize_row, axis = COLUMNS_AXIS)
+    metadata_readable[CATEGORIZE_VALID_HEADER] = True
+    metadata_readable[CATEGORIZE_ERROR_HEADER] = ""
 
-    metadata_readable = metadata_readable[[SAMPLE_HEADER, SAMPLE_NAME_HEADER] + included_required_headers + results_headers]
-    metadata_irida = metadata_readable[[SAMPLE_HEADER, source_type_header]].copy(deep=True)
+    metadata_readable = metadata_readable[[SAMPLE_HEADER, SAMPLE_NAME_HEADER] + included_required_headers + CATEGORIZE_RESULTS_HEADERS]
+    metadata_irida = metadata_readable[[SAMPLE_HEADER, CATEGORIZE_SOURCE_TYPE_HEADER]].copy(deep=True)
+
+    return metadata_readable, metadata_irida
+
+def pnc(metadata):
+    # The PNC transformation requires many exactly-matching
+    # metadata column headers:
+    required_headers = [SAMPLE_HEADER] + PNC_EARLIEST_DATE_HEADERS + CATEGORIZE_HEADERS + PNC_AGE_HEADERS
+
+    # The PNC_AGE_DATE_HEADER is normally required for the
+    # Age PNC transformation, but is calculated during the
+    # chained PNC transformation during the earliest date step.
+    if(PNC_AGE_DATE_HEADER in required_headers):
+        required_headers.remove(PNC_AGE_DATE_HEADER)
+
+    missing_headers = [col for col in required_headers if col not in metadata.columns]
+
+    if len(missing_headers) > 0:
+        metadata_irida = pandas.DataFrame({SAMPLE_HEADER:[]})
+        metadata_readable = metadata.copy(deep=True)
+        metadata_readable[CATEGORIZE_RESULTS_HEADERS] = pandas.Series([pandas.NA, False, "Missing headers: " + "; ".join(missing_headers)])
+        metadata_readable[PNC_EARLIEST_RESULTS_HEADERS] = pandas.Series([pandas.NA, False, "Missing headers: " + "; ".join(missing_headers)])
+        metadata_readable[PNC_AGE_RESULTS_HEADERS] = pandas.Series([pandas.NA, False, "Missing headers: " + "; ".join(missing_headers)])
+        return metadata_readable, metadata_irida
+
+    # Categorize
+    categorize_readable, categorize_irida = categorize(metadata)
+    categorize_readable = categorize_readable[CATEGORIZE_COMBINED_RESULTS_HEADERS]
+
+    # Earliest
+    metadata_earliest = metadata[[SAMPLE_HEADER] + PNC_EARLIEST_DATE_HEADERS]
+    earliest_readable, earliest_irida = earliest(metadata_earliest, EARLIEST_HEADER_PNC, find_earliest_date_pnc)
+    earliest_readable = earliest_readable[PNC_EARLIEST_DATE_COMBINED_RESULTS_HEADERS]
+
+    # Age PNC
+    metadata_age_pnc = metadata.merge(earliest_irida, how="inner", on=SAMPLE_HEADER)
+    age_pnc_readable, age_pnc_irida = age_pnc(metadata_age_pnc, AGE_PNC_HEADER)
+    age_pnc_readable = age_pnc_readable[PNC_AGE_COMBINED_RESULTS_HEADERS]
+
+    # Merge
+    metadata_readable = categorize_readable.merge(earliest_readable, how="inner", on=SAMPLE_HEADER)
+    metadata_readable = metadata_readable.merge(age_pnc_readable, how="inner", on=SAMPLE_HEADER)
+
+    metadata_irida = categorize_irida.merge(earliest_irida, how="inner", on=SAMPLE_HEADER)
+    metadata_irida = metadata_irida.merge(age_pnc_irida, how="inner", on=SAMPLE_HEADER)
 
     return metadata_readable, metadata_irida
 
@@ -185,7 +262,7 @@ def main():
 
     parser.add_argument("input", type=pathlib.Path,
                         help="The CSV-formatted input file to transform.")
-    parser.add_argument("transformation", choices=[LOCK, AGE, AGE_PNC, EARLIEST, POPULATE, CATEGORIZE],
+    parser.add_argument("transformation", choices=[LOCK, AGE, AGE_PNC, EARLIEST, POPULATE, CATEGORIZE, PNC],
                         help="The type of transformation to perform.")
     parser.add_argument("--age_header", default=AGE_HEADER, required=False,
                         help="The output column header for the calculated age.")
@@ -223,7 +300,7 @@ def main():
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
     elif (args.transformation == EARLIEST):
-        metadata_readable, metadata_irida = earliest(metadata, args.earliest_header)
+        metadata_readable, metadata_irida = earliest(metadata, args.earliest_header, find_earliest_date)
 
         remove_all_NA_columns(metadata_irida)
         remove_any_NA_rows(metadata_irida)
@@ -243,6 +320,14 @@ def main():
         if len(metadata_irida) > 0:
             remove_all_NA_columns(metadata_irida)
 
+        metadata_readable.to_csv(RESULTS_PATH, index=False)
+        metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
+
+    elif (args.transformation == PNC):
+        metadata_readable, metadata_irida = pnc(metadata)
+
+        remove_all_NA_columns(metadata_irida)
+        remove_all_NA_rows(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
