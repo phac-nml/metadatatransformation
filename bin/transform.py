@@ -41,7 +41,11 @@ def remove_all_NA_rows(metadata):
 def remove_all_NA_columns(metadata):
     # If all entries in the column are NA,
     # then remove the whole column.
-    metadata.dropna(axis=COLUMNS_AXIS, how="all", inplace=True)
+    # We need to check if the data frame is empty,
+    # because the "sample" column will be removed
+    # if there's no samples (i.e. it's empty).
+    if not metadata.empty:
+        metadata.dropna(axis=COLUMNS_AXIS, how="all", inplace=True)
 
 def populate(metadata, populate_header, populate_value):
     metadata_readable = metadata.copy(deep=True)

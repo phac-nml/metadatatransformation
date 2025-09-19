@@ -922,7 +922,13 @@ nextflow_pipeline {
             assert results.text.contains("sample1,basic1,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,2020-01-06,10,year,2010-01-01,Homo sapiens (Human),Human NCBITaxon:9606,,,,,,,False,Missing headers: isolate_received_date; isolation_date; sample_collection_date,,False,Missing headers: isolate_received_date; isolation_date; sample_collection_date,,False,Missing headers: isolate_received_date; isolation_date; sample_collection_date")
 
             // Check IRIDA Next JSON Output
-            assert path("$launchDir/results/iridanext.output.json").exists() == false
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            assert iridanext_metadata.containsKey("sample1") == false
         }
     }
 
