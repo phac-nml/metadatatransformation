@@ -15,7 +15,7 @@ nextflow_pipeline {
                 transformation = "age_pnc"
                 age_header = "calc_host_age"
 
-                metadata_1_header = "host_date_of_birth_DOB"
+                metadata_1_header = "host_date_of_birth_dob"
                 metadata_2_header = "calc_earliest_date"
                 metadata_3_header = "host_age"
                 metadata_4_header = "host_age_unit"
@@ -69,7 +69,7 @@ nextflow_pipeline {
 
             assert results.text.readLines().size() == 30
 
-            assert results.text.contains("sample,sample_name,host_date_of_birth_DOB,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
+            assert results.text.contains("sample,sample_name,host_date_of_birth_dob,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
             assert results.text.contains("sample1,1,2000-01-01,2000-01-02,,,0.0027,True,")
             assert results.text.contains("sample2,2,2000-01-01,2000-01-03,,,0.0055,True,")
             assert results.text.contains("sample3,3,2000-01-01,2000-04-01,,,0.2493,True,")
@@ -210,7 +210,7 @@ nextflow_pipeline {
                 transformation = "age_pnc"
                 age_header = "calc_host_age"
 
-                metadata_1_header = "host_date_of_birth_DOB"
+                metadata_1_header = "host_date_of_birth_dob"
                 metadata_2_header = "calc_earliest_date"
                 metadata_3_header = "host_age"
                 metadata_4_header = "host_age_unit"
@@ -260,7 +260,7 @@ nextflow_pipeline {
 
             assert results.text.readLines().size() == 25
 
-            assert results.text.contains("sample,sample_name,host_date_of_birth_DOB,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
+            assert results.text.contains("sample,sample_name,host_date_of_birth_dob,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
             assert results.text.contains("reverse_dates_under_2,rd_1,2001-01-01,2000-01-01,,,,False,The dates are reversed")
             assert results.text.contains("reverse_dates_over_2,rd_2,2010-01-01,2000-01-01,,,,False,The dates are reversed")
             assert results.text.contains("bad_format_1,bf_1,00-01-01,2000-11-11,,,,False,The date format does not match the expected format (YYYY-MM-DD)")
@@ -273,7 +273,7 @@ nextflow_pipeline {
             assert results.text.contains("negative_date_1,nd_1,-2000-01-01,2001-01-01,,,,False,The date format does not match the expected format (YYYY-MM-DD)")
             assert results.text.contains("negative_date_2,nd_2,2000-01-01,-2001-01-01,,,,False,The date format does not match the expected format (YYYY-MM-DD)")
             assert results.text.contains("missing_date_1,md_1,,2001-01-01,,,,False,Insufficient data to calculate an age")
-            assert results.text.contains("missing_date_2,md_2,2000-01-01,,,,,False,host_date_of_birth_DOB provided but calc_earliest_date is missing")
+            assert results.text.contains("missing_date_2,md_2,2000-01-01,,,,,False,host_date_of_birth_dob provided but calc_earliest_date is missing")
             assert results.text.contains("age_not_a_number_1,age_nan_1,,,one,year,,False,host_age (one) could not be converted to a number")
             assert results.text.contains("age_unit_not_string_1,au_nas_1,,,1,1,,False,invalid host_age_unit (1)")
             assert results.text.contains("age_unit_not_string_2,au_nas_1_age_unit_not_string_2,,,1,1.0,,False,invalid host_age_unit (1.0)")
@@ -382,7 +382,7 @@ nextflow_pipeline {
                 transformation = "age_pnc"
                 age_header = "calc_host_age"
 
-                metadata_1_header = "host_date_of_birth_DOB"
+                metadata_1_header = "host_date_of_birth_dob"
                 metadata_2_header = "calc_earliest_date"
                 metadata_3_header = "host_age"
                 metadata_4_header = "host_age_unit"
@@ -410,7 +410,7 @@ nextflow_pipeline {
 
             assert results.text.readLines().size() == 4
 
-            assert results.text.contains("sample,sample_name,host_date_of_birth_DOB,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
+            assert results.text.contains("sample,sample_name,host_date_of_birth_dob,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
             assert results.text.contains("sample1,ABC,2000-01-01,2000-12-31,,,1.0000,True,")
             assert results.text.contains("sample2,DEF,2000-02-29,2024-02-29,,,24,True,")
             assert results.text.contains("sample3,GHI,1950-12-31,2000-05-05,,,49,True,")
@@ -447,7 +447,7 @@ nextflow_pipeline {
                 transformation = "age_pnc"
                 age_header = "calc_host_age"
 
-                metadata_1_header = "host_date_of_birth_DOB"
+                metadata_1_header = "host_date_of_birth_dob"
                 metadata_2_header = "calc_earliest_date"
                 metadata_3_header = "host_age"
                 metadata_4_header = "host_age_unit"
@@ -474,7 +474,7 @@ nextflow_pipeline {
 
             assert results.text.readLines().size() == 4
 
-            assert results.text.contains("sample,sample_name,host_date_of_birth_DOB,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
+            assert results.text.contains("sample,sample_name,host_date_of_birth_dob,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
             assert results.text.contains("sample1,ABC,2000-01-01,2000-12-31,,,1.0000,True,")
             assert results.text.contains("sample2,DEF,2000-02-29,2024-02-29,,,24,True,")
             assert results.text.contains("sample3,GHI,2000-05-05,1950-12-31,,,,False,The dates are reversed")
@@ -510,7 +510,7 @@ nextflow_pipeline {
                 transformation = "age_pnc"
                 age_header "calc host age"
 
-                metadata_1_header = "host_date_of_birth_DOB"
+                metadata_1_header = "host_date_of_birth_dob"
                 metadata_2_header = "calc_earliest_date"
                 metadata_3_header = "host_age"
                 metadata_4_header = "host_age_unit"
@@ -564,7 +564,7 @@ nextflow_pipeline {
 
             assert results.text.readLines().size() == 30
 
-            assert results.text.contains("sample,sample_name,host_date_of_birth_DOB,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
+            assert results.text.contains("sample,sample_name,host_date_of_birth_dob,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
             assert results.text.contains("sample1,1,2000-01-01,2000-01-02,,,0.0027,True,")
             assert results.text.contains("sample2,2,2000-01-01,2000-01-03,,,0.0055,True,")
             assert results.text.contains("sample3,3,2000-01-01,2000-04-01,,,0.2493,True,")
@@ -645,7 +645,7 @@ nextflow_pipeline {
                 transformation = "age_pnc"
                 age_header "calc_host_age"
 
-                metadata_1_header = "host_date_of_birth_DOB"
+                metadata_1_header = "host_date_of_birth_dob"
                 metadata_2_header = "calc_earliest_date"
                 metadata_3_header = "host_age"
                 metadata_4_header = "host_age_unit"
@@ -673,7 +673,7 @@ nextflow_pipeline {
 
             assert results.text.readLines().size() == 4
 
-            assert results.text.contains("sample,sample_name,host_date_of_birth_DOB,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
+            assert results.text.contains("sample,sample_name,host_date_of_birth_dob,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
             assert results.text.contains("sample1,ABC,1.1,1.2,1.3,1.4,,False,The date format does not match the expected format (YYYY-MM-DD); invalid host_age_unit (1.4)")
             assert results.text.contains("sample2,DEF,2.1,2.2,2.3,2.4,,False,The date format does not match the expected format (YYYY-MM-DD); invalid host_age_unit (2.4)")
             assert results.text.contains("sample3,GHI,3.1,3.2,3.3,3.4,,False,The date format does not match the expected format (YYYY-MM-DD); invalid host_age_unit (3.4)")
@@ -713,7 +713,7 @@ nextflow_pipeline {
                 metadata_1_header = "calc_earliest_date"
                 metadata_2_header = "host_age"
                 metadata_3_header = "host_age_unit"
-                metadata_4_header = "host_date_of_birth_DOB"
+                metadata_4_header = "host_date_of_birth_dob"
             }
         }
 
@@ -756,7 +756,7 @@ nextflow_pipeline {
 
             assert results.text.readLines().size() == 37
 
-            assert results.text.contains("sample,sample_name,host_date_of_birth_DOB,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
+            assert results.text.contains("sample,sample_name,host_date_of_birth_dob,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
             assert results.text.contains("sample1,1,2025-01-01,2025-02-01,1,month,0.0841,True,")
             assert results.text.contains("sample2,2,2025-04-01,2025-04-11,90,day,0.1370,True,")
             assert results.text.contains("sample3,3,1985-08-10,2025-08-11,40,year,40,True,")
@@ -772,10 +772,10 @@ nextflow_pipeline {
             assert results.text.contains("sample13,13,,,10,cycles,,False,invalid host_age_unit (cycles)")
             assert results.text.contains("sample14,14,,,10,units,,False,invalid host_age_unit (units)")
             assert results.text.contains("sample15,15,,,10,Restricted Access,10,True,")
-            assert results.text.contains("sample16,16,2025-01-01,,10,,,False,host_date_of_birth_DOB provided but calc_earliest_date is missing")
-            assert results.text.contains("sample17,17,2025-01-01,,10,cycles,,False,host_date_of_birth_DOB provided but calc_earliest_date is missing")
-            assert results.text.contains("sample18,18,2025-01-01,,10,units,,False,host_date_of_birth_DOB provided but calc_earliest_date is missing")
-            assert results.text.contains("sample19,19,2025-01-01,,10,bananas,,False,host_date_of_birth_DOB provided but calc_earliest_date is missing")
+            assert results.text.contains("sample16,16,2025-01-01,,10,,,False,host_date_of_birth_dob provided but calc_earliest_date is missing")
+            assert results.text.contains("sample17,17,2025-01-01,,10,cycles,,False,host_date_of_birth_dob provided but calc_earliest_date is missing")
+            assert results.text.contains("sample18,18,2025-01-01,,10,units,,False,host_date_of_birth_dob provided but calc_earliest_date is missing")
+            assert results.text.contains("sample19,19,2025-01-01,,10,bananas,,False,host_date_of_birth_dob provided but calc_earliest_date is missing")
             assert results.text.contains("sample20,20,,,10,Not Applicable,10,True,")
             assert results.text.contains("sample21,21,,,10,Missing,10,True,")
             assert results.text.contains("sample22,22,,,10,Not Collected,10,True,")

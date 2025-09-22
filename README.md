@@ -82,12 +82,12 @@ sample3,GHI,2000-05-05,1950-12-31,,False,The dates are reversed.
 
 The metadata header parameters (`--metadata_1_header` through `--metadata_16_header`) are required for the transformation. In particular, at least four of the metadata headers must be renamed to be exactly the following:
 
-- `host_date_of_birth_DOB`
+- `host_date_of_birth_dob`
 - `calc_earliest_date`
 - `host_age`
 - `host_age_unit`
 
-For example, if the 2nd metadata column corresponds to the date of birth, then it must be parameterized as follows: `--metadata_2_header host_date_of_birth_DOB`. If the 5th metadata column of the input corresponds to the age unit, then it must be parameterized as follows: `--metadata_5_header host_age_unit`. The order of the metadata columns in the input does not matter, as long as the names are assigned correctly as above.
+For example, if the 2nd metadata column corresponds to the date of birth, then it must be parameterized as follows: `--metadata_2_header host_date_of_birth_dob`. If the 5th metadata column of the input corresponds to the age unit, then it must be parameterized as follows: `--metadata_5_header host_age_unit`. The order of the metadata columns in the input does not matter, as long as the names are assigned correctly as above.
 
 The age metadata column in the output can be renamed as follows, but this is not recommended as the expected age metadata column name is exactly `calc_host_age` (the default):
 
@@ -98,13 +98,13 @@ The age metadata column in the output can be renamed as follows, but this is not
 The following code:
 
 ```
-nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/age/basic.csv --outdir results --transformation age --age_header calc_host_age --metadata_1_header host_date_of_birth_DOB --metadata_2_header calc_earliest_date --metadata_3_header host_age --metadata_4_header host_age_unit
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/age/basic.csv --outdir results --transformation age --age_header calc_host_age --metadata_1_header host_date_of_birth_dob --metadata_2_header calc_earliest_date --metadata_3_header host_age --metadata_4_header host_age_unit
 ```
 
 would generate the following `results.csv` file:
 
 ```
-sample,sample_name,host_date_of_birth_DOB,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error
+sample,sample_name,host_date_of_birth_dob,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error
 sample1,1,2000-01-01,2000-01-02,,,0.0027,True,
 sample2,2,2000-01-01,2000-01-03,,,0.0055,True,
 sample3,3,2000-01-01,2000-04-01,,,0.2493,True,
@@ -215,7 +215,7 @@ The metadata header parameters (`--metadata_1_header` through `--metadata_16_hea
 - `sequencing_date`
 - `host_age`
 - `host_age_unit`
-- `host_date_of_birth_DOB`
+- `host_date_of_birth_dob`
 - `host_scientific_name`
 - `host_common_name`
 - `food_product`
@@ -235,7 +235,7 @@ nextflow run phac-nml/metadatatransformation -profile singularity --input tests/
 would generate the following `results.csv` file:
 
 ```
-sample,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type,calc_source_type_valid,calc_source_type_error,isolate_received_date,isolation_date,sample_collection_date,sample_received_date_collaborator,sample_received_date_nml,sequencing_date,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error,host_date_of_birth_DOB,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error
+sample,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type,calc_source_type_valid,calc_source_type_error,isolate_received_date,isolation_date,sample_collection_date,sample_received_date_collaborator,sample_received_date_nml,sequencing_date,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error,host_date_of_birth_dob,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error
 sample1,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,2020-01-06,2020-01-01,True,,2010-01-01,10,year,10,True,
 ```
 
@@ -251,7 +251,7 @@ params {
     metadata_6_header = "sequencing_date"
     metadata_7_header = "host_age"
     metadata_8_header = "host_age_unit"
-    metadata_9_header = "host_date_of_birth_DOB"
+    metadata_9_header = "host_date_of_birth_dob"
     metadata_10_header = "host_scientific_name"
     metadata_11_header = "host_common_name"
     metadata_12_header = "food_product"

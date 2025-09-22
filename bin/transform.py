@@ -279,6 +279,7 @@ def main():
 
     args = parser.parse_args()
     metadata = pandas.read_csv(args.input)
+    metadata.columns = metadata.columns.str.lower()
 
     if (args.transformation == LOCK):
         metadata_readable, metadata_irida = lock(metadata)

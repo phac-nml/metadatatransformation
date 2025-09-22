@@ -93,17 +93,17 @@ The following parameters can be used to rename CSV-generated output columns and 
 The calculate age PNC transformation may be run as follows:
 
 ```bash
-nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/age/basic.csv --outdir results --transformation age_pnc --age_header calc_host_age --metadata_1_header host_date_of_birth_DOB --metadata_2_header calc_earliest_date --metadata_3_header host_age --metadata_4_header host_age_unit
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/age/basic.csv --outdir results --transformation age_pnc --age_header calc_host_age --metadata_1_header host_date_of_birth_dob --metadata_2_header calc_earliest_date --metadata_3_header host_age --metadata_4_header host_age_unit
 ```
 
 The metadata header parameters (`--metadata_1_header` through `--metadata_16_header`) are required for the transformation. In particular, at least four of the metadata headers must be renamed to the exactly the following:
 
-- `host_date_of_birth_DOB`
+- `host_date_of_birth_dob`
 - `calc_earliest_date`
 - `host_age`
 - `host_age_unit`
 
-For example, if the 2nd metadata column corresponds to the date of birth, then it must be parameterized as follows: `--metadata_1_header host_date_of_birth_DOB`. If the 5th metadata column of the input corresponds to the age unit, then it must be parameterized as follows: `--metadata_5_header host_age_unit`. The order of the metadata columns in the input does not matter, as long as the names are assigned correctly as above.
+For example, if the 2nd metadata column corresponds to the date of birth, then it must be parameterized as follows: `--metadata_1_header host_date_of_birth_dob`. If the 5th metadata column of the input corresponds to the age unit, then it must be parameterized as follows: `--metadata_5_header host_age_unit`. The order of the metadata columns in the input does not matter, as long as the names are assigned correctly as above.
 
 The age metadata column in the output can be renamed as follows, but this is not recommended as the expected age metadata column name is exactly `calc_host_age` (the default):
 
@@ -262,7 +262,7 @@ params {
     metadata_6_header = "sequencing_date"
     metadata_7_header = "host_age"
     metadata_8_header = "host_age_unit"
-    metadata_9_header = "host_date_of_birth_DOB"
+    metadata_9_header = "host_date_of_birth_dob"
     metadata_10_header = "host_scientific_name"
     metadata_11_header = "host_common_name"
     metadata_12_header = "food_product"
@@ -281,7 +281,7 @@ The metadata header parameters (`--metadata_1_header` through `--metadata_16_hea
 - `sequencing_date`
 - `host_age`
 - `host_age_unit`
-- `host_date_of_birth_DOB`
+- `host_date_of_birth_dob`
 - `host_scientific_name`
 - `host_common_name`
 - `food_product`

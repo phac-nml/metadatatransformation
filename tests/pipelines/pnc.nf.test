@@ -22,7 +22,7 @@ nextflow_pipeline {
                 metadata_6_header = "sequencing_date"
                 metadata_7_header = "host_age"
                 metadata_8_header = "host_age_unit"
-                metadata_9_header = "host_date_of_birth_DOB"
+                metadata_9_header = "host_date_of_birth_dob"
                 metadata_10_header = "host_scientific_name"
                 metadata_11_header = "host_common_name"
                 metadata_12_header = "food_product"
@@ -50,7 +50,7 @@ nextflow_pipeline {
 
             assert results.text.readLines().size() == 2
 
-            assert results.text.contains("sample,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type,calc_source_type_valid,calc_source_type_error,isolate_received_date,isolation_date,sample_collection_date,sample_received_date_collaborator,sample_received_date_nml,sequencing_date,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error,host_date_of_birth_DOB,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
+            assert results.text.contains("sample,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type,calc_source_type_valid,calc_source_type_error,isolate_received_date,isolation_date,sample_collection_date,sample_received_date_collaborator,sample_received_date_nml,sequencing_date,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error,host_date_of_birth_dob,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
             assert results.text.contains("sample1,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,2020-01-06,2020-01-01,True,,2010-01-01,10,year,10,True,")
 
             // Check IRIDA Next JSON Output
@@ -88,7 +88,7 @@ nextflow_pipeline {
                 metadata_6_header = "sequencing_date"
                 metadata_7_header = "host_age"
                 metadata_8_header = "host_age_unit"
-                metadata_9_header = "host_date_of_birth_DOB"
+                metadata_9_header = "host_date_of_birth_dob"
                 metadata_10_header = "host_scientific_name"
                 metadata_11_header = "host_common_name"
                 metadata_12_header = "food_product"
@@ -189,7 +189,7 @@ nextflow_pipeline {
 
             assert results.text.readLines().size() == 75
 
-            assert results.text.contains("sample,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type,calc_source_type_valid,calc_source_type_error,isolate_received_date,isolation_date,sample_collection_date,sample_received_date_collaborator,sample_received_date_nml,sequencing_date,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error,host_date_of_birth_DOB,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
+            assert results.text.contains("sample,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type,calc_source_type_valid,calc_source_type_error,isolate_received_date,isolation_date,sample_collection_date,sample_received_date_collaborator,sample_received_date_nml,sequencing_date,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error,host_date_of_birth_dob,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
             assert results.text.contains("sample1,Homo sapiens (Human),Human NCBITaxon:9606,Not Applicable,Not Applicable,Not Applicable,Human,True,,2025-03-01,2025-02-15,2025-02-01,,2025-03-02,2025-03-15,2025-02-01,True,,2025-01-01,1,month,0.0841,True,")
             assert results.text.contains("sample2,Homo sapiens (Human),Human NCBITaxon:9606,Missing,Missing,Missing,Human,True,,2025-05-01,2025-04-16,2025-04-11,2025-04-12,2025-05-01,2025-05-16,2025-04-11,True,,2025-04-01,90,day,0.1370,True,")
             assert results.text.contains("sample3,Homo sapiens (Human),Human NCBITaxon:9606,Not Collected,Not Collected,Not Collected,Human,True,,2025-08-20,2025-08-22,2025-08-11,2025-08-13,2025-08-29,2025-08-29,2025-08-11,True,,1985-08-10,40,year,40,True,")
@@ -205,10 +205,10 @@ nextflow_pipeline {
             assert results.text.contains("sample13,Homo sapiens (Human),,,,,Human,True,,,,,,,,,False,No data was found.,,10,cycles,,False,invalid host_age_unit (cycles)")
             assert results.text.contains("sample14,Not Applicable,Human NCBITaxon:9606,,,,Human,True,,,,,,,,,False,No data was found.,,10,units,,False,invalid host_age_unit (units)")
             assert results.text.contains("sample15,Missing,Human NCBITaxon:9606,,,,Human,True,,,,,,,,,False,No data was found.,,10,Restricted Access,10,True,")
-            assert results.text.contains("sample16,Not Collected,Human NCBITaxon:9606,,,,Human,True,,,,,,,,,False,No data was found.,2025-01-01,10,,,False,host_date_of_birth_DOB provided but calc_earliest_date is missing")
-            assert results.text.contains("sample17,Not Provided,Human NCBITaxon:9606,,,,Human,True,,,,,,,,,False,No data was found.,2025-01-01,10,cycles,,False,host_date_of_birth_DOB provided but calc_earliest_date is missing")
-            assert results.text.contains("sample18,Restricted Access,Human NCBITaxon:9606,,,,Human,True,,,,,,,,,False,No data was found.,2025-01-01,10,units,,False,host_date_of_birth_DOB provided but calc_earliest_date is missing")
-            assert results.text.contains("sample19,,Human NCBITaxon:9606,,,,Human,True,,,,,,,,,False,No data was found.,2025-01-01,10,bananas,,False,host_date_of_birth_DOB provided but calc_earliest_date is missing")
+            assert results.text.contains("sample16,Not Collected,Human NCBITaxon:9606,,,,Human,True,,,,,,,,,False,No data was found.,2025-01-01,10,,,False,host_date_of_birth_dob provided but calc_earliest_date is missing")
+            assert results.text.contains("sample17,Not Provided,Human NCBITaxon:9606,,,,Human,True,,,,,,,,,False,No data was found.,2025-01-01,10,cycles,,False,host_date_of_birth_dob provided but calc_earliest_date is missing")
+            assert results.text.contains("sample18,Restricted Access,Human NCBITaxon:9606,,,,Human,True,,,,,,,,,False,No data was found.,2025-01-01,10,units,,False,host_date_of_birth_dob provided but calc_earliest_date is missing")
+            assert results.text.contains("sample19,,Human NCBITaxon:9606,,,,Human,True,,,,,,,,,False,No data was found.,2025-01-01,10,bananas,,False,host_date_of_birth_dob provided but calc_earliest_date is missing")
             assert results.text.contains("sample20,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,,Not Applicable,Missing,Not Collected,Not Provided,Restricted Access,,False,No dates were found.,,10,Not Applicable,10,True,")
             assert results.text.contains("sample21,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2025,Jan-25,2025-05-01,,,,,False,At least one of the dates are incorrectly formatted.,,10,Missing,10,True,")
             assert results.text.contains("sample22,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2025-Jan,,Not Applicable,Not Applicable,,,,False,At least one of the dates are incorrectly formatted.,,10,Not Collected,10,True,")
@@ -665,7 +665,7 @@ nextflow_pipeline {
                 metadata_6_header = "sequencing_date"
                 metadata_7_header = "host_age"
                 metadata_8_header = "host_age_unit"
-                metadata_9_header = "host_date_of_birth_DOB"
+                metadata_9_header = "host_date_of_birth_dob"
                 metadata_10_header = "host_scientific_name"
                 metadata_11_header = "host_common_name"
                 metadata_12_header = "food_product"
@@ -715,23 +715,23 @@ nextflow_pipeline {
 
             assert results.text.readLines().size() == 24
 
-            assert results.text.contains("sample,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type,calc_source_type_valid,calc_source_type_error,isolate_received_date,isolation_date,sample_collection_date,sample_received_date_collaborator,sample_received_date_nml,sequencing_date,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error,host_date_of_birth_DOB,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
+            assert results.text.contains("sample,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type,calc_source_type_valid,calc_source_type_error,isolate_received_date,isolation_date,sample_collection_date,sample_received_date_collaborator,sample_received_date_nml,sequencing_date,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error,host_date_of_birth_dob,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
             assert results.text.contains("sample1,,,,,,Unknown,True,,,,,,,,,False,No data was found.,,,,,False,Insufficient data to calculate an age")
             assert results.text.contains("sample2,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,,2020-01-03,,2020-01-05,,2020-01-01,True,,2010-01-01,10,year,10,True,")
-            assert results.text.contains("sample3,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,,,,,,,,False,No data was found.,2010-01-01,10,year,,False,host_date_of_birth_DOB provided but calc_earliest_date is missing")
+            assert results.text.contains("sample3,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,,,,,,,,False,No data was found.,2010-01-01,10,year,,False,host_date_of_birth_dob provided but calc_earliest_date is missing")
             assert results.text.contains("sample4,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,Not Applicable,2020-01-03,Missing,2020-01-05,Not Collected,2020-01-01,True,,2010-01-01,10,year,10,True,")
-            assert results.text.contains("sample5,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,Not Applicable,Missing,Not Collected,Not Provided,Restricted Access,,,False,No dates were found.,2010-01-01,10,year,,False,host_date_of_birth_DOB provided but calc_earliest_date is missing")
-            assert results.text.contains("sample6,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020,2020-01-02,Jan 3,2020-01-04,2020 January 5th,2020-01-06,,False,At least one of the dates are incorrectly formatted.,2010-01-01,10,year,,False,host_date_of_birth_DOB provided but calc_earliest_date is missing")
-            assert results.text.contains("sample7,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020,Jan 2,2020 January 3,January 4th 2020,05-01-2020,01-06-2020,,False,At least one of the dates are incorrectly formatted.,2010-01-01,10,year,,False,host_date_of_birth_DOB provided but calc_earliest_date is missing")
-            assert results.text.contains("sample8,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,1700-01-01,2020-01-03,1700-01-02,2020-01-05,1700-01-03,,False,At least one of the dates is too old.,2010-01-01,10,year,,False,host_date_of_birth_DOB provided but calc_earliest_date is missing")
-            assert results.text.contains("sample9,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,1700-01-01,1700-01-02,1700-01-03,1700-01-04,1700-01-05,1700-01-06,,False,At least one of the dates is too old.,2010-01-01,10,year,,False,host_date_of_birth_DOB provided but calc_earliest_date is missing")
-            assert results.text.contains("sample10,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,1980-01-01,2020-01-06,,False,The NML sample received date is too old.,2010-01-01,10,year,,False,host_date_of_birth_DOB provided but calc_earliest_date is missing")
-            assert results.text.contains("sample11,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,1980-01-01,,False,The sequencing date is too old.,2010-01-01,10,year,,False,host_date_of_birth_DOB provided but calc_earliest_date is missing")
+            assert results.text.contains("sample5,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,Not Applicable,Missing,Not Collected,Not Provided,Restricted Access,,,False,No dates were found.,2010-01-01,10,year,,False,host_date_of_birth_dob provided but calc_earliest_date is missing")
+            assert results.text.contains("sample6,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020,2020-01-02,Jan 3,2020-01-04,2020 January 5th,2020-01-06,,False,At least one of the dates are incorrectly formatted.,2010-01-01,10,year,,False,host_date_of_birth_dob provided but calc_earliest_date is missing")
+            assert results.text.contains("sample7,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020,Jan 2,2020 January 3,January 4th 2020,05-01-2020,01-06-2020,,False,At least one of the dates are incorrectly formatted.,2010-01-01,10,year,,False,host_date_of_birth_dob provided but calc_earliest_date is missing")
+            assert results.text.contains("sample8,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,1700-01-01,2020-01-03,1700-01-02,2020-01-05,1700-01-03,,False,At least one of the dates is too old.,2010-01-01,10,year,,False,host_date_of_birth_dob provided but calc_earliest_date is missing")
+            assert results.text.contains("sample9,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,1700-01-01,1700-01-02,1700-01-03,1700-01-04,1700-01-05,1700-01-06,,False,At least one of the dates is too old.,2010-01-01,10,year,,False,host_date_of_birth_dob provided but calc_earliest_date is missing")
+            assert results.text.contains("sample10,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,1980-01-01,2020-01-06,,False,The NML sample received date is too old.,2010-01-01,10,year,,False,host_date_of_birth_dob provided but calc_earliest_date is missing")
+            assert results.text.contains("sample11,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,1980-01-01,,False,The sequencing date is too old.,2010-01-01,10,year,,False,host_date_of_birth_dob provided but calc_earliest_date is missing")
             assert results.text.contains("sample12,Homo sapiens (Human),Cat,,,,Host Conflict,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,2020-01-06,2020-01-01,True,,2010-01-01,10,year,10,True,")
             assert results.text.contains("sample13,Felis catus,Human NCBITaxon:9606,,,,Host Conflict,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,2020-01-06,2020-01-01,True,,2010-01-01,10,year,10,True,")
             assert results.text.contains("sample14,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,2020-01-06,2020-01-01,True,,2010-01-01,10,Restricted Access,10,True,")
             assert results.text.contains("sample15,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,2020-01-06,2020-01-01,True,,Restricted Access,Restricted Access,Restricted Access,,False,Insufficient data to calculate an age")
-            assert results.text.contains("sample16,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,,,,,,,,False,No data was found.,2010-01-01,,,,False,host_date_of_birth_DOB provided but calc_earliest_date is missing")
+            assert results.text.contains("sample16,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,,,,,,,,False,No data was found.,2010-01-01,,,,False,host_date_of_birth_dob provided but calc_earliest_date is missing")
             assert results.text.contains("sample17,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,2020-01-06,2020-01-01,True,,2025 Jan 1,10,year,,False,The date format does not match the expected format (YYYY-MM-DD)")
             assert results.text.contains("sample18,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,2020-01-06,2020-01-01,True,,2022-01-01,,,,False,The dates are reversed")
             assert results.text.contains("sample19,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,2020-01-06,2020-01-01,True,,,0,year,,False,calc_host_age cannot be exactly zero")
@@ -885,7 +885,7 @@ nextflow_pipeline {
                 metadata_6_header = "sequencing_date"
                 metadata_7_header = "host_age"
                 metadata_8_header = "host_age_unit"
-                metadata_9_header = "host_date_of_birth_DOB"
+                metadata_9_header = "host_date_of_birth_dob"
                 metadata_10_header = "host_scientific_name"
                 metadata_11_header = "host_common_name"
                 metadata_12_header = "food_product"
@@ -918,7 +918,7 @@ nextflow_pipeline {
             // more easily correct the problem. When there is no problem,
             // the program only outputs the exact columns used in the PNC
             // transformation.
-            assert results.text.contains("sample,sample_name,wrong1,wrong2,wrong3,sample_received_date_collaborator,sample_received_date_nml,sequencing_date,host_age,host_age_unit,host_date_of_birth_DOB,host_scientific_name,host_common_name,food_product,environmental_material,environmental_site,metadata_15,metadata_16,calc_source_type,calc_source_type_valid,calc_source_type_error,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error,calc_host_age,calc_host_age_valid,calc_host_age_error")
+            assert results.text.contains("sample,sample_name,wrong1,wrong2,wrong3,sample_received_date_collaborator,sample_received_date_nml,sequencing_date,host_age,host_age_unit,host_date_of_birth_dob,host_scientific_name,host_common_name,food_product,environmental_material,environmental_site,metadata_15,metadata_16,calc_source_type,calc_source_type_valid,calc_source_type_error,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error,calc_host_age,calc_host_age_valid,calc_host_age_error")
             assert results.text.contains("sample1,basic1,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,2020-01-06,10,year,2010-01-01,Homo sapiens (Human),Human NCBITaxon:9606,,,,,,,False,Missing headers: isolate_received_date; isolation_date; sample_collection_date,,False,Missing headers: isolate_received_date; isolation_date; sample_collection_date,,False,Missing headers: isolate_received_date; isolation_date; sample_collection_date")
 
             // Check IRIDA Next JSON Output
@@ -945,7 +945,7 @@ nextflow_pipeline {
 
                 metadata_1_header = "host_age"
                 metadata_2_header = "host_age_unit"
-                metadata_3_header = "host_date_of_birth_DOB"
+                metadata_3_header = "host_date_of_birth_dob"
                 metadata_4_header = "host_scientific_name"
                 metadata_5_header = "host_common_name"
                 metadata_6_header = "food_product"
@@ -979,7 +979,7 @@ nextflow_pipeline {
 
             assert results.text.readLines().size() == 2
 
-            assert results.text.contains("sample,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type,calc_source_type_valid,calc_source_type_error,isolate_received_date,isolation_date,sample_collection_date,sample_received_date_collaborator,sample_received_date_nml,sequencing_date,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error,host_date_of_birth_DOB,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
+            assert results.text.contains("sample,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type,calc_source_type_valid,calc_source_type_error,isolate_received_date,isolation_date,sample_collection_date,sample_received_date_collaborator,sample_received_date_nml,sequencing_date,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error,host_date_of_birth_dob,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
             assert results.text.contains("sample1,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,2020-01-06,2020-01-01,True,,2010-01-01,10,year,10,True,")
 
             // Check IRIDA Next JSON Output
@@ -988,6 +988,72 @@ nextflow_pipeline {
             def iridanext_metadata = iridanext_json.metadata.samples
 
             assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            assert iridanext_metadata.containsKey("sample1")
+            assert iridanext_metadata.sample1.calc_source_type == "Human"
+            assert iridanext_metadata.sample1.calc_earliest_date == "2020-01-01"
+            assert iridanext_metadata.sample1.calc_host_age == "10"
+        }
+    }
+
+    test("Uppercase in column headers") {
+        tag "pipeline_pnc"
+        tag "pipeline_pnc_uppercase"
+
+        when {
+            params {
+                input = "$baseDir/tests/data/samplesheets/pnc/basic.csv"
+                outdir = "results"
+
+                transformation = "pnc"
+
+                metadata_1_header = "Isolate_received_date"
+                metadata_2_header = "Isolation_date"
+                metadata_3_header = "Sample_collection_date"
+                metadata_4_header = "Sample_received_date_collaborator"
+                metadata_5_header = "Sample_received_date_nml"
+                metadata_6_header = "Sequencing_date"
+                metadata_7_header = "Host_age"
+                metadata_8_header = "Host_age_unit"
+                metadata_9_header = "Host_date_of_birth_DOB"
+                metadata_10_header = "Host_scientific_name"
+                metadata_11_header = "Host_common_name"
+                metadata_12_header = "Food_product"
+                metadata_13_header = "Environmental_material"
+                metadata_14_header = "Environmental_site"
+            }
+        }
+
+        then {
+            assert workflow.success
+            assert path("$launchDir/results").exists()
+
+            // Check Transformation (Machine-Readable)
+            def transformation = path("$launchDir/results/transformation/transformation.csv")
+            assert transformation.exists()
+
+            assert transformation.text.readLines().size() == 2
+
+            assert transformation.text.contains("sample,calc_source_type,calc_earliest_date,calc_host_age")
+            assert transformation.text.contains("sample1,Human,2020-01-01,10")
+
+            // Check Results (Human-Readable)
+            def results = path("$launchDir/results/transformation/results.csv")
+            assert results.exists()
+
+            assert results.text.readLines().size() == 2
+
+            assert results.text.contains("sample,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type,calc_source_type_valid,calc_source_type_error,isolate_received_date,isolation_date,sample_collection_date,sample_received_date_collaborator,sample_received_date_nml,sequencing_date,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error,host_date_of_birth_dob,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error")
+            assert results.text.contains("sample1,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,2020-01-06,2020-01-01,True,,2010-01-01,10,year,10,True,")
+
+            // Check IRIDA Next JSON Output
+            def iridanext_json = path("$launchDir/results/iridanext.output.json").json
+            def iridanext_global = iridanext_json.files.global
+            def iridanext_metadata = iridanext_json.metadata.samples
+
+            assert iridanext_global.findAll { it.path == "transformation/results.csv" }.size() == 1
+
+            //assert iridanext_metadata.size() == 1
 
             assert iridanext_metadata.containsKey("sample1")
             assert iridanext_metadata.sample1.calc_source_type == "Human"
