@@ -55,6 +55,8 @@ The following parameters can be used to rename CSV-generated output columns and 
 - `--metadata_15_header`: names the metadata_15 column header
 - `--metadata_16_header`: names the metadata_16 column header
 
+These metadata headers are automatically converted to lowercase.
+
 ## Age Parameters
 
 The following parameters can be used to rename CSV-generated output columns and Irida Next fields as follows:
@@ -63,7 +65,7 @@ The following parameters can be used to rename CSV-generated output columns and 
 - `--metadata_2_header`: names the current/target data column header
 - `--age_header`: names the calculated age column header and related output columns
 
-For example, the following code:
+The metadata headers are automatically converted to lowercase. For example, the following code:
 
 ```
 nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/age/success_failure_mix.csv --outdir results --transformation age --metadata_1_header "date_of_birth" --metadata_2_header "collection_date" --age_header "age_at_collection"
@@ -82,12 +84,12 @@ sample3,GHI,2000-05-05,1950-12-31,,False,The dates are reversed.
 
 The metadata header parameters (`--metadata_1_header` through `--metadata_16_header`) are required for the transformation. In particular, at least four of the metadata headers must be renamed to be exactly the following:
 
-- `host_date_of_birth_DOB`
+- `host_date_of_birth_dob`
 - `calc_earliest_date`
 - `host_age`
 - `host_age_unit`
 
-For example, if the 2nd metadata column corresponds to the date of birth, then it must be parameterized as follows: `--metadata_2_header host_date_of_birth_DOB`. If the 5th metadata column of the input corresponds to the age unit, then it must be parameterized as follows: `--metadata_5_header host_age_unit`. The order of the metadata columns in the input does not matter, as long as the names are assigned correctly as above.
+For example, if the 2nd metadata column corresponds to the date of birth, then it must be parameterized as follows: `--metadata_2_header host_date_of_birth_dob`. If the 5th metadata column of the input corresponds to the age unit, then it must be parameterized as follows: `--metadata_5_header host_age_unit`. The order of the metadata columns in the input does not matter, as long as the names are assigned correctly as above. The metadata headers are automatically converted to lowercase.
 
 The age metadata column in the output can be renamed as follows, but this is not recommended as the expected age metadata column name is exactly `calc_host_age` (the default):
 
@@ -98,13 +100,13 @@ The age metadata column in the output can be renamed as follows, but this is not
 The following code:
 
 ```
-nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/age/basic.csv --outdir results --transformation age --age_header calc_host_age --metadata_1_header host_date_of_birth_DOB --metadata_2_header calc_earliest_date --metadata_3_header host_age --metadata_4_header host_age_unit
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/age/basic.csv --outdir results --transformation age --age_header calc_host_age --metadata_1_header host_date_of_birth_dob --metadata_2_header calc_earliest_date --metadata_3_header host_age --metadata_4_header host_age_unit
 ```
 
 would generate the following `results.csv` file:
 
 ```
-sample,sample_name,host_date_of_birth_DOB,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error
+sample,sample_name,host_date_of_birth_dob,calc_earliest_date,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error
 sample1,1,2000-01-01,2000-01-02,,,0.0027,True,
 sample2,2,2000-01-01,2000-01-03,,,0.0055,True,
 sample3,3,2000-01-01,2000-04-01,,,0.2493,True,
@@ -153,7 +155,7 @@ The following parameters can be used to rename CSV-generated output columns as f
 - `--metadata_16_header`: names the metadata_16 column header
 - `--earliest_header`: names the earliest date column header and related output columns
 
-The above parameters will only affect the `results.csv` file and not the information returned to IRIDA Next. The earliest date column will be reported as `calc_earliest_date` in `results.csv`, `transformation.csv`, and the `iridanext.output.json` file, which is returned to IRIDA Next.
+The above parameters will only affect the `results.csv` file and not the information returned to IRIDA Next. The earliest date column will be reported as `calc_earliest_date` in `results.csv`, `transformation.csv`, and the `iridanext.output.json` file, which is returned to IRIDA Next. The metadata headers are automatically converted to lowercase.
 
 ### Assumptions
 
@@ -177,7 +179,7 @@ This transformation is expecting a specific set of metadata headers:
 - `environmental_material`: Name of environmental material (if environmental sample)
 
 In order to ensure these columns are recognized, the metadata header parameters must be used to specify which input headers are which expected headers
-(ie. If `metadata_1` contains the host species common name, `--metadata_1_header host_common_name` must be added to the command)
+(i.e. If `metadata_1` contains the host species common name, `--metadata_1_header host_common_name` must be added to the command). The metadata headers are automatically converted to lowercase.
 
 For example, the following code:
 
@@ -215,14 +217,14 @@ The metadata header parameters (`--metadata_1_header` through `--metadata_16_hea
 - `sequencing_date`
 - `host_age`
 - `host_age_unit`
-- `host_date_of_birth_DOB`
+- `host_date_of_birth_dob`
 - `host_scientific_name`
 - `host_common_name`
 - `food_product`
 - `environmental_material`
 - `environmental_site`
 
-For example, if the 2nd metadata column of the sample sheet corresponds to the isolation date, then it must be parameterized as follows: `--metadata_2_header isolation_date`. If the 5th metadata column of the input corresponds to the sample received date for the NML, then it must be parameterized as follows: `--metadata_5_header sample_received_date_nml`. The order of the metadata columns in the input does not matter, as long as the names are assigned correctly as above. If any of the columns are missing, an error will be reported in the `transformation/results.csv` file.
+For example, if the 2nd metadata column of the sample sheet corresponds to the isolation date, then it must be parameterized as follows: `--metadata_2_header isolation_date`. If the 5th metadata column of the input corresponds to the sample received date for the NML, then it must be parameterized as follows: `--metadata_5_header sample_received_date_nml`. The order of the metadata columns in the input does not matter, as long as the names are assigned correctly as above. The metadata headers are automatically converted to lowercase. If any of the columns are missing, an error will be reported in the `transformation/results.csv` file.
 
 ### Example
 
@@ -235,7 +237,7 @@ nextflow run phac-nml/metadatatransformation -profile singularity --input tests/
 would generate the following `results.csv` file:
 
 ```
-sample,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type,calc_source_type_valid,calc_source_type_error,isolate_received_date,isolation_date,sample_collection_date,sample_received_date_collaborator,sample_received_date_nml,sequencing_date,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error,host_date_of_birth_DOB,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error
+sample,host_scientific_name,host_common_name,food_product,environmental_site,environmental_material,calc_source_type,calc_source_type_valid,calc_source_type_error,isolate_received_date,isolation_date,sample_collection_date,sample_received_date_collaborator,sample_received_date_nml,sequencing_date,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error,host_date_of_birth_dob,host_age,host_age_unit,calc_host_age,calc_host_age_valid,calc_host_age_error
 sample1,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,2020-01-06,2020-01-01,True,,2010-01-01,10,year,10,True,
 ```
 
@@ -251,7 +253,7 @@ params {
     metadata_6_header = "sequencing_date"
     metadata_7_header = "host_age"
     metadata_8_header = "host_age_unit"
-    metadata_9_header = "host_date_of_birth_DOB"
+    metadata_9_header = "host_date_of_birth_dob"
     metadata_10_header = "host_scientific_name"
     metadata_11_header = "host_common_name"
     metadata_12_header = "food_product"
