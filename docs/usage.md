@@ -66,7 +66,7 @@ The lock transformation may be run as follows:
 nextflow run phac-nml/metadatatransformation -profile singularity -r main -latest --input assets/samplesheet.csv --outdir results --transformation lock
 ```
 
-You may wish to specify the `--metadata_1_header` through `--metadata_16_header` parameters to ensure the metadata is named as desired:
+You may wish to specify the `--metadata_1_header` through `--metadata_16_header` parameters to ensure the metadata is named as desired. These metadata headers are automatically converted to lowercase.
 
 ```bash
 nextflow run phac-nml/metadatatransformation -profile singularity -r main -latest --input assets/samplesheet.csv --outdir results --transformation lock --metadata_1_header country --metadata_2_header outbreak
@@ -80,7 +80,7 @@ The calculate age transformation may be run as follows:
 nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/age/success_failure_mix.csv --outdir results --transformation age --metadata_1_header "date_of_birth" --metadata_2_header "collection_date" --age_header "age_at_collection"
 ```
 
-For this transformation, the `metadata_1` column of the sample sheet is understood as the date of birth and the `metadata_2` column is understood as the date at which to calculate the age.
+For this transformation, the `metadata_1` column of the sample sheet is understood as the date of birth and the `metadata_2` column is understood as the date at which to calculate the age. The metadata headers are automatically converted to lowercase.
 
 The following parameters can be used to rename CSV-generated output columns and Irida Next fields as follows:
 
@@ -103,7 +103,7 @@ The metadata header parameters (`--metadata_1_header` through `--metadata_16_hea
 - `host_age`
 - `host_age_unit`
 
-For example, if the 2nd metadata column corresponds to the date of birth, then it must be parameterized as follows: `--metadata_1_header host_date_of_birth_dob`. If the 5th metadata column of the input corresponds to the age unit, then it must be parameterized as follows: `--metadata_5_header host_age_unit`. The order of the metadata columns in the input does not matter, as long as the names are assigned correctly as above.
+For example, if the 2nd metadata column corresponds to the date of birth, then it must be parameterized as follows: `--metadata_1_header host_date_of_birth_dob`. If the 5th metadata column of the input corresponds to the age unit, then it must be parameterized as follows: `--metadata_5_header host_age_unit`. The order of the metadata columns in the input does not matter, as long as the names are assigned correctly as above. The metadata headers are automatically converted to lowercase.
 
 The age metadata column in the output can be renamed as follows, but this is not recommended as the expected age metadata column name is exactly `calc_host_age` (the default):
 
