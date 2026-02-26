@@ -19,6 +19,8 @@ The pipeline is built using [Nextflow](https://www.nextflow.io/) and processes d
 - [Earliest](#earliest) - Determines the earliest date among metadata columns.
 - [Populate](#populate) - Populates a specified column with a specified value. Existing values will be overwritten if the column already exists.
 
+A post-processing step will be run on most transformations to remove empty columns and rows from the file to be processed by IRIDA Next (transformationc.sv). Additionally, empty columns will be removed from the results.csv file for the lock, earliest, and populate transformations.
+
 ### Lock
 
 <details markdown="1">
