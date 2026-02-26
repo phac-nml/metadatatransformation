@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Empty columns are now removed from the results.csv output file for the lock, earliest, and populate transformations. However, the results columns (ex: earliest_date) are always retained, even if they were entirely empty. [PR #28](https://github.com/phac-nml/metadatatransformation/pull/28)
+
 ## [1.4.1] - 2025/09/22
 
 ### Fixed

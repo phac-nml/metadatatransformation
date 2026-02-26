@@ -38,14 +38,15 @@ def remove_all_NA_rows(metadata):
     # Need to ignore "sample" column.
     metadata.dropna(axis=ROWS_AXIS, how="all", inplace=True, subset=metadata.columns.difference([SAMPLE_HEADER]))
 
-def remove_all_NA_columns(metadata):
+def remove_all_NA_columns(metadata, ignore=[]):
     # If all entries in the column are NA,
     # then remove the whole column.
     # We need to check if the data frame is empty,
     # because the "sample" column will be removed
     # if there's no samples (i.e. it's empty).
     if not metadata.empty:
-        metadata.dropna(axis=COLUMNS_AXIS, how="all", inplace=True)
+        drop = metadata[metadata.columns.difference(ignore)].isna().all()
+        metadata.drop(drop.index[drop], axis=COLUMNS_AXIS, inplace=True)
 
 def populate(metadata, populate_header, populate_value):
     metadata_readable = metadata.copy(deep=True)
@@ -155,9 +156,15 @@ def find_earliest_date(row):
     earliest, dates = calculate_earliest_date(row)
     return earliest
 
+def get_earliest_valid_header(earliest_header):
+    return earliest_header + VALID_HEADER_EXTENSION
+
+def get_earliest_error_header(earliest_header):
+    return earliest_header + ERROR_HEADER_EXTENSION
+
 def earliest(metadata, earliest_header, function):
-    earliest_valid_header = earliest_header + VALID_HEADER_EXTENSION
-    earliest_error_header = earliest_header + ERROR_HEADER_EXTENSION
+    earliest_valid_header = get_earliest_valid_header(earliest_header)
+    earliest_error_header = get_earliest_error_header(earliest_header)
 
     metadata_readable = metadata.copy(deep=True)
     metadata_readable[[earliest_header, earliest_valid_header, earliest_error_header]] = metadata_readable.apply(function, axis=COLUMNS_AXIS)
@@ -285,6 +292,7 @@ def main():
         metadata_readable, metadata_irida = lock(metadata)
 
         remove_all_NA_columns(metadata_irida)
+        remove_all_NA_columns(metadata_readable, ignore=[SAMPLE_HEADER, SAMPLE_NAME_HEADER])
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
@@ -305,10 +313,12 @@ def main():
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
     elif (args.transformation == EARLIEST):
-        metadata_readable, metadata_irida = earliest(metadata, args.earliest_header, find_earliest_date)
+        earliest_header = args.earliest_header
+        metadata_readable, metadata_irida = earliest(metadata, earliest_header, find_earliest_date)
 
         remove_all_NA_columns(metadata_irida)
         remove_any_NA_rows(metadata_irida)
+        remove_all_NA_columns(metadata_readable, ignore=[SAMPLE_HEADER, SAMPLE_NAME_HEADER, args.earliest_header, get_earliest_valid_header(earliest_header), get_earliest_error_header(earliest_header)])
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
@@ -316,6 +326,7 @@ def main():
         metadata_readable, metadata_irida = populate(metadata, args.populate_header, args.populate_value)
 
         remove_all_NA_columns(metadata_irida)
+        remove_all_NA_columns(metadata_readable, ignore=[SAMPLE_HEADER, SAMPLE_NAME_HEADER, args.populate_header])
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
