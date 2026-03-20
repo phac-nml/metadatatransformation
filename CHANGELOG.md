@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Empty columns are now removed from the results.csv output file for the lock, earliest, and populate transformations. However, the results columns (ex: earliest_date) are always retained, even if they were entirely empty. [PR #28](https://github.com/phac-nml/metadatatransformation/pull/28)
+- Set nextflow version 25.10.4 to replace 'latest-everything' to confirm compatibility with next IRIDA-Next nextflow version in `.github/workflows` for nf-test. [PR 29](https://github.com/phac-nml/metadatatransformation/pull/29)
 
 ## [1.4.1] - 2025/09/22
 
