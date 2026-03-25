@@ -25,20 +25,33 @@ RESULTS_PATH = "results.csv"
 TRANSFORMATION_PATH = "transformation.csv"
 
 def missing_val(x, empty_strs = SPECIAL_ENTRIES):
-    return (pandas.isna(x) | (x in empty_strs + [None]))
+    if pandas.isna(x):
+        result = True
+    else:
+        result = x in empty_strs + [None]
 
-def remove_any_NA_rows(metadata):
-    # If at least one entry in the row is NA,
-    # then remove the whole row.
-    metadata.dropna(axis=ROWS_AXIS, how="any", inplace=True)
+    return result
 
-def remove_all_NA_rows(metadata):
-    # If all entries in the row are NA,
-    # then remove the whole row.
+def flag_missing_values(row, empty_strs = SPECIAL_ENTRIES):
+    result = []
+    for value in row:
+        result.append(missing_val(value, empty_strs))
+
+    result = pandas.Series(result)
+    return result
+
+def remove_rows_with_any_missing_data(metadata):
+    rows = (metadata.apply(flag_missing_values, axis=COLUMNS_AXIS)).any(axis=COLUMNS_AXIS)
+    metadata.drop(metadata[rows].index, axis=ROWS_AXIS, inplace=True)
+
+def remove_rows_with_all_missing_data(metadata):
     # Need to ignore "sample" column.
-    metadata.dropna(axis=ROWS_AXIS, how="all", inplace=True, subset=metadata.columns.difference([SAMPLE_HEADER]))
+    subset = metadata[metadata.columns.difference([SAMPLE_HEADER])]
+    rows = (subset.apply(flag_missing_values, axis=COLUMNS_AXIS)).all(axis=COLUMNS_AXIS)
+    metadata.drop(metadata[rows].index, axis=ROWS_AXIS, inplace=True)
 
 def remove_all_NA_columns(metadata, ignore=[]):
+    print("remove_all_NA_columns")
     # If all entries in the column are NA,
     # then remove the whole column.
     # We need to check if the data frame is empty,
@@ -300,7 +313,7 @@ def main():
         metadata_readable, metadata_irida = age(metadata, args.age_header)
 
         remove_all_NA_columns(metadata_irida)
-        remove_any_NA_rows(metadata_irida)
+        remove_rows_with_any_missing_data(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
@@ -308,7 +321,7 @@ def main():
         metadata_readable, metadata_irida = age_pnc(metadata, AGE_PNC_HEADER)
 
         remove_all_NA_columns(metadata_irida)
-        remove_any_NA_rows(metadata_irida)
+        remove_rows_with_any_missing_data(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
@@ -317,7 +330,7 @@ def main():
         metadata_readable, metadata_irida = earliest(metadata, earliest_header, find_earliest_date)
 
         remove_all_NA_columns(metadata_irida)
-        remove_any_NA_rows(metadata_irida)
+        remove_rows_with_any_missing_data(metadata_irida)
         remove_all_NA_columns(metadata_readable, ignore=[SAMPLE_HEADER, SAMPLE_NAME_HEADER, args.earliest_header, get_earliest_valid_header(earliest_header), get_earliest_error_header(earliest_header)])
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
@@ -343,7 +356,7 @@ def main():
         metadata_readable, metadata_irida = pnc(metadata)
 
         remove_all_NA_columns(metadata_irida)
-        remove_all_NA_rows(metadata_irida)
+        remove_rows_with_all_missing_data(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
