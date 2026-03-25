@@ -50,15 +50,12 @@ def remove_rows_with_all_missing_data(metadata):
     rows = (subset.apply(flag_missing_values, axis=COLUMNS_AXIS)).all(axis=COLUMNS_AXIS)
     metadata.drop(metadata[rows].index, axis=ROWS_AXIS, inplace=True)
 
-def remove_all_NA_columns(metadata, ignore=[]):
-    print("remove_all_NA_columns")
-    # If all entries in the column are NA,
-    # then remove the whole column.
+def remove_columns_with_all_missing_data(metadata, ignore=[]):
     # We need to check if the data frame is empty,
     # because the "sample" column will be removed
     # if there's no samples (i.e. it's empty).
     if not metadata.empty:
-        drop = metadata[metadata.columns.difference(ignore)].isna().all()
+        drop = metadata[metadata.columns.difference(ignore)].apply(flag_missing_values, axis=ROWS_AXIS).all()
         metadata.drop(drop.index[drop], axis=COLUMNS_AXIS, inplace=True)
 
 def populate(metadata, populate_header, populate_value):
@@ -304,15 +301,15 @@ def main():
     if (args.transformation == LOCK):
         metadata_readable, metadata_irida = lock(metadata)
 
-        remove_all_NA_columns(metadata_irida)
-        remove_all_NA_columns(metadata_readable, ignore=[SAMPLE_HEADER, SAMPLE_NAME_HEADER])
+        remove_columns_with_all_missing_data(metadata_irida)
+        remove_columns_with_all_missing_data(metadata_readable, ignore=[SAMPLE_HEADER, SAMPLE_NAME_HEADER])
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
     elif (args.transformation == AGE):
         metadata_readable, metadata_irida = age(metadata, args.age_header)
 
-        remove_all_NA_columns(metadata_irida)
+        remove_columns_with_all_missing_data(metadata_irida)
         remove_rows_with_any_missing_data(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
@@ -320,7 +317,7 @@ def main():
     elif (args.transformation == AGE_PNC):
         metadata_readable, metadata_irida = age_pnc(metadata, AGE_PNC_HEADER)
 
-        remove_all_NA_columns(metadata_irida)
+        remove_columns_with_all_missing_data(metadata_irida)
         remove_rows_with_any_missing_data(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
@@ -329,17 +326,17 @@ def main():
         earliest_header = args.earliest_header
         metadata_readable, metadata_irida = earliest(metadata, earliest_header, find_earliest_date)
 
-        remove_all_NA_columns(metadata_irida)
+        remove_columns_with_all_missing_data(metadata_irida)
         remove_rows_with_any_missing_data(metadata_irida)
-        remove_all_NA_columns(metadata_readable, ignore=[SAMPLE_HEADER, SAMPLE_NAME_HEADER, args.earliest_header, get_earliest_valid_header(earliest_header), get_earliest_error_header(earliest_header)])
+        remove_columns_with_all_missing_data(metadata_readable, ignore=[SAMPLE_HEADER, SAMPLE_NAME_HEADER, args.earliest_header, get_earliest_valid_header(earliest_header), get_earliest_error_header(earliest_header)])
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
     elif (args.transformation == POPULATE):
         metadata_readable, metadata_irida = populate(metadata, args.populate_header, args.populate_value)
 
-        remove_all_NA_columns(metadata_irida)
-        remove_all_NA_columns(metadata_readable, ignore=[SAMPLE_HEADER, SAMPLE_NAME_HEADER, args.populate_header])
+        remove_columns_with_all_missing_data(metadata_irida)
+        remove_columns_with_all_missing_data(metadata_readable, ignore=[SAMPLE_HEADER, SAMPLE_NAME_HEADER, args.populate_header])
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
@@ -347,7 +344,7 @@ def main():
         metadata_readable, metadata_irida = categorize(metadata)
 
         if len(metadata_irida) > 0:
-            remove_all_NA_columns(metadata_irida)
+            remove_columns_with_all_missing_data(metadata_irida)
 
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
@@ -355,7 +352,7 @@ def main():
     elif (args.transformation == PNC):
         metadata_readable, metadata_irida = pnc(metadata)
 
-        remove_all_NA_columns(metadata_irida)
+        remove_columns_with_all_missing_data(metadata_irida)
         remove_rows_with_all_missing_data(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)

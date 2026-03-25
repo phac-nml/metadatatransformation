@@ -86,7 +86,7 @@ nextflow_pipeline {
             assert transformation.text.contains("sample4,") == false
             assert transformation.text.contains("sample5,") == false
             assert transformation.text.contains("sample6,") == false
-            assert transformation.text.contains("sample6,") == false
+            assert transformation.text.contains("sample7,") == false
             assert transformation.text.contains("sample8,") == false
             assert transformation.text.contains("sample9,") == false
             assert transformation.text.contains("sample10,") == false
@@ -114,7 +114,7 @@ nextflow_pipeline {
 
             assert results.text.contains("sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8,calc_earliest_date,calc_earliest_date_valid,calc_earliest_date_error")
             assert results.text.contains("sample1,normal,2000-01-01,2000-01-02,2000-01-03,2000-01-04,2000-01-05,2000-01-06,2000-01-07,2000-01-08,2000-01-01,True,")
-            assert results.text.contains("sample2,all_missing,,,,,,,,,,False,No data was found.")
+            assert results.text.contains("sample2,all_missing,,,,,,,,,,False,No dates were found.")
             assert results.text.contains("sample3,some_missing,,2000-03-02,,2000-03-04,,2000-03-06,,2000-03-08,2000-03-02,True,")
             assert results.text.contains("sample4,only_non_strings,12,,a,,0.5,,,1,,False,At least one of the dates are incorrectly formatted.")
             assert results.text.contains("sample5,only_bad_dates,2000-30-12,,,,,,,2000-30-01,,False,At least one of the dates are incorrectly formatted.")
