@@ -272,7 +272,7 @@ def main():
         description="Transforms metadata according to the passed transformation. Generates both human- and machine-readable output files.")
 
     parser.add_argument("input", type=pathlib.Path,
-                        help="The CSV-formatted input file to transform.")
+                        help="The JSON-formatted input file to transform.")
     parser.add_argument("transformation", choices=[LOCK, AGE, AGE_PNC, EARLIEST, POPULATE, CATEGORIZE, PNC],
                         help="The type of transformation to perform.")
     parser.add_argument("--age_header", default=AGE_HEADER, required=False,
@@ -285,7 +285,7 @@ def main():
                         help="The value to populate the specified column with for the populate transformation.")
 
     args = parser.parse_args()
-    metadata = pandas.read_csv(args.input)
+    metadata = pandas.read_json(args.input, orient="split")
     metadata.columns = metadata.columns.str.lower()
 
     if (args.transformation == LOCK):
