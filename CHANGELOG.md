@@ -5,6 +5,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+- Fixed a bug with parsing commas in the metadata by replacing the internal CSV writing/reading with JSON writing/reading. [PR #30](https://github.com/phac-nml/metadatatransformation/pull/30)
+
 ### Changed
 
 - Empty columns are now removed from the results.csv output file for the lock, earliest, and populate transformations. However, the results columns (ex: earliest_date) are always retained, even if they were entirely empty. [PR #28](https://github.com/phac-nml/metadatatransformation/pull/28)
