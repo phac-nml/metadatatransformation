@@ -24,30 +24,35 @@ UNKNOWN_VALUE = "Unknown"
 RESULTS_PATH = "results.csv"
 TRANSFORMATION_PATH = "transformation.csv"
 
-def missing_val(x, empty_strs = SPECIAL_ENTRIES):
-    if pandas.isna(x):
+def is_missing_value(value, missing_values = SPECIAL_ENTRIES):
+    if pandas.isna(value):
         result = True
     else:
-        result = x in empty_strs + [None]
+        result = value in missing_values + [None]
 
     return result
 
-def flag_missing_values(row, empty_strs = SPECIAL_ENTRIES):
+def flag_missing_values(row, missing_values = SPECIAL_ENTRIES):
     result = []
+
     for value in row:
-        result.append(missing_val(value, empty_strs))
+        result.append(is_missing_value(value, missing_values))
 
     result = pandas.Series(result)
     return result
 
 def remove_rows_with_any_missing_data(metadata):
+    # Find rows with any missing value:
     rows = (metadata.apply(flag_missing_values, axis=COLUMNS_AXIS)).any(axis=COLUMNS_AXIS)
+    # Drop those rows:
     metadata.drop(metadata[rows].index, axis=ROWS_AXIS, inplace=True)
 
 def remove_rows_with_all_missing_data(metadata):
-    # Need to ignore "sample" column.
+    # Need to ignore "sample" column:
     subset = metadata[metadata.columns.difference([SAMPLE_HEADER])]
-    rows = (subset.apply(flag_missing_values, axis=COLUMNS_AXIS)).all(axis=COLUMNS_AXIS)
+    # Find rows with all missing values:
+    rows = subset.apply(flag_missing_values, axis=COLUMNS_AXIS).all(axis=COLUMNS_AXIS)
+    # Drop those rows:
     metadata.drop(metadata[rows].index, axis=ROWS_AXIS, inplace=True)
 
 def remove_columns_with_all_missing_data(metadata, ignore=[]):
@@ -55,8 +60,12 @@ def remove_columns_with_all_missing_data(metadata, ignore=[]):
     # because the "sample" column will be removed
     # if there's no samples (i.e. it's empty).
     if not metadata.empty:
-        drop = metadata[metadata.columns.difference(ignore)].apply(flag_missing_values, axis=ROWS_AXIS).all()
-        metadata.drop(drop.index[drop], axis=COLUMNS_AXIS, inplace=True)
+        # Ignore specified rows:
+        subset = metadata[metadata.columns.difference(ignore)]
+        # Find columns that contain all missing values:
+        columns = subset.apply(flag_missing_values, axis=ROWS_AXIS).all()
+        # Drop those columns:
+        metadata.drop(columns.index[columns], axis=COLUMNS_AXIS, inplace=True)
 
 def populate(metadata, populate_header, populate_value):
     metadata_readable = metadata.copy(deep=True)
@@ -206,19 +215,19 @@ def categorize(metadata):
     def categorize_row(row):
         if ((row["host_scientific_name"] == "Homo sapiens (Human)") & (row["host_common_name"] == "Human NCBITaxon:9606")):
             return "Human"
-        elif ((row["host_scientific_name"] == "Homo sapiens (Human)") & missing_val(row["host_common_name"])):
+        elif ((row["host_scientific_name"] == "Homo sapiens (Human)") & is_missing_value(row["host_common_name"])):
             return "Human"
-        elif (missing_val(row["host_scientific_name"]) & (row["host_common_name"] == "Human NCBITaxon:9606")):
+        elif (is_missing_value(row["host_scientific_name"]) & (row["host_common_name"] == "Human NCBITaxon:9606")):
             return "Human"
         elif ((row["host_scientific_name"] == "Homo sapiens (Human)") & (row["host_common_name"] != "Human NCBITaxon:9606")):
             return "Host Conflict"
         elif ((row["host_scientific_name"] != "Homo sapiens (Human)") & (row["host_common_name"] == "Human NCBITaxon:9606")):
             return "Host Conflict"
-        elif ((not missing_val(row["host_scientific_name"])) | (not missing_val(row["host_common_name"]))):
+        elif ((not is_missing_value(row["host_scientific_name"])) | (not is_missing_value(row["host_common_name"]))):
             return "Animal"
-        elif ((not missing_val(row["food_product"]))):
+        elif ((not is_missing_value(row["food_product"]))):
             return "Food"
-        elif ((not missing_val(row["environmental_site"])) | (not missing_val(row["environmental_material"]))):
+        elif ((not is_missing_value(row["environmental_site"])) | (not is_missing_value(row["environmental_material"]))):
             return "Environmental"
         else:
             return UNKNOWN_VALUE
@@ -282,7 +291,7 @@ def main():
         description="Transforms metadata according to the passed transformation. Generates both human- and machine-readable output files.")
 
     parser.add_argument("input", type=pathlib.Path,
-                        help="The JSON-formatted input file to transform.")
+                        help="The JSON-formatted input file to transform. This file must be in the Pandas 'split' orient.")
     parser.add_argument("transformation", choices=[LOCK, AGE, AGE_PNC, EARLIEST, POPULATE, CATEGORIZE, PNC],
                         help="The type of transformation to perform.")
     parser.add_argument("--age_header", default=AGE_HEADER, required=False,
