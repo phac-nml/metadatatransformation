@@ -10,7 +10,7 @@ from transformations.constants import (SAMPLE_HEADER, SAMPLE_NAME_HEADER, DATE_F
                                         COLUMNS_AXIS, SPECIAL_ENTRIES_REGEX, BLANK,
                                         AGE_HEADER, AGE_PNC_HEADER, DATE_1_INDEX, DATE_2_INDEX,
                                         PNC_AGE_DATE_OF_BIRTH_HEADER, PNC_AGE_DATE_HEADER, PNC_AGE_HOST_AGE_HEADER,
-                                        PNC_AGE_HOST_AGE_UNIT_HEADER, PNC_AGE_HEADERS)
+                                        PNC_AGE_HOST_AGE_UNIT_HEADER, PNC_AGE_HEADERS, EMPTY_STRING)
 
 AGE_CONSOLIDATION_THRESHOLD = 1 # Threshold for accepting differences in DOB-based and units-based ages (in years).
 AGE_THRESHOLD = 2 # Ages less than this will include a decimal component.
@@ -211,7 +211,10 @@ def calculate_age_pnc(row):
 
 def calculate_age(row):
     # Is a date missing?
-    if pandas.isnull(row.iloc[DATE_1_INDEX]) or pandas.isnull(row.iloc[DATE_2_INDEX]):
+    if (pandas.isnull(row.iloc[DATE_1_INDEX])
+        or pandas.isnull(row.iloc[DATE_2_INDEX])
+        or row.iloc[DATE_1_INDEX] == EMPTY_STRING
+        or row.iloc[DATE_2_INDEX] == EMPTY_STRING):
         age = numpy.nan
         age_valid = False
         age_error = "At least one of the dates is missing"

@@ -7,16 +7,29 @@ process WRITE_METADATA {
     val metadata_rows
 
     output:
-    path("results.csv"), emit: results
+    path("results.json"), emit: results
 
     exec:
-    task.workDir.resolve("results.csv").withWriter { writer ->
-        // Header:
-        writer.writeLine(metadata_headers.join(","))
+    def columns = metadata_headers
+    def index = []
+    def data = []
 
-        // Contents:
-        metadata_rows.each {
-            writer.writeLine(it.join(","))
-        }
+    metadata_rows.each {
+        index += it[0]
+        data += [it]
+    }
+
+    // Note: the "sample" ID is duplicated as both the index and as a metadata.
+    // This is because transform.py expects a "sample" metadata column header and indices
+    // don't have a column header (in Pandas).
+    json_data = [
+        "index": index,
+        "columns": columns,
+        "data": data
+    ]
+
+    task.workDir.resolve("results.json").withWriter { writer ->
+        json_output = groovy.json.JsonOutput.toJson(json_data)
+        writer.write(json_output)
     }
 }
