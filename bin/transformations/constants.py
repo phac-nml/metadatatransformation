@@ -62,6 +62,9 @@ NOT_PROVIDED = "Not Provided"
 RESTRICTED_ACCESS = "Restricted Access"
 BLANK = ""
 
+# Nulls / Empty Strings:
+EMPTY_STRING = ""
+
 SPECIAL_ENTRIES = [NOT_APPLICABLE, MISSING, NOT_COLLECTED,
                     NOT_PROVIDED, RESTRICTED_ACCESS, BLANK]
 SPECIAL_ENTRIES_REGEX = ['(?i)^{}$'.format(x) for x in SPECIAL_ENTRIES] # case insensitive

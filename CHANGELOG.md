@@ -3,6 +3,17 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.2] - 2026/04/09
+
+### Fixed
+
+- Fixed a bug with parsing commas in the metadata by replacing the internal CSV writing/reading with JSON writing/reading. [PR #30](https://github.com/phac-nml/metadatatransformation/pull/30)
+
+### Changed
+
+- Empty columns are now removed from the results.csv output file for the lock, earliest, and populate transformations. However, the results columns (ex: earliest_date) are always retained, even if they were entirely empty. [PR #28](https://github.com/phac-nml/metadatatransformation/pull/28)
+- Set nextflow version 25.10.4 to replace 'latest-everything' to confirm compatibility with next IRIDA-Next nextflow version in `.github/workflows` for nf-test. [PR 29](https://github.com/phac-nml/metadatatransformation/pull/29)
+
 ## [1.4.1] - 2025/09/22
 
 ### Fixed
@@ -79,3 +90,4 @@ Initial release of phac-nml/metadatatransformation.
 [1.3.0]: https://github.com/phac-nml/metadatatransformation/releases/tag/1.3.0
 [1.4.0]: https://github.com/phac-nml/metadatatransformation/releases/tag/1.4.0
 [1.4.1]: https://github.com/phac-nml/metadatatransformation/releases/tag/1.4.1
+[1.4.2]: https://github.com/phac-nml/metadatatransformation/releases/tag/1.4.2

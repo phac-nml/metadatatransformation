@@ -24,28 +24,48 @@ UNKNOWN_VALUE = "Unknown"
 RESULTS_PATH = "results.csv"
 TRANSFORMATION_PATH = "transformation.csv"
 
-def missing_val(x, empty_strs = SPECIAL_ENTRIES):
-    return (pandas.isna(x) | (x in empty_strs + [None]))
+def is_missing_value(value, missing_values = SPECIAL_ENTRIES):
+    if pandas.isna(value):
+        result = True
+    else:
+        result = value in missing_values + [None]
 
-def remove_any_NA_rows(metadata):
-    # If at least one entry in the row is NA,
-    # then remove the whole row.
-    metadata.dropna(axis=ROWS_AXIS, how="any", inplace=True)
+    return result
 
-def remove_all_NA_rows(metadata):
-    # If all entries in the row are NA,
-    # then remove the whole row.
-    # Need to ignore "sample" column.
-    metadata.dropna(axis=ROWS_AXIS, how="all", inplace=True, subset=metadata.columns.difference([SAMPLE_HEADER]))
+def flag_missing_values(row, missing_values = SPECIAL_ENTRIES):
+    result = []
 
-def remove_all_NA_columns(metadata):
-    # If all entries in the column are NA,
-    # then remove the whole column.
+    for value in row:
+        result.append(is_missing_value(value, missing_values))
+
+    result = pandas.Series(result)
+    return result
+
+def remove_rows_with_any_missing_data(metadata):
+    # Find rows with any missing value:
+    rows = (metadata.apply(flag_missing_values, axis=COLUMNS_AXIS)).any(axis=COLUMNS_AXIS)
+    # Drop those rows:
+    metadata.drop(metadata[rows].index, axis=ROWS_AXIS, inplace=True)
+
+def remove_rows_with_all_missing_data(metadata):
+    # Need to ignore "sample" column:
+    subset = metadata[metadata.columns.difference([SAMPLE_HEADER])]
+    # Find rows with all missing values:
+    rows = subset.apply(flag_missing_values, axis=COLUMNS_AXIS).all(axis=COLUMNS_AXIS)
+    # Drop those rows:
+    metadata.drop(metadata[rows].index, axis=ROWS_AXIS, inplace=True)
+
+def remove_columns_with_all_missing_data(metadata, ignore=[]):
     # We need to check if the data frame is empty,
     # because the "sample" column will be removed
     # if there's no samples (i.e. it's empty).
     if not metadata.empty:
-        metadata.dropna(axis=COLUMNS_AXIS, how="all", inplace=True)
+        # Ignore specified rows:
+        subset = metadata[metadata.columns.difference(ignore)]
+        # Find columns that contain all missing values:
+        columns = subset.apply(flag_missing_values, axis=ROWS_AXIS).all()
+        # Drop those columns:
+        metadata.drop(columns.index[columns], axis=COLUMNS_AXIS, inplace=True)
 
 def populate(metadata, populate_header, populate_value):
     metadata_readable = metadata.copy(deep=True)
@@ -155,9 +175,15 @@ def find_earliest_date(row):
     earliest, dates = calculate_earliest_date(row)
     return earliest
 
+def get_earliest_valid_header(earliest_header):
+    return earliest_header + VALID_HEADER_EXTENSION
+
+def get_earliest_error_header(earliest_header):
+    return earliest_header + ERROR_HEADER_EXTENSION
+
 def earliest(metadata, earliest_header, function):
-    earliest_valid_header = earliest_header + VALID_HEADER_EXTENSION
-    earliest_error_header = earliest_header + ERROR_HEADER_EXTENSION
+    earliest_valid_header = get_earliest_valid_header(earliest_header)
+    earliest_error_header = get_earliest_error_header(earliest_header)
 
     metadata_readable = metadata.copy(deep=True)
     metadata_readable[[earliest_header, earliest_valid_header, earliest_error_header]] = metadata_readable.apply(function, axis=COLUMNS_AXIS)
@@ -189,19 +215,19 @@ def categorize(metadata):
     def categorize_row(row):
         if ((row["host_scientific_name"] == "Homo sapiens (Human)") & (row["host_common_name"] == "Human NCBITaxon:9606")):
             return "Human"
-        elif ((row["host_scientific_name"] == "Homo sapiens (Human)") & missing_val(row["host_common_name"])):
+        elif ((row["host_scientific_name"] == "Homo sapiens (Human)") & is_missing_value(row["host_common_name"])):
             return "Human"
-        elif (missing_val(row["host_scientific_name"]) & (row["host_common_name"] == "Human NCBITaxon:9606")):
+        elif (is_missing_value(row["host_scientific_name"]) & (row["host_common_name"] == "Human NCBITaxon:9606")):
             return "Human"
         elif ((row["host_scientific_name"] == "Homo sapiens (Human)") & (row["host_common_name"] != "Human NCBITaxon:9606")):
             return "Host Conflict"
         elif ((row["host_scientific_name"] != "Homo sapiens (Human)") & (row["host_common_name"] == "Human NCBITaxon:9606")):
             return "Host Conflict"
-        elif ((not missing_val(row["host_scientific_name"])) | (not missing_val(row["host_common_name"]))):
+        elif ((not is_missing_value(row["host_scientific_name"])) | (not is_missing_value(row["host_common_name"]))):
             return "Animal"
-        elif ((not missing_val(row["food_product"]))):
+        elif ((not is_missing_value(row["food_product"]))):
             return "Food"
-        elif ((not missing_val(row["environmental_site"])) | (not missing_val(row["environmental_material"]))):
+        elif ((not is_missing_value(row["environmental_site"])) | (not is_missing_value(row["environmental_material"]))):
             return "Environmental"
         else:
             return UNKNOWN_VALUE
@@ -265,7 +291,7 @@ def main():
         description="Transforms metadata according to the passed transformation. Generates both human- and machine-readable output files.")
 
     parser.add_argument("input", type=pathlib.Path,
-                        help="The CSV-formatted input file to transform.")
+                        help="The JSON-formatted input file to transform. This file must be in the Pandas 'split' orient.")
     parser.add_argument("transformation", choices=[LOCK, AGE, AGE_PNC, EARLIEST, POPULATE, CATEGORIZE, PNC],
                         help="The type of transformation to perform.")
     parser.add_argument("--age_header", default=AGE_HEADER, required=False,
@@ -278,44 +304,48 @@ def main():
                         help="The value to populate the specified column with for the populate transformation.")
 
     args = parser.parse_args()
-    metadata = pandas.read_csv(args.input)
+    metadata = pandas.read_json(args.input, orient="split")
     metadata.columns = metadata.columns.str.lower()
 
     if (args.transformation == LOCK):
         metadata_readable, metadata_irida = lock(metadata)
 
-        remove_all_NA_columns(metadata_irida)
+        remove_columns_with_all_missing_data(metadata_irida)
+        remove_columns_with_all_missing_data(metadata_readable, ignore=[SAMPLE_HEADER, SAMPLE_NAME_HEADER])
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
     elif (args.transformation == AGE):
         metadata_readable, metadata_irida = age(metadata, args.age_header)
 
-        remove_all_NA_columns(metadata_irida)
-        remove_any_NA_rows(metadata_irida)
+        remove_columns_with_all_missing_data(metadata_irida)
+        remove_rows_with_any_missing_data(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
     elif (args.transformation == AGE_PNC):
         metadata_readable, metadata_irida = age_pnc(metadata, AGE_PNC_HEADER)
 
-        remove_all_NA_columns(metadata_irida)
-        remove_any_NA_rows(metadata_irida)
+        remove_columns_with_all_missing_data(metadata_irida)
+        remove_rows_with_any_missing_data(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
     elif (args.transformation == EARLIEST):
-        metadata_readable, metadata_irida = earliest(metadata, args.earliest_header, find_earliest_date)
+        earliest_header = args.earliest_header
+        metadata_readable, metadata_irida = earliest(metadata, earliest_header, find_earliest_date)
 
-        remove_all_NA_columns(metadata_irida)
-        remove_any_NA_rows(metadata_irida)
+        remove_columns_with_all_missing_data(metadata_irida)
+        remove_rows_with_any_missing_data(metadata_irida)
+        remove_columns_with_all_missing_data(metadata_readable, ignore=[SAMPLE_HEADER, SAMPLE_NAME_HEADER, args.earliest_header, get_earliest_valid_header(earliest_header), get_earliest_error_header(earliest_header)])
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
     elif (args.transformation == POPULATE):
         metadata_readable, metadata_irida = populate(metadata, args.populate_header, args.populate_value)
 
-        remove_all_NA_columns(metadata_irida)
+        remove_columns_with_all_missing_data(metadata_irida)
+        remove_columns_with_all_missing_data(metadata_readable, ignore=[SAMPLE_HEADER, SAMPLE_NAME_HEADER, args.populate_header])
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
@@ -323,7 +353,7 @@ def main():
         metadata_readable, metadata_irida = categorize(metadata)
 
         if len(metadata_irida) > 0:
-            remove_all_NA_columns(metadata_irida)
+            remove_columns_with_all_missing_data(metadata_irida)
 
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
@@ -331,8 +361,8 @@ def main():
     elif (args.transformation == PNC):
         metadata_readable, metadata_irida = pnc(metadata)
 
-        remove_all_NA_columns(metadata_irida)
-        remove_all_NA_rows(metadata_irida)
+        remove_columns_with_all_missing_data(metadata_irida)
+        remove_rows_with_all_missing_data(metadata_irida)
         metadata_readable.to_csv(RESULTS_PATH, index=False)
         metadata_irida.to_csv(TRANSFORMATION_PATH, index=False)
 
