@@ -3,7 +3,9 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [1.4.2] - 2026/04/09
+
+### Fixed
 
 - Fixed a bug with parsing commas in the metadata by replacing the internal CSV writing/reading with JSON writing/reading. [PR #30](https://github.com/phac-nml/metadatatransformation/pull/30)
 
@@ -88,3 +90,4 @@ Initial release of phac-nml/metadatatransformation.
 [1.3.0]: https://github.com/phac-nml/metadatatransformation/releases/tag/1.3.0
 [1.4.0]: https://github.com/phac-nml/metadatatransformation/releases/tag/1.4.0
 [1.4.1]: https://github.com/phac-nml/metadatatransformation/releases/tag/1.4.1
+[1.4.2]: https://github.com/phac-nml/metadatatransformation/releases/tag/1.4.2
