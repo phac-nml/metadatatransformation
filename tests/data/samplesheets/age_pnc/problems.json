@@ -1,194 +1,194 @@
 [
-  {
-    "sample": "reverse_dates_under_2",
-    "sample_name": "rd_1",
-    "metadata_1": "2001-01-01",
-    "metadata_2": "2000-01-01",
-    "metadata_3": "",
-    "metadata_4": ""
-  },
-  {
-    "sample": "reverse_dates_over_2",
-    "sample_name": "rd_2",
-    "metadata_1": "2010-01-01",
-    "metadata_2": "2000-01-01",
-    "metadata_3": "",
-    "metadata_4": ""
-  },
-  {
-    "sample": "bad_format_1",
-    "sample_name": "bf_1",
-    "metadata_1": "00-01-01",
-    "metadata_2": "2000-11-11",
-    "metadata_3": "",
-    "metadata_4": ""
-  },
-  {
-    "sample": "bad_format_2",
-    "sample_name": "bf_2",
-    "metadata_1": "2000-01-01",
-    "metadata_2": "00-11-11",
-    "metadata_3": "",
-    "metadata_4": ""
-  },
-  {
-    "sample": "bad_format_3",
-    "sample_name": "bf_3",
-    "metadata_1": "2000/01/01",
-    "metadata_2": "2000/11/11",
-    "metadata_3": "",
-    "metadata_4": ""
-  },
-  {
-    "sample": "bad_format_4",
-    "sample_name": "bf_4",
-    "metadata_1": "2000.01.01",
-    "metadata_2": "2000.11.11",
-    "metadata_3": "",
-    "metadata_4": ""
-  },
-  {
-    "sample": "bad_format_5",
-    "sample_name": "bf_5",
-    "metadata_1": "2000-01-01",
-    "metadata_2": "2000-11-11 23:59:59",
-    "metadata_3": "",
-    "metadata_4": ""
-  },
-  {
-    "sample": "wrong_order_1",
-    "sample_name": "wo_1",
-    "metadata_1": "2000-31-01",
-    "metadata_2": "2000-01-02",
-    "metadata_3": "",
-    "metadata_4": ""
-  },
-  {
-    "sample": "wrong_order_2",
-    "sample_name": "wo_2",
-    "metadata_1": "2000-01-01",
-    "metadata_2": "2000-31-02",
-    "metadata_3": "",
-    "metadata_4": ""
-  },
-  {
-    "sample": "negative_date_1",
-    "sample_name": "nd_1",
-    "metadata_1": "-2000-01-01",
-    "metadata_2": "2001-01-01",
-    "metadata_3": "",
-    "metadata_4": ""
-  },
-  {
-    "sample": "negative_date_2",
-    "sample_name": "nd_2",
-    "metadata_1": "2000-01-01",
-    "metadata_2": "-2001-01-01",
-    "metadata_3": "",
-    "metadata_4": ""
-  },
-  {
-    "sample": "missing_date_1",
-    "sample_name": "md_1",
-    "metadata_1": "",
-    "metadata_2": "2001-01-01",
-    "metadata_3": "",
-    "metadata_4": ""
-  },
-  {
-    "sample": "missing_date_2",
-    "sample_name": "md_2",
-    "metadata_1": "2000-01-01",
-    "metadata_2": "",
-    "metadata_3": "",
-    "metadata_4": ""
-  },
-  {
-    "sample": "age_not_a_number_1",
-    "sample_name": "age_nan_1",
-    "metadata_1": "",
-    "metadata_2": "",
-    "metadata_3": "one",
-    "metadata_4": "year"
-  },
-  {
-    "sample": "age_unit_not_string_1",
-    "sample_name": "au_nas_1",
-    "metadata_1": "",
-    "metadata_2": "",
-    "metadata_3": "1",
-    "metadata_4": "1"
-  },
-  {
-    "sample": "age_unit_not_string_2",
-    "sample_name": "au_nas_1",
-    "metadata_1": "",
-    "metadata_2": "",
-    "metadata_3": "1",
-    "metadata_4": "1"
-  },
-  {
-    "sample": "age_unit_invalid_1",
-    "sample_name": "aui_1",
-    "metadata_1": "",
-    "metadata_2": "",
-    "metadata_3": "1",
-    "metadata_4": "cat"
-  },
-  {
-    "sample": "consolidation_error_1",
-    "sample_name": "ce_1",
-    "metadata_1": "2000-01-01",
-    "metadata_2": "2001-01-01",
-    "metadata_3": "1000",
-    "metadata_4": "year"
-  },
-  {
-    "sample": "junk_1",
-    "sample_name": "j_1",
-    "metadata_1": "cat",
-    "metadata_2": "dog",
-    "metadata_3": "fish",
-    "metadata_4": "mouse"
-  },
-  {
-    "sample": "junk_2",
-    "sample_name": "j_2",
-    "metadata_1": "",
-    "metadata_2": "",
-    "metadata_3": "",
-    "metadata_4": ""
-  },
-  {
-    "sample": "junk_3",
-    "sample_name": "j_3",
-    "metadata_1": "0",
-    "metadata_2": "0",
-    "metadata_3": "0",
-    "metadata_4": "0"
-  },
-  {
-    "sample": "junk_4",
-    "sample_name": "j_4",
-    "metadata_1": "0000-00-00",
-    "metadata_2": "0000-00-00",
-    "metadata_3": "0000-00-00",
-    "metadata_4": "0000-00-00"
-  },
-  {
-    "sample": "junk_5",
-    "sample_name": "j_5",
-    "metadata_1": "1",
-    "metadata_2": "2",
-    "metadata_3": "3",
-    "metadata_4": "4"
-  },
-  {
-    "sample": "junk_6",
-    "sample_name": "j_6",
-    "metadata_1": "-2000-01-01",
-    "metadata_2": "-2001-01-01",
-    "metadata_3": "-10",
-    "metadata_4": "year"
-  }
+    {
+        "sample": "reverse_dates_under_2",
+        "sample_name": "rd_1",
+        "metadata_1": "2001-01-01",
+        "metadata_2": "2000-01-01",
+        "metadata_3": "",
+        "metadata_4": ""
+    },
+    {
+        "sample": "reverse_dates_over_2",
+        "sample_name": "rd_2",
+        "metadata_1": "2010-01-01",
+        "metadata_2": "2000-01-01",
+        "metadata_3": "",
+        "metadata_4": ""
+    },
+    {
+        "sample": "bad_format_1",
+        "sample_name": "bf_1",
+        "metadata_1": "00-01-01",
+        "metadata_2": "2000-11-11",
+        "metadata_3": "",
+        "metadata_4": ""
+    },
+    {
+        "sample": "bad_format_2",
+        "sample_name": "bf_2",
+        "metadata_1": "2000-01-01",
+        "metadata_2": "00-11-11",
+        "metadata_3": "",
+        "metadata_4": ""
+    },
+    {
+        "sample": "bad_format_3",
+        "sample_name": "bf_3",
+        "metadata_1": "2000/01/01",
+        "metadata_2": "2000/11/11",
+        "metadata_3": "",
+        "metadata_4": ""
+    },
+    {
+        "sample": "bad_format_4",
+        "sample_name": "bf_4",
+        "metadata_1": "2000.01.01",
+        "metadata_2": "2000.11.11",
+        "metadata_3": "",
+        "metadata_4": ""
+    },
+    {
+        "sample": "bad_format_5",
+        "sample_name": "bf_5",
+        "metadata_1": "2000-01-01",
+        "metadata_2": "2000-11-11 23:59:59",
+        "metadata_3": "",
+        "metadata_4": ""
+    },
+    {
+        "sample": "wrong_order_1",
+        "sample_name": "wo_1",
+        "metadata_1": "2000-31-01",
+        "metadata_2": "2000-01-02",
+        "metadata_3": "",
+        "metadata_4": ""
+    },
+    {
+        "sample": "wrong_order_2",
+        "sample_name": "wo_2",
+        "metadata_1": "2000-01-01",
+        "metadata_2": "2000-31-02",
+        "metadata_3": "",
+        "metadata_4": ""
+    },
+    {
+        "sample": "negative_date_1",
+        "sample_name": "nd_1",
+        "metadata_1": "-2000-01-01",
+        "metadata_2": "2001-01-01",
+        "metadata_3": "",
+        "metadata_4": ""
+    },
+    {
+        "sample": "negative_date_2",
+        "sample_name": "nd_2",
+        "metadata_1": "2000-01-01",
+        "metadata_2": "-2001-01-01",
+        "metadata_3": "",
+        "metadata_4": ""
+    },
+    {
+        "sample": "missing_date_1",
+        "sample_name": "md_1",
+        "metadata_1": "",
+        "metadata_2": "2001-01-01",
+        "metadata_3": "",
+        "metadata_4": ""
+    },
+    {
+        "sample": "missing_date_2",
+        "sample_name": "md_2",
+        "metadata_1": "2000-01-01",
+        "metadata_2": "",
+        "metadata_3": "",
+        "metadata_4": ""
+    },
+    {
+        "sample": "age_not_a_number_1",
+        "sample_name": "age_nan_1",
+        "metadata_1": "",
+        "metadata_2": "",
+        "metadata_3": "one",
+        "metadata_4": "year"
+    },
+    {
+        "sample": "age_unit_not_string_1",
+        "sample_name": "au_nas_1",
+        "metadata_1": "",
+        "metadata_2": "",
+        "metadata_3": "1",
+        "metadata_4": "1"
+    },
+    {
+        "sample": "age_unit_not_string_2",
+        "sample_name": "au_nas_1",
+        "metadata_1": "",
+        "metadata_2": "",
+        "metadata_3": "1",
+        "metadata_4": "1"
+    },
+    {
+        "sample": "age_unit_invalid_1",
+        "sample_name": "aui_1",
+        "metadata_1": "",
+        "metadata_2": "",
+        "metadata_3": "1",
+        "metadata_4": "cat"
+    },
+    {
+        "sample": "consolidation_error_1",
+        "sample_name": "ce_1",
+        "metadata_1": "2000-01-01",
+        "metadata_2": "2001-01-01",
+        "metadata_3": "1000",
+        "metadata_4": "year"
+    },
+    {
+        "sample": "junk_1",
+        "sample_name": "j_1",
+        "metadata_1": "cat",
+        "metadata_2": "dog",
+        "metadata_3": "fish",
+        "metadata_4": "mouse"
+    },
+    {
+        "sample": "junk_2",
+        "sample_name": "j_2",
+        "metadata_1": "",
+        "metadata_2": "",
+        "metadata_3": "",
+        "metadata_4": ""
+    },
+    {
+        "sample": "junk_3",
+        "sample_name": "j_3",
+        "metadata_1": "0",
+        "metadata_2": "0",
+        "metadata_3": "0",
+        "metadata_4": "0"
+    },
+    {
+        "sample": "junk_4",
+        "sample_name": "j_4",
+        "metadata_1": "0000-00-00",
+        "metadata_2": "0000-00-00",
+        "metadata_3": "0000-00-00",
+        "metadata_4": "0000-00-00"
+    },
+    {
+        "sample": "junk_5",
+        "sample_name": "j_5",
+        "metadata_1": "1",
+        "metadata_2": "2",
+        "metadata_3": "3",
+        "metadata_4": "4"
+    },
+    {
+        "sample": "junk_6",
+        "sample_name": "j_6",
+        "metadata_1": "-2000-01-01",
+        "metadata_2": "-2001-01-01",
+        "metadata_3": "-10",
+        "metadata_4": "year"
+    }
 ]
