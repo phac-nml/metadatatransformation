@@ -9,7 +9,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/populate/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/populate/basic.json"
                 outdir = "results"
 
                 transformation = "populate"
@@ -69,7 +69,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/populate/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/populate/basic.json"
                 outdir = "results"
 
                 transformation = "populate"
@@ -129,7 +129,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/populate/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/populate/basic.json"
                 outdir = "results"
 
                 transformation = "populate"
@@ -189,7 +189,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/populate/missing_metadata.csv"
+                input = "$baseDir/tests/data/samplesheets/populate/missing_metadata.json"
                 outdir = "results"
 
                 transformation = "populate"
@@ -249,7 +249,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/populate/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/populate/basic.json"
                 outdir = "results"
 
                 transformation = "populate"

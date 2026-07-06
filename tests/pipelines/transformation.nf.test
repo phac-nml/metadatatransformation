@@ -9,7 +9,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/lock/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/lock/basic.json"
                 outdir = "results"
 
                 transformation = "UNKNOWN123"
@@ -29,7 +29,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/lock/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/lock/basic.json"
                 outdir = "results"
 
                 transformation = null
