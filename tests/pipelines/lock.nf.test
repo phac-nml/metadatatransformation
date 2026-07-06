@@ -9,7 +9,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/lock/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/lock/basic.json"
                 outdir = "results"
 
                 transformation = "lock"
@@ -85,7 +85,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/lock/missing_metadata.csv"
+                input = "$baseDir/tests/data/samplesheets/lock/missing_metadata.json"
                 outdir = "results"
 
                 transformation = "lock"
@@ -161,7 +161,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/lock/missing_column.csv"
+                input = "$baseDir/tests/data/samplesheets/lock/missing_column.json"
                 outdir = "results"
 
                 transformation = "lock"
@@ -240,7 +240,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/lock/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/lock/basic.json"
                 outdir = "results"
 
                 transformation = "lock"
@@ -317,7 +317,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/lock/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/lock/basic.json"
                 outdir = "results"
 
                 transformation = "lock"
@@ -401,7 +401,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/lock/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/lock/basic.json"
                 outdir = "results"
 
                 transformation = "lock"

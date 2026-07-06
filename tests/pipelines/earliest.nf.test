@@ -9,7 +9,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/earliest/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/earliest/basic.json"
                 outdir = "results"
 
                 transformation = "earliest"
@@ -64,7 +64,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/earliest/problems.csv"
+                input = "$baseDir/tests/data/samplesheets/earliest/problems.json"
                 outdir = "results"
 
                 transformation = "earliest"
@@ -218,7 +218,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/earliest/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/earliest/basic.json"
                 outdir = "results"
 
                 transformation = "earliest"
@@ -274,7 +274,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/earliest/special.csv"
+                input = "$baseDir/tests/data/samplesheets/earliest/special.json"
                 outdir = "results"
 
                 transformation = "earliest"
@@ -345,7 +345,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/earliest/all_problems.csv"
+                input = "$baseDir/tests/data/samplesheets/earliest/all_problems.json"
                 outdir = "results"
 
                 transformation = "earliest"

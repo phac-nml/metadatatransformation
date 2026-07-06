@@ -1,0 +1,38 @@
+[
+  {
+    "sample": "sample1",
+    "sample_name": "ABC",
+    "metadata_1": "a",
+    "metadata_2": "a",
+    "metadata_3": "a",
+    "metadata_4": "a",
+    "metadata_5": "a",
+    "metadata_6": "a",
+    "metadata_7": "a",
+    "metadata_8": "a"
+  },
+  {
+    "sample": "sample2",
+    "sample_name": "DEF",
+    "metadata_1": "b",
+    "metadata_2": "b",
+    "metadata_3": "b",
+    "metadata_4": "b",
+    "metadata_5": "b",
+    "metadata_6": "b",
+    "metadata_7": "b",
+    "metadata_8": "b"
+  },
+  {
+    "sample": "sample3",
+    "sample_name": "GHI",
+    "metadata_1": "c",
+    "metadata_2": "c",
+    "metadata_3": "c",
+    "metadata_4": "c",
+    "metadata_5": "c",
+    "metadata_6": "c",
+    "metadata_7": "c",
+    "metadata_8": "c"
+  }
+]

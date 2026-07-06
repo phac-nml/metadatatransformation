@@ -1,0 +1,110 @@
+[
+  {
+    "sample": "sample1",
+    "sample_name": "A",
+    "metadata_1": "Homo sapiens (Human)",
+    "metadata_2": "Human NCBITaxon:9606",
+    "metadata_3": "",
+    "metadata_4": "",
+    "metadata_5": ""
+  },
+  {
+    "sample": "sample2",
+    "sample_name": "B",
+    "metadata_1": "",
+    "metadata_2": "dog",
+    "metadata_3": "",
+    "metadata_4": "",
+    "metadata_5": ""
+  },
+  {
+    "sample": "sample3",
+    "sample_name": "C",
+    "metadata_1": "",
+    "metadata_2": "",
+    "metadata_3": "eggs",
+    "metadata_4": "",
+    "metadata_5": ""
+  },
+  {
+    "sample": "sample4",
+    "sample_name": "D",
+    "metadata_1": "",
+    "metadata_2": "",
+    "metadata_3": "",
+    "metadata_4": "farm",
+    "metadata_5": "wastewater"
+  },
+  {
+    "sample": "sample5",
+    "sample_name": "E",
+    "metadata_1": "",
+    "metadata_2": "",
+    "metadata_3": "",
+    "metadata_4": "",
+    "metadata_5": ""
+  },
+  {
+    "sample": "sample6",
+    "sample_name": "F",
+    "metadata_1": "Homo sapiens (Human)",
+    "metadata_2": "dog",
+    "metadata_3": "",
+    "metadata_4": "",
+    "metadata_5": ""
+  },
+  {
+    "sample": "sample7",
+    "sample_name": "G",
+    "metadata_1": "Homo sapiens (Human)",
+    "metadata_2": "",
+    "metadata_3": "",
+    "metadata_4": "",
+    "metadata_5": ""
+  },
+  {
+    "sample": "sample8",
+    "sample_name": "H",
+    "metadata_1": "",
+    "metadata_2": "Human NCBITaxon:9606",
+    "metadata_3": "",
+    "metadata_4": "",
+    "metadata_5": ""
+  },
+  {
+    "sample": "sample9",
+    "sample_name": "J",
+    "metadata_1": "Homo sapiens (Human)",
+    "metadata_2": "Human NCBITaxon:9606",
+    "metadata_3": "eggs",
+    "metadata_4": "farm",
+    "metadata_5": "wastewater"
+  },
+  {
+    "sample": "sample10",
+    "sample_name": "K",
+    "metadata_1": "",
+    "metadata_2": "dog",
+    "metadata_3": "eggs",
+    "metadata_4": "",
+    "metadata_5": ""
+  },
+  {
+    "sample": "sample11",
+    "sample_name": "L",
+    "metadata_1": "",
+    "metadata_2": "",
+    "metadata_3": "eggs",
+    "metadata_4": "farm",
+    "metadata_5": ""
+  },
+  {
+    "sample": "sample12",
+    "sample_name": "M",
+    "metadata_1": "",
+    "metadata_2": "",
+    "metadata_3": "eggs",
+    "metadata_4": "",
+    "metadata_5": "wastewater"
+  }
+]
