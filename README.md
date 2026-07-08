@@ -6,7 +6,7 @@ This pipeline transforms metadata from IRIDA Next.
 
 # Input
 
-The input to the pipeline is a sample sheet (passed as `--input samplesheet.csv`) that looks like:
+The input to the pipeline is a sample sheet (passed as `--input samplesheet.json`) that looks like:
 
 | sample  | sample_name | metadata_1 | metadata_2 | metadata_3 | metadata_4 | metadata_5 | metadata_6 | metadata_7 | metadata_8 | metadata_9 | metadata_10 | metadata_11 | metadata_12 | metadata_13 | metadata_14 | metadata_15 | metadata_16 |
 | ------- | ----------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |
