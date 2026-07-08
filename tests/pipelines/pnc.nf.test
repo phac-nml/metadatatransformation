@@ -9,7 +9,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/pnc/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/pnc/basic.json"
                 outdir = "results"
 
                 transformation = "pnc"
@@ -75,7 +75,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/pnc/specification.csv"
+                input = "$baseDir/tests/data/samplesheets/pnc/specification.json"
                 outdir = "results"
 
                 transformation = "pnc"
@@ -652,7 +652,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/pnc/problems.csv"
+                input = "$baseDir/tests/data/samplesheets/pnc/problems.json"
                 outdir = "results"
 
                 transformation = "pnc"
@@ -736,8 +736,8 @@ nextflow_pipeline {
             assert results.text.contains("sample18,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,2020-01-06,2020-01-01,True,,2022-01-01,,,,False,The dates are reversed")
             assert results.text.contains("sample19,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,2020-01-06,2020-01-01,True,,,0,year,,False,calc_host_age cannot be exactly zero")
             assert results.text.contains("sample20,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,2020-01-06,2020-01-01,True,,,2000,year,,False,calc_host_age is too large")
-            assert results.text.contains("sample21,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,2020-01-06,2020-01-01,True,,,10.0,year,10,True,")
-            assert results.text.contains("sample22,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,2020-01-06,2020-01-01,True,,2010-01-01,10,10.0,,False,invalid host_age_unit (10.0)")
+            assert results.text.contains("sample21,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,2020-01-06,2020-01-01,True,,,10,year,10,True,")
+            assert results.text.contains("sample22,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,2020-01-06,2020-01-01,True,,2010-01-01,10,10,,False,invalid host_age_unit (10)")
             assert results.text.contains("sample23,Homo sapiens (Human),Human NCBITaxon:9606,,,,Human,True,,2020-01-01,2020-01-02,2020-01-03,2020-01-04,2020-01-05,2020-01-06,2020-01-01,True,,2010-01-01,100,year,,False,calc_host_age and host_age are greater than 1 year(s) different")
 
             // Check IRIDA Next JSON Output
@@ -872,7 +872,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/pnc/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/pnc/basic.json"
                 outdir = "results"
 
                 transformation = "pnc"
@@ -938,7 +938,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/pnc/column_order.csv"
+                input = "$baseDir/tests/data/samplesheets/pnc/column_order.json"
                 outdir = "results"
 
                 transformation = "pnc"
@@ -1002,7 +1002,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/pnc/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/pnc/basic.json"
                 outdir = "results"
 
                 transformation = "pnc"
@@ -1068,7 +1068,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/pnc/commas.csv"
+                input = "$baseDir/tests/data/samplesheets/pnc/commas.json"
                 outdir = "results"
 
                 transformation = "pnc"

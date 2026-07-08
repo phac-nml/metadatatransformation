@@ -9,7 +9,7 @@ nextflow_pipeline {
         when {
             params {
                 outdir = "$outputDir"
-                input = "$baseDir/tests/data/samplesheets/lock/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/lock/basic.json"
 
                 transformation = "lock"
             }

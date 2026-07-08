@@ -9,7 +9,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/categorize/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/categorize/basic.json"
                 outdir = "results"
 
                 metadata_1_header = "host_scientific_name"
@@ -127,7 +127,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/categorize/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/categorize/basic.json"
                 outdir = "results"
 
                 metadata_1_header = "host_scientific_name"
@@ -184,7 +184,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/categorize/reorder_headers.csv"
+                input = "$baseDir/tests/data/samplesheets/categorize/reorder_headers.json"
                 outdir = "results"
 
                 metadata_1_header = "environmental_material"

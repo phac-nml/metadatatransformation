@@ -9,7 +9,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age_pnc/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/age_pnc/basic.json"
                 outdir = "results"
 
                 transformation = "age_pnc"
@@ -204,7 +204,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age_pnc/problems.csv"
+                input = "$baseDir/tests/data/samplesheets/age_pnc/problems.json"
                 outdir = "results"
 
                 transformation = "age_pnc"
@@ -276,14 +276,14 @@ nextflow_pipeline {
             assert results.text.contains("missing_date_2,md_2,2000-01-01,,,,,False,host_date_of_birth_dob provided but calc_earliest_date is missing")
             assert results.text.contains("age_not_a_number_1,age_nan_1,,,one,year,,False,host_age (one) could not be converted to a number")
             assert results.text.contains("age_unit_not_string_1,au_nas_1,,,1,1,,False,invalid host_age_unit (1)")
-            assert results.text.contains("age_unit_not_string_2,au_nas_1_age_unit_not_string_2,,,1,1.0,,False,invalid host_age_unit (1.0)")
+            assert results.text.contains("age_unit_not_string_2,au_nas_1_age_unit_not_string_2,,,1,1,,False,invalid host_age_unit (1)")
             assert results.text.contains("age_unit_invalid_1,aui_1,,,1,cat,,False,invalid host_age_unit (cat)")
             assert results.text.contains("consolidation_error_1,ce_1,2000-01-01,2001-01-01,1000,year,,False,calc_host_age and host_age are greater than 1 year(s) different")
             assert results.text.contains("junk_1,j_1,cat,dog,fish,mouse,,False,The date format does not match the expected format (YYYY-MM-DD); host_age (fish) could not be converted to a number")
             assert results.text.contains("junk_2,j_2,,,,,,False,Insufficient data to calculate an age")
             assert results.text.contains("junk_3,j_3,0,0,0,0,,False,The date format does not match the expected format (YYYY-MM-DD); invalid host_age_unit (0)")
             assert results.text.contains("junk_4,j_4,0000-00-00,0000-00-00,0000-00-00,0000-00-00,,False,The date format does not match the expected format (YYYY-MM-DD); host_age (0000-00-00) could not be converted to a number")
-            assert results.text.contains("junk_5,j_5,1.0,2.0,3.0,4.0,,False,The date format does not match the expected format (YYYY-MM-DD); invalid host_age_unit (4.0)")
+            assert results.text.contains("junk_5,j_5,1,2,3,4,,False,The date format does not match the expected format (YYYY-MM-DD); invalid host_age_unit (4)")
             assert results.text.contains("junk_6,j_6,-2000-01-01,-2001-01-01,-10,year,,False,The date format does not match the expected format (YYYY-MM-DD)")
 
             // Check IRIDA Next JSON Output
@@ -376,7 +376,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age_pnc/extra_columns.csv"
+                input = "$baseDir/tests/data/samplesheets/age_pnc/extra_columns.json"
                 outdir = "results"
 
                 transformation = "age_pnc"
@@ -441,7 +441,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age_pnc/success_failure_mix.csv"
+                input = "$baseDir/tests/data/samplesheets/age_pnc/success_failure_mix.json"
                 outdir = "results"
 
                 transformation = "age_pnc"
@@ -504,7 +504,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age_pnc/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/age_pnc/basic.json"
                 outdir = "results"
 
                 transformation = "age_pnc"
@@ -639,7 +639,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age_pnc/float_columns.csv"
+                input = "$baseDir/tests/data/samplesheets/age_pnc/float_columns.json"
                 outdir = "results"
 
                 transformation = "age_pnc"
@@ -704,7 +704,7 @@ nextflow_pipeline {
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age_pnc/specification.csv"
+                input = "$baseDir/tests/data/samplesheets/age_pnc/specification.json"
                 outdir = "results"
 
                 transformation = "age_pnc"

@@ -1,0 +1,362 @@
+[
+    {
+        "sample": "sample1",
+        "sample_name": "1",
+        "metadata_1": "2025-02-01",
+        "metadata_2": "1",
+        "metadata_3": "month",
+        "metadata_4": "2025-01-01",
+        "metadata_5": "0.083",
+        "metadata_6": ""
+    },
+    {
+        "sample": "sample2",
+        "sample_name": "2",
+        "metadata_1": "2025-04-11",
+        "metadata_2": "90",
+        "metadata_3": "day",
+        "metadata_4": "2025-04-01",
+        "metadata_5": "0.027",
+        "metadata_6": "Mismatch between CALC_HOST_AGE and HOST_AGE"
+    },
+    {
+        "sample": "sample3",
+        "sample_name": "3",
+        "metadata_1": "2025-08-11",
+        "metadata_2": "40",
+        "metadata_3": "year",
+        "metadata_4": "1985-08-10",
+        "metadata_5": "40",
+        "metadata_6": ""
+    },
+    {
+        "sample": "sample4",
+        "sample_name": "4",
+        "metadata_1": "2025-02-01",
+        "metadata_2": "1",
+        "metadata_3": "month",
+        "metadata_4": "",
+        "metadata_5": "0.083",
+        "metadata_6": ""
+    },
+    {
+        "sample": "sample5",
+        "sample_name": "5",
+        "metadata_1": "2025-04-11",
+        "metadata_2": "90",
+        "metadata_3": "day",
+        "metadata_4": "",
+        "metadata_5": "0.247",
+        "metadata_6": ""
+    },
+    {
+        "sample": "sample6",
+        "sample_name": "6",
+        "metadata_1": "2025-08-11",
+        "metadata_2": "40",
+        "metadata_3": "year",
+        "metadata_4": "",
+        "metadata_5": "40",
+        "metadata_6": ""
+    },
+    {
+        "sample": "sample7",
+        "sample_name": "7",
+        "metadata_1": "2025-02-01",
+        "metadata_2": "1",
+        "metadata_3": "month",
+        "metadata_4": "Not Applicable",
+        "metadata_5": "0.083",
+        "metadata_6": ""
+    },
+    {
+        "sample": "sample8",
+        "sample_name": "8",
+        "metadata_1": "2025-04-11",
+        "metadata_2": "90",
+        "metadata_3": "day",
+        "metadata_4": "Missing",
+        "metadata_5": "0.247",
+        "metadata_6": ""
+    },
+    {
+        "sample": "sample9",
+        "sample_name": "9",
+        "metadata_1": "2025-08-11",
+        "metadata_2": "40",
+        "metadata_3": "year",
+        "metadata_4": "Not Collected",
+        "metadata_5": "40",
+        "metadata_6": ""
+    },
+    {
+        "sample": "sample10",
+        "sample_name": "10",
+        "metadata_1": "2025-02-01",
+        "metadata_2": "1",
+        "metadata_3": "month",
+        "metadata_4": "Not Provided",
+        "metadata_5": "0.083",
+        "metadata_6": ""
+    },
+    {
+        "sample": "sample11",
+        "sample_name": "11",
+        "metadata_1": "2025-04-11",
+        "metadata_2": "90",
+        "metadata_3": "day",
+        "metadata_4": "Restricted Access",
+        "metadata_5": "0.247",
+        "metadata_6": ""
+    },
+    {
+        "sample": "sample12",
+        "sample_name": "12",
+        "metadata_1": "",
+        "metadata_2": "10",
+        "metadata_3": "",
+        "metadata_4": "",
+        "metadata_5": "10",
+        "metadata_6": ""
+    },
+    {
+        "sample": "sample13",
+        "sample_name": "13",
+        "metadata_1": "",
+        "metadata_2": "10",
+        "metadata_3": "cycles",
+        "metadata_4": "",
+        "metadata_5": "",
+        "metadata_6": "Invalid HOST_AGE_UNIT"
+    },
+    {
+        "sample": "sample14",
+        "sample_name": "14",
+        "metadata_1": "",
+        "metadata_2": "10",
+        "metadata_3": "units",
+        "metadata_4": "",
+        "metadata_5": "",
+        "metadata_6": "Invalid HOST_AGE_UNIT"
+    },
+    {
+        "sample": "sample15",
+        "sample_name": "15",
+        "metadata_1": "",
+        "metadata_2": "10",
+        "metadata_3": "Restricted Access",
+        "metadata_4": "",
+        "metadata_5": "",
+        "metadata_6": "Invalid HOST_AGE_UNIT"
+    },
+    {
+        "sample": "sample16",
+        "sample_name": "16",
+        "metadata_1": "",
+        "metadata_2": "10",
+        "metadata_3": "",
+        "metadata_4": "2025-01-01",
+        "metadata_5": "",
+        "metadata_6": "EARLIEST DATE MISSING"
+    },
+    {
+        "sample": "sample17",
+        "sample_name": "17",
+        "metadata_1": "",
+        "metadata_2": "10",
+        "metadata_3": "cycles",
+        "metadata_4": "2025-01-01",
+        "metadata_5": "",
+        "metadata_6": "Invalid HOST_AGE_UNIT; EARLIEST DATE MISSING"
+    },
+    {
+        "sample": "sample18",
+        "sample_name": "18",
+        "metadata_1": "",
+        "metadata_2": "10",
+        "metadata_3": "units",
+        "metadata_4": "2025-01-01",
+        "metadata_5": "",
+        "metadata_6": "Invalid HOST_AGE_UNIT; EARLIEST DATE MISSING"
+    },
+    {
+        "sample": "sample19",
+        "sample_name": "19",
+        "metadata_1": "",
+        "metadata_2": "10",
+        "metadata_3": "bananas",
+        "metadata_4": "2025-01-01",
+        "metadata_5": "",
+        "metadata_6": "Invalid HOST_AGE_UNIT; EARLIEST DATE MISSING"
+    },
+    {
+        "sample": "sample20",
+        "sample_name": "20",
+        "metadata_1": "",
+        "metadata_2": "10",
+        "metadata_3": "Not Applicable",
+        "metadata_4": "",
+        "metadata_5": "10",
+        "metadata_6": ""
+    },
+    {
+        "sample": "sample21",
+        "sample_name": "21",
+        "metadata_1": "",
+        "metadata_2": "10",
+        "metadata_3": "Missing",
+        "metadata_4": "",
+        "metadata_5": "10",
+        "metadata_6": ""
+    },
+    {
+        "sample": "sample22",
+        "sample_name": "22",
+        "metadata_1": "",
+        "metadata_2": "10",
+        "metadata_3": "Not Collected",
+        "metadata_4": "",
+        "metadata_5": "10",
+        "metadata_6": ""
+    },
+    {
+        "sample": "sample23",
+        "sample_name": "23",
+        "metadata_1": "",
+        "metadata_2": "10",
+        "metadata_3": "Not Provided",
+        "metadata_4": "",
+        "metadata_5": "10",
+        "metadata_6": ""
+    },
+    {
+        "sample": "sample24",
+        "sample_name": "24",
+        "metadata_1": "",
+        "metadata_2": "10",
+        "metadata_3": "Restricted Access",
+        "metadata_4": "",
+        "metadata_5": "10",
+        "metadata_6": ""
+    },
+    {
+        "sample": "sample25",
+        "sample_name": "25",
+        "metadata_1": "",
+        "metadata_2": "10",
+        "metadata_3": "",
+        "metadata_4": "",
+        "metadata_5": "",
+        "metadata_6": ""
+    },
+    {
+        "sample": "sample26",
+        "sample_name": "26",
+        "metadata_1": "2020-01-12",
+        "metadata_2": "-1",
+        "metadata_3": "",
+        "metadata_4": "",
+        "metadata_5": "",
+        "metadata_6": "negative value; Invalid HOST_AGE_UNIT"
+    },
+    {
+        "sample": "sample27",
+        "sample_name": "27",
+        "metadata_1": "1998-06-15",
+        "metadata_2": "500",
+        "metadata_3": "year",
+        "metadata_4": "",
+        "metadata_5": "",
+        "metadata_6": "age is not reasonable"
+    },
+    {
+        "sample": "sample28",
+        "sample_name": "28",
+        "metadata_1": "1900-01-01",
+        "metadata_2": "500",
+        "metadata_3": "",
+        "metadata_4": "",
+        "metadata_5": "",
+        "metadata_6": "age is not reasonable; Invalid HOST_AGE_UNIT"
+    },
+    {
+        "sample": "sample29",
+        "sample_name": "29",
+        "metadata_1": "",
+        "metadata_2": "150",
+        "metadata_3": "year",
+        "metadata_4": "",
+        "metadata_5": "150",
+        "metadata_6": ""
+    },
+    {
+        "sample": "sample30",
+        "sample_name": "30",
+        "metadata_1": "",
+        "metadata_2": "fledgling",
+        "metadata_3": "year",
+        "metadata_4": "",
+        "metadata_5": "",
+        "metadata_6": "invalid host age"
+    },
+    {
+        "sample": "sample31",
+        "sample_name": "31",
+        "metadata_1": "2019-12-22",
+        "metadata_2": "1/2",
+        "metadata_3": "",
+        "metadata_4": "",
+        "metadata_5": "",
+        "metadata_6": "invalid host age"
+    },
+    {
+        "sample": "sample32",
+        "sample_name": "32",
+        "metadata_1": "2017-06-14",
+        "metadata_2": "0",
+        "metadata_3": "",
+        "metadata_4": "",
+        "metadata_5": "",
+        "metadata_6": "invalid host age"
+    },
+    {
+        "sample": "sample33",
+        "sample_name": "33",
+        "metadata_1": "2019-07-12",
+        "metadata_2": "5",
+        "metadata_3": "week",
+        "metadata_4": "",
+        "metadata_5": "0.096",
+        "metadata_6": ""
+    },
+    {
+        "sample": "sample34",
+        "sample_name": "34",
+        "metadata_1": "2018-01-08",
+        "metadata_2": "toddler",
+        "metadata_3": "",
+        "metadata_4": "",
+        "metadata_5": "",
+        "metadata_6": "invalid host age; Invalid HOST_AGE_UNIT"
+    },
+    {
+        "sample": "sample35",
+        "sample_name": "35",
+        "metadata_1": "2015-06-30",
+        "metadata_2": "40",
+        "metadata_3": "year",
+        "metadata_4": "2015-06-30",
+        "metadata_5": "",
+        "metadata_6": "CALC_HOST_AGE and HOST_AGE are greater than 1 year different"
+    },
+    {
+        "sample": "sample36",
+        "sample_name": "36",
+        "metadata_1": "2013-06-19",
+        "metadata_2": "1",
+        "metadata_3": "month",
+        "metadata_4": "2010-06-19",
+        "metadata_5": "",
+        "metadata_6": "CALC_HOST_AGE and HOST_AGE are greater than 1 year different"
+    }
+]

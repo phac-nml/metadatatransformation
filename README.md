@@ -6,11 +6,24 @@ This pipeline transforms metadata from IRIDA Next.
 
 # Input
 
-The input to the pipeline is a sample sheet (passed as `--input samplesheet.csv`) that looks like:
+The input to the pipeline is a sample sheet (passed as `--input samplesheet.json`) that looks like:
 
-| sample  | sample_name | metadata_1 | metadata_2 | metadata_3 | metadata_4 | metadata_5 | metadata_6 | metadata_7 | metadata_8 | metadata_9 | metadata_10 | metadata_11 | metadata_12 | metadata_13 | metadata_14 | metadata_15 | metadata_16 |
-| ------- | ----------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ---------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |
-| Sample1 | SampleA     | meta_1     | meta_2     | meta_3     | meta_4     | meta_5     | meta_6     | meta_7     | meta_8     | meta_9     | meta_10     | meta_11     | meta_12     | meta_13     | meta_14     | meta_15     | meta_16     |
+```
+[
+    {
+        "sample": "sample1",
+        "sample_name": "ABC",
+        "metadata_1": "1.1",
+        "metadata_2": "1.2",
+        "metadata_3": "1.3",
+        "metadata_4": "1.4",
+        "metadata_5": "1.5",
+        "metadata_6": "1.6",
+        "metadata_7": "1.7",
+        "metadata_8": "1.8"
+    }
+]
+```
 
 The amount and meaning of the metadata columns may be different for each metadata transformation.
 
@@ -68,7 +81,7 @@ The following parameters can be used to rename CSV-generated output columns and 
 The metadata headers are automatically converted to lowercase. For example, the following code:
 
 ```
-nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/age/success_failure_mix.csv --outdir results --transformation age --metadata_1_header "date_of_birth" --metadata_2_header "collection_date" --age_header "age_at_collection"
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/age/success_failure_mix.json --outdir results --transformation age --metadata_1_header "date_of_birth" --metadata_2_header "collection_date" --age_header "age_at_collection"
 ```
 
 would generate the following `results.csv` file:
@@ -100,7 +113,7 @@ The age metadata column in the output can be renamed as follows, but this is not
 The following code:
 
 ```
-nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/age/basic.csv --outdir results --transformation age --age_header calc_host_age --metadata_1_header host_date_of_birth_dob --metadata_2_header calc_earliest_date --metadata_3_header host_age --metadata_4_header host_age_unit
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/age/basic.json --outdir results --transformation age --age_header calc_host_age --metadata_1_header host_date_of_birth_dob --metadata_2_header calc_earliest_date --metadata_3_header host_age --metadata_4_header host_age_unit
 ```
 
 would generate the following `results.csv` file:
@@ -184,7 +197,7 @@ In order to ensure these columns are recognized, the metadata header parameters 
 For example, the following code:
 
 ```bash
-nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/categorize/basic.csv --outdir results --transformation categorize --metadata_1_header host_scientific_name --metadata_2_header host_common_name  --metadata_3_header food_product --metadata_4_header environmental_site  --metadata_5_header environmental_material
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/categorize/basic.json --outdir results --transformation categorize --metadata_1_header host_scientific_name --metadata_2_header host_common_name  --metadata_3_header food_product --metadata_4_header environmental_site  --metadata_5_header environmental_material
 ```
 
 would generate the following `results.csv` file:
@@ -231,7 +244,7 @@ For example, if the 2nd metadata column of the sample sheet corresponds to the i
 The following code:
 
 ```
-nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/pnc/basic.csv --outdir results --transformation pnc -c pnc.config
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/pnc/basic.json --outdir results --transformation pnc -c pnc.config
 ```
 
 would generate the following `results.csv` file:
@@ -294,10 +307,10 @@ Other parameters (defaults from nf-core) are defined in [nextflow_schema.json](n
 To run the pipeline, please do:
 
 ```bash
-nextflow run phac-nml/metadatatransformation -profile singularity -r main -latest --input assets/samplesheet.csv --outdir results --transformation lock
+nextflow run phac-nml/metadatatransformation -profile singularity -r main -latest --input assets/samplesheet.json --outdir results --transformation lock
 ```
 
-Where the `samplesheet.csv` is structured as specified in the [Input](#input) section.
+Where the `samplesheet.json` is structured as specified in the [Input](#input) section.
 
 For more information see [usage doc](docs/usage.md)
 
