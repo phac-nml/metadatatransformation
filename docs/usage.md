@@ -6,7 +6,7 @@ This pipeline transforms metadata from IRIDA Next.
 
 ## Sample sheet input
 
-You will need to create a sample sheet with information about the samples you would like to analyse before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 10 columns, and a header row as shown in the examples below.
+You will need to create a JSON-formatted sample sheet with information about the samples you would like to transform before running the pipeline. Use this parameter to specify the file location.
 
 ```bash
 --input '[path to samplesheet file]'
@@ -14,31 +14,65 @@ You will need to create a sample sheet with information about the samples you wo
 
 ### Full samplesheet
 
-The input samplesheet must contain the following columns: `sample`, and `metadata_1` through `metadata_16`. The IDs within a samplesheet should be unique. You may optionally provide a `sample_name` column, which will replace the Irida Next IDs in the `sample` column if available. All other columns will be ignored.
+The input samplesheet must be a JSON-formatted file with the following fields: `sample`, and `metadata_1` through `metadata_16`. The IDs within a samplesheet should be unique. You may optionally provide a `sample_name` field, which will replace the Irida Next IDs in the `sample` field if available. All other fields will be ignored.
 
 A final samplesheet file contain the `sample_name` column may look something like the one below.
 
-```csv title="samplesheet.csv"
-sample,sample_name,metadata_1,metadata_2,metadata_3,metadata_4,metadata_5,metadata_6,metadata_7,metadata_8
-sample1,"ABC",1.1,1.2,1.3,1.4,1.5,1.6,1.7,1.8
-sample2,"DEF",2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8
-sample3,"GHI",3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8
+```json title="samplesheet.json"
+[
+    {
+        "sample": "sample1",
+        "sample_name": "ABC",
+        "metadata_1": "1.1",
+        "metadata_2": "1.2",
+        "metadata_3": "1.3",
+        "metadata_4": "1.4",
+        "metadata_5": "1.5",
+        "metadata_6": "1.6",
+        "metadata_7": "1.7",
+        "metadata_8": "1.8"
+    },
+    {
+        "sample": "sample2",
+        "sample_name": "DEF",
+        "metadata_1": "2.1",
+        "metadata_2": "2.2",
+        "metadata_3": "2.3",
+        "metadata_4": "2.4",
+        "metadata_5": "2.5",
+        "metadata_6": "2.6",
+        "metadata_7": "2.7",
+        "metadata_8": "2.8"
+    },
+    {
+        "sample": "sample3",
+        "sample_name": "GHI",
+        "metadata_1": "3.1",
+        "metadata_2": "3.2",
+        "metadata_3": "3.3",
+        "metadata_4": "3.4",
+        "metadata_5": "3.5",
+        "metadata_6": "3.6",
+        "metadata_7": "3.7",
+        "metadata_8": "3.8"
+    }
+]
 ```
 
-| Column           | Description                                                                                                                                |
+| Field           | Description                                                                                                                                |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | `sample`         | Sample ID. Samples should be unique within a samplesheet. Likely Irida Next IDs.                                                           |
 | `sample_name`    | Sample name. Likely user-provided IDs that should be unique, but are not required to be unique. Will be used over `sample` when available. |
 | `metadata_1..16` | Metadata that will be used in the metadata transformations.                                                                                |
 
-An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
+An [example samplesheet](../assets/samplesheet.json) has been provided with the pipeline.
 
 ## Running the pipeline
 
 The typical command for running the pipeline is as follows:
 
 ```bash
-nextflow run phac-nml/metadatatransformation -profile singularity -r main -latest --input assets/samplesheet.csv --outdir results --transformation lock
+nextflow run phac-nml/metadatatransformation -profile singularity -r main -latest --input assets/samplesheet.json --outdir results --transformation lock
 ```
 
 This will launch the pipeline with the `singularity` configuration profile. See below for more information about profiles.
@@ -63,13 +97,13 @@ Do not use `-c <file>` to specify parameters as this will result in errors. Cust
 The lock transformation may be run as follows:
 
 ```bash
-nextflow run phac-nml/metadatatransformation -profile singularity -r main -latest --input assets/samplesheet.csv --outdir results --transformation lock
+nextflow run phac-nml/metadatatransformation -profile singularity -r main -latest --input assets/samplesheet.json --outdir results --transformation lock
 ```
 
 You may wish to specify the `--metadata_1_header` through `--metadata_16_header` parameters to ensure the metadata is named as desired. These metadata headers are automatically converted to lowercase.
 
 ```bash
-nextflow run phac-nml/metadatatransformation -profile singularity -r main -latest --input assets/samplesheet.csv --outdir results --transformation lock --metadata_1_header country --metadata_2_header outbreak
+nextflow run phac-nml/metadatatransformation -profile singularity -r main -latest --input assets/samplesheet.json --outdir results --transformation lock --metadata_1_header country --metadata_2_header outbreak
 ```
 
 ### Age
@@ -77,7 +111,7 @@ nextflow run phac-nml/metadatatransformation -profile singularity -r main -lates
 The calculate age transformation may be run as follows:
 
 ```bash
-nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/age/success_failure_mix.csv --outdir results --transformation age --metadata_1_header "date_of_birth" --metadata_2_header "collection_date" --age_header "age_at_collection"
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/age/success_failure_mix.json --outdir results --transformation age --metadata_1_header "date_of_birth" --metadata_2_header "collection_date" --age_header "age_at_collection"
 ```
 
 For this transformation, the `metadata_1` column of the sample sheet is understood as the date of birth and the `metadata_2` column is understood as the date at which to calculate the age. The metadata headers are automatically converted to lowercase.
@@ -93,7 +127,7 @@ The following parameters can be used to rename CSV-generated output columns and 
 The calculate age PNC transformation may be run as follows:
 
 ```bash
-nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/age/basic.csv --outdir results --transformation age_pnc --age_header calc_host_age --metadata_1_header host_date_of_birth_dob --metadata_2_header calc_earliest_date --metadata_3_header host_age --metadata_4_header host_age_unit
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/age/basic.json --outdir results --transformation age_pnc --age_header calc_host_age --metadata_1_header host_date_of_birth_dob --metadata_2_header calc_earliest_date --metadata_3_header host_age --metadata_4_header host_age_unit
 ```
 
 The metadata header parameters (`--metadata_1_header` through `--metadata_16_header`) are required for the transformation. In particular, at least four of the metadata headers must be renamed to the exactly the following:
@@ -124,7 +158,7 @@ Furthermore, the following values are ignored and treated as "years" when provid
 The earliest date transformation may be run as follows:
 
 ```bash
-nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/earliest/basic.csv --outdir results --transformation earliest
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/earliest/basic.json --outdir results --transformation earliest
 ```
 
 For this transformation, the `metadata_1` column through `metadata_16` column of the sample sheet are understood as containing a date or being empty. The transformation will determine the earliest date among these metadata columns.
@@ -138,7 +172,7 @@ If at least one metadata column contains non-empty data that does not conform to
 The populate transformation may be run as follows:
 
 ```bash
-nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/populate/basic.csv --outdir results --transformation populate --populate_header "new_header" --populate_value "new_value"
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/populate/basic.json --outdir results --transformation populate --populate_header "new_header" --populate_value "new_value"
 ```
 
 For this transformation, all input metadata (`metadata_1` through `metadata_16`) will be ignored. However, the transformation will write or overwrite the input metadata as specified by `--populate_header`. The value specified by `--populate_value` will be written for every sample under the column specified by `--populate_header`.
@@ -155,7 +189,7 @@ sample3,"GHI",3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8
 and command:
 
 ```bash
-nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/populate/basic.csv --outdir results --transformation populate --populate_header "new_header" --populate_value "new_value"
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/populate/basic.json --outdir results --transformation populate --populate_header "new_header" --populate_value "new_value"
 ```
 
 following output `results.csv` file will be generated:
@@ -181,7 +215,7 @@ sample3,new_value
 The categorize transformation may be run as follows:
 
 ```bash
-nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/categorize/basic.csv --outdir results --transformation categorize --metadata_1_header host_scientific_name --metadata_2_header host_common_name  --metadata_3_header food_product --metadata_4_header environmental_site  --metadata_5_header environmental_material
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/categorize/basic.json --outdir results --transformation categorize --metadata_1_header host_scientific_name --metadata_2_header host_common_name  --metadata_3_header food_product --metadata_4_header environmental_site  --metadata_5_header environmental_material
 ```
 
 For this transformation, a new field "calc_source_type" will be assigned based on the values of other fields in the input metadata.
@@ -247,7 +281,7 @@ sample12,Food
 The PNC transformation may be run as follows:
 
 ```bash
-nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/pnc/basic.csv --outdir results --transformation pnc -c pnc.config
+nextflow run phac-nml/metadatatransformation -profile singularity --input tests/data/samplesheets/pnc/basic.json --outdir results --transformation pnc -c pnc.config
 ```
 
 Where the `pnc.config` file is as follows:
