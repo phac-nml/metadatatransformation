@@ -26,6 +26,9 @@ nextflow_pipeline {
             assert workflow.success
             assert path("$launchDir/results").exists()
 
+            def combined_stdout = workflow.stdout.join(",")
+            assert combined_stdout.contains("JSON did not match schema") == false
+
             // Check Transformation (Machine-Readable)
             def transformation = path("$launchDir/results/transformation/transformation.csv")
             assert transformation.exists()
@@ -221,6 +224,9 @@ nextflow_pipeline {
             assert workflow.success
             assert path("$launchDir/results").exists()
 
+            def combined_stdout = workflow.stdout.join(",")
+            assert combined_stdout.contains("JSON did not match schema") == false
+
             // Check Transformation (Machine-Readable)
             def transformation = path("$launchDir/results/transformation/transformation.csv")
             assert transformation.exists()
@@ -393,6 +399,9 @@ nextflow_pipeline {
             assert workflow.success
             assert path("$launchDir/results").exists()
 
+            def combined_stdout = workflow.stdout.join(",")
+            assert combined_stdout.contains("JSON did not match schema") == false
+
             // Check Transformation (Machine-Readable)
             def transformation = path("$launchDir/results/transformation/transformation.csv")
             assert transformation.exists()
@@ -458,6 +467,9 @@ nextflow_pipeline {
             assert workflow.success
             assert path("$launchDir/results").exists()
 
+            def combined_stdout = workflow.stdout.join(",")
+            assert combined_stdout.contains("JSON did not match schema") == false
+
             // Check Transformation (Machine-Readable)
             def transformation = path("$launchDir/results/transformation/transformation.csv")
             assert transformation.exists()
@@ -520,6 +532,9 @@ nextflow_pipeline {
         then {
             assert workflow.success
             assert path("$launchDir/results").exists()
+
+            def combined_stdout = workflow.stdout.join(",")
+            assert combined_stdout.contains("JSON did not match schema") == false
 
             // Check Transformation (Machine-Readable)
             def transformation = path("$launchDir/results/transformation/transformation.csv")
@@ -656,6 +671,9 @@ nextflow_pipeline {
             assert workflow.success
             assert path("$launchDir/results").exists()
 
+            def combined_stdout = workflow.stdout.join(",")
+            assert combined_stdout.contains("JSON did not match schema") == false
+
             // Check Transformation (Machine-Readable)
             def transformation = path("$launchDir/results/transformation/transformation.csv")
             assert transformation.exists()
@@ -720,6 +738,9 @@ nextflow_pipeline {
         then {
             assert workflow.success
             assert path("$launchDir/results").exists()
+
+            def combined_stdout = workflow.stdout.join(",")
+            assert combined_stdout.contains("JSON did not match schema") == false
 
             // Check Transformation (Machine-Readable)
             def transformation = path("$launchDir/results/transformation/transformation.csv")
