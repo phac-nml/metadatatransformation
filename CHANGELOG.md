@@ -3,6 +3,12 @@
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Added
+
+- A metadatatransformation-specific JSON output schema that the nf-iridanext plugin will automatically validate its output against. Currently, this schema validation is only enabled during testing. [PR 33](https://github.com/phac-nml/metadatatransformation/pull/33)
+
 ## [1.4.2] - 2026/04/09
 
 ### Fixed
