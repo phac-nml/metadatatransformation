@@ -1,15 +1,16 @@
 nextflow_pipeline {
 
-    name "Metadata Transformation: General"
+    name "Metadata Transformation: General (JSON)"
     script "main.nf"
 
     test("Invalid") {
         tag "pipeline_transformation"
         tag "pipeline_transformation_invalid"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/lock/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/lock/basic.json"
                 outdir = "results"
 
                 transformation = "UNKNOWN123"
@@ -26,10 +27,11 @@ nextflow_pipeline {
     test("Null") {
         tag "pipeline_transformation"
         tag "pipeline_transformation_null"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/lock/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/lock/basic.json"
                 outdir = "results"
 
                 transformation = null

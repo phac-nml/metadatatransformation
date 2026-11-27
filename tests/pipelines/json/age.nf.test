@@ -1,15 +1,16 @@
 nextflow_pipeline {
 
-    name "Metadata Transformation: Age"
+    name "Metadata Transformation: Age (JSON)"
     script "main.nf"
 
     test("Basic") {
         tag "pipeline_age"
         tag "pipeline_age_basic"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/age/basic.json"
                 outdir = "results"
 
                 transformation = "age"
@@ -97,10 +98,11 @@ nextflow_pipeline {
     test("Problems") {
         tag "pipeline_age"
         tag "pipeline_age_problems"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age/problems.csv"
+                input = "$baseDir/tests/data/samplesheets/age/problems.json"
                 outdir = "results"
 
                 transformation = "age"
@@ -210,10 +212,11 @@ nextflow_pipeline {
     test("Extra columns") {
         tag "pipeline_age"
         tag "pipeline_age_extra_columns"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age/extra_columns.csv"
+                input = "$baseDir/tests/data/samplesheets/age/extra_columns.json"
                 outdir = "results"
 
                 transformation = "age"
@@ -271,10 +274,11 @@ nextflow_pipeline {
     test("Success and failure mix") {
         tag "pipeline_age"
         tag "pipeline_age_success_failure_mix"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age/success_failure_mix.csv"
+                input = "$baseDir/tests/data/samplesheets/age/success_failure_mix.json"
                 outdir = "results"
 
                 transformation = "age"
@@ -330,10 +334,11 @@ nextflow_pipeline {
     test("Spaces in headers") {
         tag "pipeline_age"
         tag "pipeline_age_spaces"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/age/basic.json"
                 outdir = "results"
 
                 transformation = "age"
@@ -421,10 +426,11 @@ nextflow_pipeline {
     test("Float columns") {
         tag "pipeline_age"
         tag "pipeline_age_float_columns"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age/float_columns.csv"
+                input = "$baseDir/tests/data/samplesheets/age/float_columns.json"
                 outdir = "results"
 
                 transformation = "age"

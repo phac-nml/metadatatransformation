@@ -1,15 +1,16 @@
 nextflow_pipeline {
 
-    name "Metadata Transformation: Earliest Date"
+    name "Metadata Transformation: Earliest Date (JSON)"
     script "main.nf"
 
     test("Basic") {
         tag "pipeline_earliest"
         tag "pipeline_earliest_basic"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/earliest/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/earliest/basic.json"
                 outdir = "results"
 
                 transformation = "earliest"
@@ -64,10 +65,11 @@ nextflow_pipeline {
     test("Problems") {
         tag "pipeline_earliest"
         tag "pipeline_earliest_problems"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/earliest/problems.csv"
+                input = "$baseDir/tests/data/samplesheets/earliest/problems.json"
                 outdir = "results"
 
                 transformation = "earliest"
@@ -221,10 +223,11 @@ nextflow_pipeline {
     test("Rename earliest column") {
         tag "pipeline_earliest"
         tag "pipeline_earliest_rename"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/earliest/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/earliest/basic.json"
                 outdir = "results"
 
                 transformation = "earliest"
@@ -280,10 +283,11 @@ nextflow_pipeline {
     test("Special Entries") {
         tag "pipeline_earliest"
         tag "pipeline_earliest_special"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/earliest/special.csv"
+                input = "$baseDir/tests/data/samplesheets/earliest/special.json"
                 outdir = "results"
 
                 transformation = "earliest"
@@ -351,13 +355,14 @@ nextflow_pipeline {
         }
     }
 
-    test("All Problems (no dates in transformation.csv)") {
+    test("All Problems (no dates in transformation.json)") {
         tag "pipeline_earliest"
         tag "pipeline_earliest_all_problems"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/earliest/all_problems.csv"
+                input = "$baseDir/tests/data/samplesheets/earliest/all_problems.json"
                 outdir = "results"
 
                 transformation = "earliest"

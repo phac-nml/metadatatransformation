@@ -4,15 +4,14 @@
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
-include { paramsSummaryLog; paramsSummaryMap; fromSamplesheet  } from 'plugin/nf-validation'
-include { loadIridaSampleIds                                   } from 'plugin/nf-iridanext'
+include { samplesheetToList  } from 'plugin/nf-schema'
+include { loadIridaSampleIds } from 'plugin/nf-iridanext'
 
 def logo = NfcoreTemplate.logo(workflow, params.monochrome_logs)
 def citation = '\n' + WorkflowMain.citation(workflow) + '\n'
-def summary_params = paramsSummaryMap(workflow)
 
 // Print parameter summary log to screen
-log.info logo + paramsSummaryLog(workflow) + citation
+log.info logo + citation
 
 WorkflowMetadatatransformation.initialise(params, log)
 
@@ -61,15 +60,46 @@ workflow METADATATRANSFORMATION {
     def processedIDs = [] as Set
 
     // Create a new channel of metadata from a sample sheet
-    // NB: `input` corresponds to `params.input` and associated sample sheet schema
-    input = Channel.fromSamplesheet("input").map {
-        def meta = it[0]
-        if (!meta.id) {
-            meta.id = meta.irida_id
-        } else {
-            // Non-alphanumeric characters (excluding _,-,.) will be replaced with "_"
-            meta.id = meta.id.replaceAll(/[^A-Za-z0-9_.\-]/, '_')
+    input = Channel.fromList(samplesheetToList(params.input, "assets/schema_input.json"))
+    
+    // Cast all the metadata to strings:
+    // This is to fix a bug with loading CSV sample sheets with nf-schema.
+    // Must be done before ID replacement below.
+    input = input.map { row ->
+
+        def meta = row[0].collectEntries([:]){ key, value ->
+            key.contains("metadata_") ? [key, value.toString()] : [key, value]
         }
+
+        // This prevents an empty ID from being converted to the "[]" string,
+        // which causes problems when correcting IDs below.
+        if(meta["id"]) {
+            meta["id"] = meta["id"].toString()
+        }
+        else {
+            meta["id"] = ""
+        }
+        
+        if(meta["irida_id"]) {
+            meta["irida_id"] = meta["irida_id"].toString()
+        }
+        else {
+            meta["irida_id"] = ""
+        }
+
+        tuple(meta)
+    }    
+    
+    input = input.map {
+        def meta = it[0]
+
+        if (!meta.id || meta.id.toString() == "") {
+            meta.id = meta.irida_id
+        }
+
+        // Non-alphanumeric characters (excluding _,-,.) will be replaced with "_"
+        meta.id = meta.id.replaceAll(/[^A-Za-z0-9_.\-]/, '_')
+
         // Ensure ID is unique by appending meta.irida_id if needed
         while (processedIDs.contains(meta.id)) {
             meta.id = "${meta.id}_${meta.irida_id}"

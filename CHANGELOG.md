@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - A metadatatransformation-specific JSON output schema that the nf-iridanext plugin will automatically validate its output against. Currently, this schema validation is only enabled during testing. [PR 33](https://github.com/phac-nml/metadatatransformation/pull/33)
+- Added support for JSON-formatted sample sheets. [PR #34](https://github.com/phac-nml/metadatatransformation/pull/34)
 
 ## [1.4.2] - 2026/04/09
 

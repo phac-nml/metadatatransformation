@@ -25,13 +25,42 @@ sample2,"DEF",2.1,2.2,2.3,2.4,2.5,2.6,2.7,2.8
 sample3,"GHI",3.1,3.2,3.3,3.4,3.5,3.6,3.7,3.8
 ```
 
-| Column           | Description                                                                                                                                |
+| Column / Field   | Description                                                                                                                                |
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
 | `sample`         | Sample ID. Samples should be unique within a samplesheet. Likely Irida Next IDs.                                                           |
 | `sample_name`    | Sample name. Likely user-provided IDs that should be unique, but are not required to be unique. Will be used over `sample` when available. |
 | `metadata_1..16` | Metadata that will be used in the metadata transformations.                                                                                |
 
-An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline.
+An [example samplesheet](../assets/samplesheet.csv) has been provided with the pipeline. Alternatively, a JSON-formatted sample sheet may be provided:
+
+```json
+[
+  {
+    "sample": "sample1",
+    "sample_name": "ABC",
+    "metadata_1": 1.1,
+    "metadata_2": 1.2,
+    "metadata_3": 1.3,
+    "metadata_4": 1.4,
+    "metadata_5": 1.5,
+    "metadata_6": 1.6,
+    "metadata_7": 1.7,
+    "metadata_8": 1.8
+  },
+  {
+    "sample": "sample2",
+    "sample_name": "DEF",
+    "metadata_1": 2.1,
+    "metadata_2": 2.2,
+    "metadata_3": 2.3,
+    "metadata_4": 2.4,
+    "metadata_5": 2.5,
+    "metadata_6": 2.6,
+    "metadata_7": 2.7,
+    "metadata_8": 2.8
+  }
+]
+```
 
 ## Running the pipeline
 

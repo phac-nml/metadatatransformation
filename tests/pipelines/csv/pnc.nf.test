@@ -1,11 +1,12 @@
 nextflow_pipeline {
 
-    name "Metadata Transformation: PNC"
+    name "Metadata Transformation: PNC (CSV)"
     script "main.nf"
 
     test("Basic") {
         tag "pipeline_pnc"
         tag "pipeline_pnc_basic"
+        tag "csv_samplesheet"
 
         when {
             params {
@@ -75,6 +76,7 @@ nextflow_pipeline {
     test("Specification") {
         tag "pipeline_pnc"
         tag "pipeline_pnc_specification"
+        tag "csv_samplesheet"
 
         when {
             params {
@@ -655,6 +657,7 @@ nextflow_pipeline {
     test("Problems") {
         tag "pipeline_pnc"
         tag "pipeline_pnc_problems"
+        tag "csv_samplesheet"
 
         when {
             params {
@@ -878,6 +881,7 @@ nextflow_pipeline {
     test("Some columns missing") {
         tag "pipeline_pnc"
         tag "pipeline_pnc_some_columns_missing"
+        tag "csv_samplesheet"
 
         when {
             params {
@@ -947,6 +951,7 @@ nextflow_pipeline {
     test("Columns in different order") {
         tag "pipeline_pnc"
         tag "pipeline_pnc_column_order"
+        tag "csv_samplesheet"
 
         when {
             params {
@@ -1014,6 +1019,7 @@ nextflow_pipeline {
     test("Uppercase in column headers") {
         tag "pipeline_pnc"
         tag "pipeline_pnc_uppercase"
+        tag "csv_samplesheet"
 
         when {
             params {
@@ -1083,6 +1089,7 @@ nextflow_pipeline {
     test("Commas") {
         tag "pipeline_pnc"
         tag "pipeline_pnc_commas"
+        tag "csv_samplesheet"
 
         when {
             params {

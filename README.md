@@ -16,6 +16,37 @@ The amount and meaning of the metadata columns may be different for each metadat
 
 The structure of this file is defined in [assets/schema_input.json](assets/schema_input.json). Validation of the sample sheet is performed by [nf-validation](https://nextflow-io.github.io/nf-validation/).
 
+Alternatively, a JSON-formatted sample sheet may be provided:
+
+```json
+[
+  {
+    "sample": "sample1",
+    "sample_name": "ABC",
+    "metadata_1": 1.1,
+    "metadata_2": 1.2,
+    "metadata_3": 1.3,
+    "metadata_4": 1.4,
+    "metadata_5": 1.5,
+    "metadata_6": 1.6,
+    "metadata_7": 1.7,
+    "metadata_8": 1.8
+  },
+  {
+    "sample": "sample2",
+    "sample_name": "DEF",
+    "metadata_1": 2.1,
+    "metadata_2": 2.2,
+    "metadata_3": 2.3,
+    "metadata_4": 2.4,
+    "metadata_5": 2.5,
+    "metadata_6": 2.6,
+    "metadata_7": 2.7,
+    "metadata_8": 2.8
+  }
+]
+```
+
 # Parameters
 
 The main parameters are `--input` as defined above and `--output` for specifying the output results directory. You may wish to provide `-profile singularity` to specify the use of singularity containers and `-r [branch]` to specify which GitHub branch you would like to run.
