@@ -1,80 +1,80 @@
 [
-  {
-    "sample": "reverse_dates_under_2",
-    "sample_name": "rd_1",
-    "metadata_1": "2001-01-01",
-    "metadata_2": "2000-01-01"
-  },
-  {
-    "sample": "reverse_dates_over_2",
-    "sample_name": "rd_2",
-    "metadata_1": "2010-01-01",
-    "metadata_2": "2000-01-01"
-  },
-  {
-    "sample": "bad_format_1",
-    "sample_name": "bf_1",
-    "metadata_1": "00-01-01",
-    "metadata_2": "2000-11-11"
-  },
-  {
-    "sample": "bad_format_2",
-    "sample_name": "bf_2",
-    "metadata_1": "2000-01-01",
-    "metadata_2": "00-11-11"
-  },
-  {
-    "sample": "bad_format_3",
-    "sample_name": "bf_3",
-    "metadata_1": "2000/01/01",
-    "metadata_2": "2000/11/11"
-  },
-  {
-    "sample": "bad_format_4",
-    "sample_name": "bf_4",
-    "metadata_1": "2000.01.01",
-    "metadata_2": "2000.11.11"
-  },
-  {
-    "sample": "bad_format_5",
-    "sample_name": "bf_5",
-    "metadata_1": "2000-01-01",
-    "metadata_2": "2000-11-11 23:59:59"
-  },
-  {
-    "sample": "wrong_order_1",
-    "sample_name": "wo_1",
-    "metadata_1": "2000-31-01",
-    "metadata_2": "2000-01-02"
-  },
-  {
-    "sample": "wrong_order_2",
-    "sample_name": "wo_2",
-    "metadata_1": "2000-01-01",
-    "metadata_2": "2000-31-02"
-  },
-  {
-    "sample": "negative_date_1",
-    "sample_name": "nd_1",
-    "metadata_1": "-2000-01-01",
-    "metadata_2": "2001-01-01"
-  },
-  {
-    "sample": "negative_date_2",
-    "sample_name": "nd_2",
-    "metadata_1": "2000-01-01",
-    "metadata_2": "-2001-01-01"
-  },
-  {
-    "sample": "missing_date_1",
-    "sample_name": "md_1",
-    "metadata_1": "",
-    "metadata_2": "2001-01-01"
-  },
-  {
-    "sample": "missing_date_2",
-    "sample_name": "md_2",
-    "metadata_1": "2000-01-01",
-    "metadata_2": ""
-  }
+    {
+        "sample": "reverse_dates_under_2",
+        "sample_name": "rd_1",
+        "metadata_1": "2001-01-01",
+        "metadata_2": "2000-01-01"
+    },
+    {
+        "sample": "reverse_dates_over_2",
+        "sample_name": "rd_2",
+        "metadata_1": "2010-01-01",
+        "metadata_2": "2000-01-01"
+    },
+    {
+        "sample": "bad_format_1",
+        "sample_name": "bf_1",
+        "metadata_1": "00-01-01",
+        "metadata_2": "2000-11-11"
+    },
+    {
+        "sample": "bad_format_2",
+        "sample_name": "bf_2",
+        "metadata_1": "2000-01-01",
+        "metadata_2": "00-11-11"
+    },
+    {
+        "sample": "bad_format_3",
+        "sample_name": "bf_3",
+        "metadata_1": "2000/01/01",
+        "metadata_2": "2000/11/11"
+    },
+    {
+        "sample": "bad_format_4",
+        "sample_name": "bf_4",
+        "metadata_1": "2000.01.01",
+        "metadata_2": "2000.11.11"
+    },
+    {
+        "sample": "bad_format_5",
+        "sample_name": "bf_5",
+        "metadata_1": "2000-01-01",
+        "metadata_2": "2000-11-11 23:59:59"
+    },
+    {
+        "sample": "wrong_order_1",
+        "sample_name": "wo_1",
+        "metadata_1": "2000-31-01",
+        "metadata_2": "2000-01-02"
+    },
+    {
+        "sample": "wrong_order_2",
+        "sample_name": "wo_2",
+        "metadata_1": "2000-01-01",
+        "metadata_2": "2000-31-02"
+    },
+    {
+        "sample": "negative_date_1",
+        "sample_name": "nd_1",
+        "metadata_1": "-2000-01-01",
+        "metadata_2": "2001-01-01"
+    },
+    {
+        "sample": "negative_date_2",
+        "sample_name": "nd_2",
+        "metadata_1": "2000-01-01",
+        "metadata_2": "-2001-01-01"
+    },
+    {
+        "sample": "missing_date_1",
+        "sample_name": "md_1",
+        "metadata_1": "",
+        "metadata_2": "2001-01-01"
+    },
+    {
+        "sample": "missing_date_2",
+        "sample_name": "md_2",
+        "metadata_1": "2000-01-01",
+        "metadata_2": ""
+    }
 ]
