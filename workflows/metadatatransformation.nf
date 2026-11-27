@@ -61,7 +61,7 @@ workflow METADATATRANSFORMATION {
 
     // Create a new channel of metadata from a sample sheet
     input = Channel.fromList(samplesheetToList(params.input, "assets/schema_input.json"))
-    
+
     // Cast all the metadata to strings:
     // This is to fix a bug with loading CSV sample sheets with nf-schema.
     // Must be done before ID replacement below.
@@ -79,7 +79,7 @@ workflow METADATATRANSFORMATION {
         else {
             meta["id"] = ""
         }
-        
+
         if(meta["irida_id"]) {
             meta["irida_id"] = meta["irida_id"].toString()
         }
@@ -88,8 +88,8 @@ workflow METADATATRANSFORMATION {
         }
 
         tuple(meta)
-    }    
-    
+    }
+
     input = input.map {
         def meta = it[0]
 
