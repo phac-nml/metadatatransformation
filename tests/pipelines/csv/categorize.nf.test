@@ -1,11 +1,12 @@
 nextflow_pipeline {
 
-    name "Metadata Transformation: Categorize"
+    name "Metadata Transformation: Categorize (CSV)"
     script "main.nf"
 
     test("Basic") {
         tag "pipeline_categorize"
         tag "pipeline_categorize_basic"
+        tag "csv_samplesheet"
 
         when {
             params {
@@ -127,6 +128,7 @@ nextflow_pipeline {
     test("Missing Headers") {
         tag "pipeline_categorize"
         tag "pipeline_categorize_missing_headers"
+        tag "csv_samplesheet"
 
         when {
             params {
@@ -187,6 +189,7 @@ nextflow_pipeline {
     test("Reorder Headers") {
         tag "pipeline_categorize"
         tag "pipeline_categorize_reorder_headers"
+        tag "csv_samplesheet"
 
         when {
             params {

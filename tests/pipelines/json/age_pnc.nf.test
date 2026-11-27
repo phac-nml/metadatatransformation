@@ -1,15 +1,16 @@
 nextflow_pipeline {
 
-    name "Metadata Transformation: Age PNC"
+    name "Metadata Transformation: Age PNC (JSON)"
     script "main.nf"
 
     test("Basic") {
         tag "pipeline_age_pnc"
         tag "pipeline_age_pnc_basic"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age_pnc/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/age_pnc/basic.json"
                 outdir = "results"
 
                 transformation = "age_pnc"
@@ -204,10 +205,11 @@ nextflow_pipeline {
     test("Problems") {
         tag "pipeline_age_pnc"
         tag "pipeline_age_pnc_problems"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age_pnc/problems.csv"
+                input = "$baseDir/tests/data/samplesheets/age_pnc/problems.json"
                 outdir = "results"
 
                 transformation = "age_pnc"
@@ -379,10 +381,11 @@ nextflow_pipeline {
     test("Extra columns") {
         tag "pipeline_age_pnc"
         tag "pipeline_age_pnc_extra_columns"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age_pnc/extra_columns.csv"
+                input = "$baseDir/tests/data/samplesheets/age_pnc/extra_columns.json"
                 outdir = "results"
 
                 transformation = "age_pnc"
@@ -447,10 +450,11 @@ nextflow_pipeline {
     test("Success and failure mix") {
         tag "pipeline_age_pnc"
         tag "pipeline_age_pnc_success_failure_mix"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age_pnc/success_failure_mix.csv"
+                input = "$baseDir/tests/data/samplesheets/age_pnc/success_failure_mix.json"
                 outdir = "results"
 
                 transformation = "age_pnc"
@@ -513,10 +517,11 @@ nextflow_pipeline {
     test("Spaces in headers") {
         tag "pipeline_age_pnc"
         tag "pipeline_age_pnc_spaces"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age_pnc/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/age_pnc/basic.json"
                 outdir = "results"
 
                 transformation = "age_pnc"
@@ -651,10 +656,11 @@ nextflow_pipeline {
     test("Float columns") {
         tag "pipeline_age_pnc"
         tag "pipeline_age_pnc_float_columns"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age_pnc/float_columns.csv"
+                input = "$baseDir/tests/data/samplesheets/age_pnc/float_columns.json"
                 outdir = "results"
 
                 transformation = "age_pnc"
@@ -719,10 +725,11 @@ nextflow_pipeline {
     test("Specification") {
         tag "pipeline_age_pnc"
         tag "pipeline_age_pnc_specification"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/age_pnc/specification.csv"
+                input = "$baseDir/tests/data/samplesheets/age_pnc/specification.json"
                 outdir = "results"
 
                 transformation = "age_pnc"

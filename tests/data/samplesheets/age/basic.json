@@ -1,0 +1,56 @@
+[
+    {
+        "sample": "sample1",
+        "sample_name": "ABC",
+        "metadata_1": "2000-01-01",
+        "metadata_2": "2000-01-01"
+    },
+    {
+        "sample": "sample2",
+        "sample_name": "DEF",
+        "metadata_1": "2000-01-01",
+        "metadata_2": "2000-01-02"
+    },
+    {
+        "sample": "sample3",
+        "sample_name": "GHI",
+        "metadata_1": "2000-01-01",
+        "metadata_2": "2000-04-01"
+    },
+    {
+        "sample": "sample4",
+        "sample_name": "JKL",
+        "metadata_1": "2000-01-01",
+        "metadata_2": "2000-12-31"
+    },
+    {
+        "sample": "sample5",
+        "sample_name": "MNO",
+        "metadata_1": "2000-01-01",
+        "metadata_2": "2001-04-01"
+    },
+    {
+        "sample": "sample6",
+        "sample_name": "PQR",
+        "metadata_1": "2000-01-01",
+        "metadata_2": "2001-12-31"
+    },
+    {
+        "sample": "sample7",
+        "sample_name": "STU",
+        "metadata_1": "2000-01-01",
+        "metadata_2": "2002-01-01"
+    },
+    {
+        "sample": "sample8",
+        "sample_name": "VWX",
+        "metadata_1": "2000-02-29",
+        "metadata_2": "2024-02-29"
+    },
+    {
+        "sample": "sample9",
+        "sample_name": "YZ",
+        "metadata_1": "1950-12-31",
+        "metadata_2": "2000-05-05"
+    }
+]

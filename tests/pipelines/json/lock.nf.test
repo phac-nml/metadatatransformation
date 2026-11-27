@@ -1,15 +1,16 @@
 nextflow_pipeline {
 
-    name "Metadata Transformation: Lock"
+    name "Metadata Transformation: Lock (JSON)"
     script "main.nf"
 
     test("Basic") {
         tag "pipeline_lock"
         tag "pipeline_lock_basic"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/lock/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/lock/basic.json"
                 outdir = "results"
 
                 transformation = "lock"
@@ -85,10 +86,11 @@ nextflow_pipeline {
     test("Missing metadata") {
         tag "pipeline_lock"
         tag "pipeline_lock_missing_metadata"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/lock/missing_metadata.csv"
+                input = "$baseDir/tests/data/samplesheets/lock/missing_metadata.json"
                 outdir = "results"
 
                 transformation = "lock"
@@ -164,10 +166,11 @@ nextflow_pipeline {
     test("Missing column") {
         tag "pipeline_lock"
         tag "pipeline_lock_missing_column"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/lock/missing_column.csv"
+                input = "$baseDir/tests/data/samplesheets/lock/missing_column.json"
                 outdir = "results"
 
                 transformation = "lock"
@@ -246,10 +249,11 @@ nextflow_pipeline {
     test("Unrelated parameters") {
         tag "pipeline_lock"
         tag "pipeline_lock_unrelated_parameters"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/lock/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/lock/basic.json"
                 outdir = "results"
 
                 transformation = "lock"
@@ -326,10 +330,11 @@ nextflow_pipeline {
     test("Specify column headers") {
         tag "pipeline_lock"
         tag "pipeline_lock_specify_column_headers"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/lock/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/lock/basic.json"
                 outdir = "results"
 
                 transformation = "lock"
@@ -413,10 +418,11 @@ nextflow_pipeline {
     test("Spaces in headers") {
         tag "pipeline_lock"
         tag "pipeline_lock_spaces"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/lock/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/lock/basic.json"
                 outdir = "results"
 
                 transformation = "lock"

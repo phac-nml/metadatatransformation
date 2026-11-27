@@ -1,15 +1,16 @@
 nextflow_pipeline {
 
-    name "Metadata Transformation: Populate"
+    name "Metadata Transformation: Populate (JSON)"
     script "main.nf"
 
     test("Basic") {
         tag "pipeline_populate"
         tag "pipeline_populate_basic"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/populate/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/populate/basic.json"
                 outdir = "results"
 
                 transformation = "populate"
@@ -69,10 +70,11 @@ nextflow_pipeline {
     test("Spaces") {
         tag "pipeline_populate"
         tag "pipeline_populate_spaces"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/populate/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/populate/basic.json"
                 outdir = "results"
 
                 transformation = "populate"
@@ -132,10 +134,11 @@ nextflow_pipeline {
     test("Overwrite") {
         tag "pipeline_populate"
         tag "pipeline_populate_overwrite"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/populate/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/populate/basic.json"
                 outdir = "results"
 
                 transformation = "populate"
@@ -195,10 +198,11 @@ nextflow_pipeline {
     test("Missing metadata") {
         tag "pipeline_populate"
         tag "pipeline_populate_missing_metadata"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/populate/missing_metadata.csv"
+                input = "$baseDir/tests/data/samplesheets/populate/missing_metadata.json"
                 outdir = "results"
 
                 transformation = "populate"
@@ -258,10 +262,11 @@ nextflow_pipeline {
     test("Unrelated parameters") {
         tag "pipeline_populate"
         tag "pipeline_populate_unrelated_parameters"
+        tag "json_samplesheet"
 
         when {
             params {
-                input = "$baseDir/tests/data/samplesheets/populate/basic.csv"
+                input = "$baseDir/tests/data/samplesheets/populate/basic.json"
                 outdir = "results"
 
                 transformation = "populate"

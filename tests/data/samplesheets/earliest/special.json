@@ -1,0 +1,86 @@
+[
+    {
+        "sample": "sample1",
+        "sample_name": "normal",
+        "metadata_1": "2000-01-01",
+        "metadata_2": "Not Applicable",
+        "metadata_3": "Missing",
+        "metadata_4": "Not Collected",
+        "metadata_5": "Not Provided",
+        "metadata_6": "Restricted Access",
+        "metadata_7": "",
+        "metadata_8": "2000-01-08"
+    },
+    {
+        "sample": "sample2",
+        "sample_name": "mixed_case",
+        "metadata_1": "2000-02-01",
+        "metadata_2": "not Applicable",
+        "metadata_3": "MIssIng",
+        "metadata_4": "not Collected",
+        "metadata_5": "not Provided",
+        "metadata_6": "restricted Access",
+        "metadata_7": "",
+        "metadata_8": "2000-02-08"
+    },
+    {
+        "sample": "sample3",
+        "sample_name": "lowercase",
+        "metadata_1": "2000-03-01",
+        "metadata_2": "not applicable",
+        "metadata_3": "missing",
+        "metadata_4": "not collected",
+        "metadata_5": "not provided",
+        "metadata_6": "restricted access",
+        "metadata_7": "",
+        "metadata_8": "2000-03-08"
+    },
+    {
+        "sample": "sample4",
+        "sample_name": "bad_data",
+        "metadata_1": "2000-03-01",
+        "metadata_2": "not applicable",
+        "metadata_3": "BAD_DATA",
+        "metadata_4": "not collected",
+        "metadata_5": "not provided",
+        "metadata_6": "restricted access",
+        "metadata_7": "",
+        "metadata_8": "2000-03-08"
+    },
+    {
+        "sample": "sample5",
+        "sample_name": "bad_date_format",
+        "metadata_1": "2000-03-01",
+        "metadata_2": "not applicable",
+        "metadata_3": "2000-20-01",
+        "metadata_4": "not collected",
+        "metadata_5": "not provided",
+        "metadata_6": "restricted access",
+        "metadata_7": "",
+        "metadata_8": "2000-03-08"
+    },
+    {
+        "sample": "sample6",
+        "sample_name": "all_special",
+        "metadata_1": "not applicable",
+        "metadata_2": "not applicable",
+        "metadata_3": "missing",
+        "metadata_4": "not collected",
+        "metadata_5": "not provided",
+        "metadata_6": "restricted access",
+        "metadata_7": "not applicable",
+        "metadata_8": "not applicable"
+    },
+    {
+        "sample": "sample7",
+        "sample_name": "all_special_and_blank",
+        "metadata_1": "",
+        "metadata_2": "not applicable",
+        "metadata_3": "missing",
+        "metadata_4": "not collected",
+        "metadata_5": "not provided",
+        "metadata_6": "restricted access",
+        "metadata_7": "",
+        "metadata_8": ""
+    }
+]
